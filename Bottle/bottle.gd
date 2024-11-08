@@ -60,6 +60,6 @@ func add_impulse(impulse: float) -> void:
     # Limit the bottle rotation to the max possible speed
     if rotation_speed > max_rotation_speed:
         rotation_speed = max_rotation_speed
-    elif rotation_speed < max_rotation_speed:
+    elif rotation_speed < -max_rotation_speed:
         rotation_speed = -max_rotation_speed
 
