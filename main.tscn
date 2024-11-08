@@ -1,19 +1,9 @@
-[gd_scene load_steps=6 format=3 uid="uid://dv03v2o4qgx7j"]
+[gd_scene load_steps=5 format=3 uid="uid://dv03v2o4qgx7j"]
 
 [ext_resource type="PackedScene" uid="uid://pl2j5a30sd8w" path="res://Player/player.tscn" id="1_bb77e"]
 [ext_resource type="PackedScene" uid="uid://b1u5n0mlyoqu5" path="res://Bottle/bottle.tscn" id="2_i8da5"]
 [ext_resource type="PackedScene" uid="uid://vya5gp3frnx5" path="res://Arena/arena.tscn" id="3_j16lt"]
 [ext_resource type="Script" path="res://Player/player_spawner.gd" id="4_h0alh"]
-
-[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_owhi4"]
-lifetime_randomness = 0.5
-particle_flag_disable_z = true
-direction = Vector3(0, -100, 0)
-spread = 50.385
-initial_velocity_min = 144.96
-initial_velocity_max = 216.39
-gravity = Vector3(0, 0, 0)
-scale_max = 5.0
 
 [node name="Main" type="Node2D"]
 
@@ -28,11 +18,6 @@ position = Vector2(342, 355)
 device = -2
 
 [node name="Bottle" parent="." instance=ExtResource("2_i8da5")]
-
-[node name="GPUParticles2D" type="GPUParticles2D" parent="Bottle"]
-position = Vector2(-19.4833, -613.333)
-scale = Vector2(3.33333, 3.33333)
-process_material = SubResource("ParticleProcessMaterial_owhi4")
 
 [node name="PlayerSpawner" type="Node2D" parent="."]
 position = Vector2(558, 308)

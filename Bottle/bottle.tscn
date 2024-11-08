@@ -1,7 +1,17 @@
-[gd_scene load_steps=3 format=3 uid="uid://b1u5n0mlyoqu5"]
+[gd_scene load_steps=4 format=3 uid="uid://b1u5n0mlyoqu5"]
 
 [ext_resource type="Script" path="res://Bottle/bottle.gd" id="1_lxhjm"]
 [ext_resource type="Texture2D" uid="uid://cfhp2d60h4r7q" path="res://Bottle/bottle.png" id="2_fj3et"]
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_pwhv5"]
+lifetime_randomness = 0.5
+particle_flag_disable_z = true
+direction = Vector3(0, -1, 0)
+spread = 50.0
+initial_velocity_min = 144.96
+initial_velocity_max = 216.39
+gravity = Vector3(0, 0, 0)
+scale_max = 5.0
 
 [node name="Bottle" type="Node2D"]
 position = Vector2(496.845, 300)
@@ -12,3 +22,9 @@ metadata/_edit_lock_ = true
 [node name="Sprite2D" type="Sprite2D" parent="."]
 scale = Vector2(0.642136, 0.642136)
 texture = ExtResource("2_fj3et")
+
+[node name="GPUParticles2D" type="GPUParticles2D" parent="."]
+modulate = Color(0.352941, 0.827451, 1, 0.72549)
+position = Vector2(-19.4833, -603.333)
+scale = Vector2(3.33333, 3.33333)
+process_material = SubResource("ParticleProcessMaterial_pwhv5")
