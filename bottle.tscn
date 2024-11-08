@@ -5,7 +5,7 @@
 
 [node name="Bottle" type="Node2D"]
 position = Vector2(496.845, 300)
-scale = Vector2(0.5, 0.5)
+scale = Vector2(0.3, 0.3)
 script = ExtResource("1_lxhjm")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
