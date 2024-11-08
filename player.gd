@@ -14,9 +14,6 @@ var time_factor := 1
 var dash_range := 10
 var time := 0.0
 var is_dashing = false
-
-func _ready():
-    pass
     
 func _draw() -> void:
     draw_circle(position, 30, Color.VIOLET, 2)

@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://dv03v2o4qgx7j"]
+[gd_scene load_steps=5 format=3 uid="uid://dv03v2o4qgx7j"]
 
 [ext_resource type="PackedScene" uid="uid://pl2j5a30sd8w" path="res://player.tscn" id="1_bb77e"]
 [ext_resource type="PackedScene" uid="uid://b1u5n0mlyoqu5" path="res://bottle.tscn" id="2_i8da5"]
 [ext_resource type="PackedScene" uid="uid://vya5gp3frnx5" path="res://arena.tscn" id="3_j16lt"]
+[ext_resource type="Script" path="res://Player/player_spawner.gd" id="4_h0alh"]
 
 [node name="Main" type="Node2D"]
 
@@ -13,7 +14,10 @@ device = -1
 time_factor = 20
 
 [node name="Player2" parent="." instance=ExtResource("1_bb77e")]
-position = Vector2(1340, 382)
+device = -2
 time_factor = 20
 
 [node name="Bottle" parent="." instance=ExtResource("2_i8da5")]
+
+[node name="PlayerSpawner" type="Node2D" parent="."]
+script = ExtResource("4_h0alh")
