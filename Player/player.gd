@@ -25,11 +25,7 @@ var is_dashing := false
 var dead := false
     
 func _draw() -> void:
-    print('dead ', dead)
-    if (dead):
-        draw_circle(Vector2.ZERO, radius, Color.RED, 2)
-        return
-    draw_circle(Vector2.ZERO, radius, Color.VIOLET, 2)
+    draw_circle(Vector2.ZERO, radius, player_color, 2)
 
 func _ready():
     print(Input.get_connected_joypads())
@@ -84,3 +80,8 @@ func setup_weapon():
     weapon.material.set("shader_parameter/color", player_color)
     var weapon_offset = 10
     weapon.position.x += radius + weapon_offset
+
+func kill():
+    dead = true
+    player_color = Color.RED
+    queue_redraw()
