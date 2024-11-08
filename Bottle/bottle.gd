@@ -5,8 +5,11 @@ extends Node2D
 func _ready() -> void:
   # center the bottle
   var viewport = get_viewport_rect()
-  # position.x = viewport.size.x / 2
+
   position.x = viewport.size.x / 2
   position.y = viewport.size.y / 2
+
+func _process(delta) -> void:
+  rotation += 0.5 * delta
 
 
