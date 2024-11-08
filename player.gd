@@ -1,8 +1,8 @@
-extends Sprite2D
+extends Node2D
 
 
-func _ready() -> void:
-    pass # Replace with function body.
+func _draw() -> void:
+    draw_circle(position, 20, Color.WEB_GREEN)
 
 
 func _process(delta: float) -> void:
@@ -10,4 +10,4 @@ func _process(delta: float) -> void:
     dir.y += Input.get_axis("ui_up", "ui_down")
 
     print(dir)
-    position += dir * delta * 200
+    position += dir * delta * 700
