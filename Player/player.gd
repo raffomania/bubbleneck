@@ -92,6 +92,7 @@ func setup_weapon():
     
 func respawn():
     dead = false
+    find_child('deathParticles').emitting = false
     var viewport = get_viewport_rect()
     position.x = viewport.size.x / 2
     position.y = viewport.size.y / 2
@@ -105,6 +106,7 @@ func set_weapon_rotation(dir):
 func kill():
     dead = true
     queue_redraw()
+    find_child('deathParticles').emitting = true
     await get_tree().create_timer(respawn_time).timeout
     print('respawn')
     respawn()
