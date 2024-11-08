@@ -9,7 +9,7 @@ var movespeed := 700
 var dash_curve: Curve
 
 @export
-var time_factor := 1
+var time_factor := 20
 
 var dash_range := 10
 var time := 0.0
