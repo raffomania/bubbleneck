@@ -1,7 +1,7 @@
 extends Node2D
 
 var spawned_devices = []
-var player_scene = preload("res://player.tscn")
+var player_scene = preload("res://Player/player.tscn")
 
 func _ready() -> void:
     for device in Input.get_connected_joypads():
