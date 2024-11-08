@@ -12,10 +12,14 @@
 [node name="Player1" parent="." instance=ExtResource("1_bb77e")]
 position = Vector2(1176, 517)
 device = -1
+movespeed = 400
+radius = 20
 
 [node name="Player2" parent="." instance=ExtResource("1_bb77e")]
 position = Vector2(342, 355)
 device = -2
+movespeed = 400
+radius = 20
 
 [node name="Bottle" parent="." instance=ExtResource("2_i8da5")]
 
