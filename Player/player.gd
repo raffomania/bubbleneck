@@ -53,6 +53,7 @@ func _process(delta: float) -> void:
         if Input.is_joy_button_pressed(device, JOY_BUTTON_A):
             is_dashing = true
 
+    set_weapon_rotation(dir)
 
     var curve_value = dash_curve.sample(time)
     dash_offset.x = curve_value * dir.x
@@ -81,7 +82,12 @@ func setup_weapon():
     var weapon_offset = 10
     weapon.position.x += radius + weapon_offset
 
+func set_weapon_rotation(dir):
+    if (dir == Vector2.ZERO):
+        return
+    rotation = dir.angle() + PI / 2
+
 func kill():
     dead = true
     player_color = Color.RED
-    queue_redraw()
+    queue_redraw()    queue_redraw()
