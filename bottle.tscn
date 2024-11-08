@@ -1,0 +1,12 @@
+[gd_scene load_steps=3 format=3 uid="uid://b1u5n0mlyoqu5"]
+
+[ext_resource type="Script" path="res://Bottle/bottle.gd" id="1_lxhjm"]
+[ext_resource type="Texture2D" uid="uid://bww8k8vlbjefl" path="res://Bottle/fritz.png" id="2_3fqrv"]
+
+[node name="Bottle" type="Node2D"]
+position = Vector2(496.845, 300)
+scale = Vector2(0.5, 0.5)
+script = ExtResource("1_lxhjm")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_3fqrv")

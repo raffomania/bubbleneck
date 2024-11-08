@@ -1,7 +1,7 @@
 extends Node2D
 
 @export
-var device: int = -1
+var device: int = 1
 @export
 var movespeed := 700
 
