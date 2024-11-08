@@ -1,21 +1,34 @@
-[gd_scene load_steps=5 format=3 uid="uid://pl2j5a30sd8w"]
+[gd_scene load_steps=8 format=3 uid="uid://pl2j5a30sd8w"]
 
 [ext_resource type="Script" path="res://Player/player.gd" id="1_02l3o"]
 [ext_resource type="PackedScene" uid="uid://b70qbilpbes2r" path="res://Weapon/weapon.tscn" id="2_tyojq"]
+[ext_resource type="Shader" path="res://Player/deathparticles.gdshader" id="3_x4mws"]
 
 [sub_resource type="Curve" id="Curve_d2kbo"]
 _data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.32199, 1), 0.0, 0.0, 0, 0]
 point_count = 2
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_5oj7f"]
+shader = ExtResource("3_x4mws")
+
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_afeeu"]
 lifetime_randomness = 0.5
 particle_flag_disable_z = true
-direction = Vector3(0, -100, 0)
-spread = 50.385
+emission_shape = 1
+emission_sphere_radius = 3.0
+direction = Vector3(0, 0, 0)
+spread = 180.0
 initial_velocity_min = 144.96
 initial_velocity_max = 216.39
 gravity = Vector3(0, 0, 0)
+tangential_accel_min = -2.23517e-06
+tangential_accel_max = -2.23517e-06
+damping_min = 31.183
+damping_max = 100.0
 scale_max = 5.0
+turbulence_enabled = true
+
+[sub_resource type="ImageTexture" id="ImageTexture_3aba5"]
 
 [node name="Player" type="Node2D"]
 script = ExtResource("1_02l3o")
@@ -25,6 +38,11 @@ dash_curve = SubResource("Curve_d2kbo")
 scale = Vector2(0.2, 0.2)
 
 [node name="deathParticles" type="GPUParticles2D" parent="."]
-scale = Vector2(3.33333, 3.33333)
-emitting = false
+self_modulate = Color(0.12549, 1, 1, 1)
+material = SubResource("ShaderMaterial_5oj7f")
+amount = 10
 process_material = SubResource("ParticleProcessMaterial_afeeu")
+texture = SubResource("ImageTexture_3aba5")
+lifetime = 3.0
+explosiveness = 1.0
+randomness = 1.0
