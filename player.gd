@@ -6,15 +6,14 @@ var device := 0
 var movespeed := 700
 
 @export
-var dash_curve : Curve
+var dash_curve: Curve
 
-@export 
+@export
 var factor := 10
 
 var dash_range := 2
 var time := 0.0
-var space_was_pressed = false
-var dash_finished = false
+var is_dashing = false
 
 func _ready():
     print(Input.get_connected_joypads())
@@ -25,25 +24,32 @@ func _draw() -> void:
 func _process(delta: float) -> void:
     var dash_offset = Vector2()
     var dir: Vector2
-    if space_was_pressed and not dash_finished:
+    if is_dashing:
         time += delta * 2
+
     if is_keyboard_player():
         var prefix = get_keyboard_player_prefix()
         dir = Input.get_vector(prefix + "_left", prefix + "_right", prefix + "_up", prefix + "_down")
-        if Input.is_action_just_pressed("ui_accept"):
-            space_was_pressed = true
-        var curve_value = dash_curve.sample(time) * factor
-        dash_offset.x = curve_value * dir.x
-        dash_offset.y = curve_value * dir.y
-        dash_offset *= dash_range
-        if time >= 1:
-            time = 0
-            space_was_pressed = false
-        print(curve_value)
+
+        if Input.is_action_just_pressed(prefix + "_dash"):
+            is_dashing = true
 
     else:
+        # Player is using a controller
         dir = Vector2(1, 0) * Input.get_joy_axis(device, JOY_AXIS_LEFT_X)
         dir.y = Input.get_joy_axis(device, JOY_AXIS_LEFT_Y)
+        
+        if Input.is_joy_button_pressed(device, JOY_BUTTON_A):
+            is_dashing = true
+
+
+    var curve_value = dash_curve.sample(time) * factor
+    dash_offset.x = curve_value * dir.x
+    dash_offset.y = curve_value * dir.y
+    dash_offset *= dash_range
+    if time >= 1:
+        time = 0
+        is_dashing = false
 
     position += dash_offset + dir * delta * movespeed
 
