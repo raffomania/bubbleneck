@@ -9,7 +9,7 @@ func _ready():
     print(Input.get_connected_joypads())
 
 func _draw() -> void:
-    draw_circle(position, 20, Color.WEB_GREEN)
+    draw_circle(position, 30, Color.VIOLET, 2)
 
 func _process(delta: float) -> void:
     var dir
