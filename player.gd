@@ -3,7 +3,7 @@ extends Node2D
 @export
 var device := 0
 @export
-var movespeed := 700
+var movespeed := 400
 
 @export
 var dash_curve: Curve
@@ -16,7 +16,7 @@ var time := 0.0
 var is_dashing = false
     
 func _draw() -> void:
-    draw_circle(position, 30, Color.VIOLET, 2)
+    draw_circle(Vector2.ZERO, 20, Color.VIOLET, 2)
 
 func _process(delta: float) -> void:
     var dash_offset = Vector2()
@@ -47,7 +47,10 @@ func _process(delta: float) -> void:
     if time >= 1:
         time = 0
         is_dashing = false
+        create_tween().tween_property(self, "scale", Vector2.ONE, 0.1)
 
+    if is_dashing:
+        scale.y = 0.6
     position += dash_offset + dir * delta * movespeed
 
 func is_keyboard_player():

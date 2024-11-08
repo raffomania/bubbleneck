@@ -10,14 +10,15 @@
 [node name="Arena" parent="." instance=ExtResource("3_j16lt")]
 
 [node name="Player1" parent="." instance=ExtResource("1_bb77e")]
+position = Vector2(1176, 517)
 device = -1
-time_factor = 20
 
 [node name="Player2" parent="." instance=ExtResource("1_bb77e")]
+position = Vector2(342, 355)
 device = -2
-time_factor = 20
 
 [node name="Bottle" parent="." instance=ExtResource("2_i8da5")]
 
 [node name="PlayerSpawner" type="Node2D" parent="."]
+position = Vector2(558, 308)
 script = ExtResource("4_h0alh")
