@@ -9,15 +9,15 @@ var movespeed := 700
 var dash_curve: Curve
 
 @export
-var factor := 10
+var time_factor := 1
 
-var dash_range := 2
+var dash_range := 10
 var time := 0.0
 var is_dashing = false
 
 func _ready():
-    print(Input.get_connected_joypads())
-
+    pass
+    
 func _draw() -> void:
     draw_circle(position, 30, Color.VIOLET, 2)
 
@@ -25,7 +25,7 @@ func _process(delta: float) -> void:
     var dash_offset = Vector2()
     var dir: Vector2
     if is_dashing:
-        time += delta * 2
+        time += delta * time_factor
 
     if is_keyboard_player():
         var prefix = get_keyboard_player_prefix()
@@ -43,7 +43,7 @@ func _process(delta: float) -> void:
             is_dashing = true
 
 
-    var curve_value = dash_curve.sample(time) * factor
+    var curve_value = dash_curve.sample(time)
     dash_offset.x = curve_value * dir.x
     dash_offset.y = curve_value * dir.y
     dash_offset *= dash_range
