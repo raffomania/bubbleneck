@@ -90,4 +90,5 @@ func set_weapon_rotation(dir):
 func kill():
     dead = true
     player_color = Color.RED
-    queue_redraw()    queue_redraw()
+    queue_redraw()    
+
