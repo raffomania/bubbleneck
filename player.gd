@@ -11,12 +11,19 @@ var dash_curve: Curve
 @export
 var time_factor := 20
 
+@export
+var radius := 20
+
 var dash_range := 10
 var time := 0.0
 var is_dashing := false
     
 func _draw() -> void:
-    draw_circle(Vector2.ZERO, 20, Color.VIOLET, 2)
+    draw_circle(Vector2.ZERO, radius, Color.VIOLET, 2)
+
+func _ready():
+    print(Input.get_connected_joypads())
+    add_to_group('players')
 
 func _process(delta: float) -> void:
     var dash_offset = Vector2()

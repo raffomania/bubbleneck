@@ -26,6 +26,10 @@ window/stretch/aspect="keep_height"
 
 enabled=PackedStringArray()
 
+[global_group]
+
+players="All players"
+
 [input]
 
 ui_left={
