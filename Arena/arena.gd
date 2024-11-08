@@ -26,6 +26,3 @@ func _process(delta: float) -> void:
        var dist = player.position.distance_to(center) - player.radius
        if (!player.dead and dist > radius):
            player.kill()
-       else:
-           print('player %s is alive' % [player.device])
-           player.dead = false

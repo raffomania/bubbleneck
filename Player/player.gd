@@ -8,6 +8,8 @@ var movespeed := 400
 @export
 var player_color := Color.VIOLET
 
+var dead_color := Color.RED
+
 @export
 var dash_curve: Curve
 
@@ -23,9 +25,13 @@ var is_dashing := false
 
 @export
 var dead := false
+
+@export
+var respawn_time := 3.0
     
 func _draw() -> void:
-    draw_circle(Vector2.ZERO, radius, player_color, 2)
+    var color = dead_color if dead else player_color
+    draw_circle(Vector2.ZERO, radius, color, 2)
 
 func _ready():
     print(Input.get_connected_joypads())
@@ -33,6 +39,8 @@ func _ready():
     setup_weapon()
 
 func _process(delta: float) -> void:
+    if (dead):
+        return
     var dash_offset = Vector2()
     var dir: Vector2
     if is_dashing:
@@ -81,6 +89,13 @@ func setup_weapon():
     weapon.material.set("shader_parameter/color", player_color)
     var weapon_offset = 10
     weapon.position.x += radius + weapon_offset
+    
+func respawn():
+    dead = false
+    var viewport = get_viewport_rect()
+    position.x = viewport.size.x / 2
+    position.y = viewport.size.y / 2
+    queue_redraw()
 
 func set_weapon_rotation(dir):
     if (dir == Vector2.ZERO):
@@ -89,6 +104,7 @@ func set_weapon_rotation(dir):
 
 func kill():
     dead = true
-    player_color = Color.RED
-    queue_redraw()    
-
+    queue_redraw()
+    await get_tree().create_timer(respawn_time).timeout
+    print('respawn')
+    respawn()
