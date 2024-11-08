@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://pl2j5a30sd8w"]
 
-[ext_resource type="Script" path="res://player.gd" id="2_krhbc"]
+[ext_resource type="Script" path="res://Player/player.gd" id="2_krhbc"]
 [ext_resource type="PackedScene" uid="uid://b70qbilpbes2r" path="res://Weapon/weapon.tscn" id="2_rtcpi"]
 
 [sub_resource type="Curve" id="Curve_d2kbo"]

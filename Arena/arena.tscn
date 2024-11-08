@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://vya5gp3frnx5"]
 
-[ext_resource type="Script" path="res://arena.gd" id="1_ymhiu"]
+[ext_resource type="Script" path="res://Arena/arena.gd" id="1_ymhiu"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_8sr05"]
 
