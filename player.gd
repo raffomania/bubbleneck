@@ -6,6 +6,9 @@ var device := 0
 var movespeed := 400
 
 @export
+var player_color := Color.VIOLET
+
+@export
 var dash_curve: Curve
 
 @export
@@ -24,6 +27,7 @@ func _draw() -> void:
 func _ready():
     print(Input.get_connected_joypads())
     add_to_group('players')
+    setup_weapon()
 
 func _process(delta: float) -> void:
     var dash_offset = Vector2()
@@ -67,3 +71,9 @@ func is_keyboard_player():
 
 func get_keyboard_player_prefix():
     return "kb" + str(abs(device))
+
+func setup_weapon():
+    var weapon = $Weapon
+    weapon.material.set("shader_parameter/color", player_color)
+    var weapon_offset = 10
+    weapon.position.x += radius + weapon_offset
