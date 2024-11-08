@@ -1,6 +1,11 @@
-[gd_scene load_steps=2 format=3 uid="uid://pl2j5a30sd8w"]
+[gd_scene load_steps=3 format=3 uid="uid://pl2j5a30sd8w"]
 
 [ext_resource type="Script" path="res://player.gd" id="2_krhbc"]
 
+[sub_resource type="Curve" id="Curve_d2kbo"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.32199, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
 [node name="Player1" type="Node2D"]
 script = ExtResource("2_krhbc")
+dash_curve = SubResource("Curve_d2kbo")
