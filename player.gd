@@ -13,7 +13,7 @@ var time_factor := 20
 
 var dash_range := 10
 var time := 0.0
-var is_dashing = false
+var is_dashing := false
     
 func _draw() -> void:
     draw_circle(Vector2.ZERO, 20, Color.VIOLET, 2)
@@ -51,6 +51,8 @@ func _process(delta: float) -> void:
 
     if is_dashing:
         scale.y = 0.6
+        rotation = dir.angle()
+
     position += dash_offset + dir * delta * movespeed
 
 func is_keyboard_player():
