@@ -14,5 +14,6 @@ time_factor = 20
 
 [node name="Player2" parent="." instance=ExtResource("1_bb77e")]
 position = Vector2(1340, 382)
+time_factor = 20
 
 [node name="Bottle" parent="." instance=ExtResource("2_i8da5")]
