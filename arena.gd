@@ -24,6 +24,9 @@ func _process(delta: float) -> void:
     center.y = viewport.size.y / 2
     for player: Node2D in get_tree().get_nodes_in_group('players'):
        var dist = player.position.distance_to(center) - player.radius
-       if (dist > radius):
-           print('player is out', player, 'distance', dist)
-       break
+       if (!player.dead and dist > radius):
+           player.dead = true
+           player.queue_redraw()
+       else:
+           print('player %s is alive' % [player.device])
+           player.dead = false

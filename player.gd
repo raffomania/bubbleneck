@@ -20,8 +20,15 @@ var radius := 20
 var dash_range := 10
 var time := 0.0
 var is_dashing := false
+
+@export
+var dead := false
     
 func _draw() -> void:
+    print('dead ', dead)
+    if (dead):
+        draw_circle(Vector2.ZERO, radius, Color.RED, 2)
+        return
     draw_circle(Vector2.ZERO, radius, Color.VIOLET, 2)
 
 func _ready():
