@@ -158,19 +158,19 @@ func _on_area_entered_body(area: Area2D) -> void:
        
 func _on_top_left_entered_body(area: Area2D) -> void:
     if is_instance_of(area, Player) and not player_has_entered:
-        hit(0.1)
+        hit(0.25)
 
 func _on_top_right_entered_body(area: Area2D) -> void:
     if is_instance_of(area, Player) and not player_has_entered:
-        hit(-0.1)
+        hit(-0.25)
 
 func _on_bottom_left_entered_body(area: Area2D) -> void:
     if is_instance_of(area, Player) and not player_has_entered:
-        hit(-0.1)
+        hit(-0.25)
 
 func _on_bottom_right_entered_body(area: Area2D) -> void:
     if is_instance_of(area, Player) and not player_has_entered:
-        hit(0.1)
+        hit(0.25)
 
 
 
