@@ -159,7 +159,6 @@ func pick_up_weapon(new_weapon) -> void:
     weapon.rotation = PI / 2.0
     weapon.weapon_owner = self
     weapon.position = Vector2(8, 25)
-
     weapon.on_throw.connect(on_throw_weapon)
 
 func on_throw_weapon():
@@ -193,10 +192,12 @@ func respawn():
     queue_redraw()
 
 func get_respawn_position() -> Vector2:
+    var rand_offset = Vector2(randf() * 100 -50 , randf() * 100 - 50)
+
     if (false):
         return get_viewport_rect().size / 2
     else:
-        return $"../Bottle".get_bottle_floor(200) 
+        return $"../Bottle".get_bottle_floor(200) + rand_offset
     
 
 func is_keyboard_player():
