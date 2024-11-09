@@ -52,7 +52,9 @@ func set_attack_button_pressed(now_pressed: bool) -> void:
     var just_released = attack_button_pressed and not now_pressed
     if just_pressed:
         attack_button_pressed = true
+        position.x -= 20
     if just_released:
+        position.x += 20
         if attack_button_pressed_since < stab_button_press_threshold_seconds:
             stab()
         else:
