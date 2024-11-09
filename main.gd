@@ -22,3 +22,4 @@ func next_stage():
     add_child(current_stage)
     spawner.spawn_all_players.call_deferred()
     camera.zoom = Vector2.ONE
+    spawner.bottle = current_stage.find_child("Bottle")

@@ -2,6 +2,7 @@ extends Node2D
 
 var spawned_devices = []
 var player_scene = preload("res://Player/player.tscn")
+var bottle: Bottle
 
 # todo: this is broken
 # func _ready():
@@ -30,7 +31,7 @@ func spawn_player(device: int):
     
     # player.global_position = player.get_respawn_position()
     var rand_offset = Vector2(randf() * 100 - 50, randf() * 100 - 50)
-    # player.global_position = $"../Bottle".get_bottle_floor(200) + rand_offset
+    player.global_position = bottle.get_bottle_floor(200) + rand_offset
 
     $'..'.add_child(player)
     spawned_devices.append(device)

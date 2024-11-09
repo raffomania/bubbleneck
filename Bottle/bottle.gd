@@ -1,5 +1,7 @@
 extends Node2D
 
+class_name Bottle
+
 # Describes whether the Bottle is popped.
 var popped = false
 # Seconds until bottle pops.
@@ -107,7 +109,8 @@ func _on_area_entered_entrance(area: Area2D) -> void:
 
     var player = area as Player
     var minigame = player.start_minigame()
-    minigame.finished.connect(func(): self.minigame_finished(player, minigame))
+    if is_instance_valid(minigame):
+        minigame.finished.connect(func(): self.minigame_finished(player, minigame))
 
 
 func minigame_finished(player: Player, minigame):
