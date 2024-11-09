@@ -185,6 +185,11 @@ func handle_invincibility(delta: float):
 
 func make_invincible(duration: float):
     invincibility_countdown = duration
+    var tween = get_tree().create_tween()
+    tween.tween_property($BubbleSprite, "self_modulate", player_color.lightened(0.8), duration/2)
+    tween.tween_property($BubbleSprite, "self_modulate", player_color, duration/2)
+    tween.set_trans(Tween.TransitionType.TRANS_SINE)
+    tween.set_loops(true)
 
 
 func is_invincible() -> bool:
