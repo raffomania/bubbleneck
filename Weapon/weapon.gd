@@ -61,7 +61,7 @@ func set_attack_button_pressed(now_pressed: bool) -> void:
         attack_button_pressed_since = 0.0
 
 func throw() -> void:
-    dir = Vector2(1, 0).rotated(global_rotation)
+    dir = Vector2(0, -1).rotated(global_rotation)
     var main_scene = get_tree().get_root().get_node("Main")
     reparent(main_scene)
     is_throwing = true
