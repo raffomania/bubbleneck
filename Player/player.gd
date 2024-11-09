@@ -79,6 +79,9 @@ func _process(delta: float) -> void:
             $'GooglyEyes'.raise_eye()
             if is_instance_valid(weapon):
                 weapon.set_attack_button_pressed(true)
+        elif Input.is_action_pressed(prefix + "_stab"):
+            if is_instance_valid(weapon):
+                weapon.stab()
         elif is_instance_valid(weapon):
                 weapon.set_attack_button_pressed(false)
 
