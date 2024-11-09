@@ -34,9 +34,9 @@ var is_dashing := false
 var dash_timer := 0.0
 # How far the player should be able to dash.
 @export
-var dash_speed := 10
+var dash_speed := 6
 # The time how long a dash should last.
-var dash_duration := 0.05
+var dash_duration := 0.10
 # The timer that tracks how long the dash is on cooldown.
 var dash_cooldown: float = 0
 # How long a player needs to wait until they can dash again
