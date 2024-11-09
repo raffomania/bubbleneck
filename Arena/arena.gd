@@ -26,7 +26,7 @@ func _process(_delta: float) -> void:
            player.kill()
 
     for node: Node2D in get_tree().get_nodes_in_group('weapons'):
-       var weapon = node as Node2D
+       var weapon = node as Weapon
        var dist = weapon.global_position.distance_to(center)
        if (weapon.is_throwing and dist > radius - 10):
            weapon.stick()

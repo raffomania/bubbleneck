@@ -1,5 +1,7 @@
 extends Area2D
 
+class_name Weapon
+
 @export
 var throw_distance := 0.0
 @export
