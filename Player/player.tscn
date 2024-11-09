@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://pl2j5a30sd8w"]
+[gd_scene load_steps=9 format=3 uid="uid://pl2j5a30sd8w"]
 
 [ext_resource type="Script" path="res://Player/player.gd" id="1_02l3o"]
 [ext_resource type="PackedScene" uid="uid://b70qbilpbes2r" path="res://Weapon/weapon.tscn" id="2_tyojq"]
@@ -35,12 +35,14 @@ sub_emitter_mode = 2
 sub_emitter_amount_at_end = 8
 sub_emitter_keep_velocity = true
 
-[node name="Player" type="Node2D"]
+[sub_resource type="CircleShape2D" id="CircleShape2D_8hwc6"]
+radius = 16.0312
+
+[node name="Player" type="Area2D"]
 script = ExtResource("1_02l3o")
 dash_curve = SubResource("Curve_d2kbo")
 
 [node name="Weapon" parent="." instance=ExtResource("2_tyojq")]
-scale = Vector2(0.2, 0.2)
 
 [node name="deathParticles" type="GPUParticles2D" parent="."]
 self_modulate = Color(0.12549, 1, 1, 1)
@@ -56,3 +58,6 @@ randomness = 1.0
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = ExtResource("4_13c7d")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_8hwc6")

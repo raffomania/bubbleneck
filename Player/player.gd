@@ -1,4 +1,4 @@
-extends Node2D
+extends Area2D
 
 @export
 var device := 0
@@ -22,12 +22,15 @@ var radius := 20
 var dash_range := 10
 var time := 0.0
 var is_dashing := false
+var is_holding_weapon := true
 
 @export
 var dead := false
 
 @export
 var respawn_time := 3.0
+
+var weapon_scene = preload("res://Weapon/weapon.tscn")
     
 func _draw() -> void:
     if (dead):
@@ -55,6 +58,9 @@ func _process(delta: float) -> void:
         if Input.is_action_just_pressed(prefix + "_dash"):
             is_dashing = true
 
+        if Input.is_action_just_pressed(prefix + "_throw"):
+            throw_weapon(dir)
+
     else:
         # Player is using a controller
         dir = Vector2(1, 0) * Input.get_joy_axis(device, JOY_AXIS_LEFT_X)
@@ -62,6 +68,10 @@ func _process(delta: float) -> void:
         
         if Input.is_joy_button_pressed(device, JOY_BUTTON_A):
             is_dashing = true
+
+
+        if Input.is_joy_button_pressed(device, JOY_BUTTON_B):
+            throw_weapon(dir)
 
     set_weapon_rotation(dir)
 
@@ -87,7 +97,7 @@ func get_keyboard_player_prefix():
     return "kb" + str(abs(device))
 
 func setup_weapon():
-    var weapon = $Weapon
+    var weapon = $'Weapon/WeaponSprite'
     weapon.material.set("shader_parameter/color", player_color)
     var weapon_offset = 10
     weapon.position.x += radius + weapon_offset
@@ -104,6 +114,17 @@ func set_weapon_rotation(dir):
     if (dir == Vector2.ZERO):
         return
     rotation = dir.angle() + PI / 2
+
+func throw_weapon(direction : Vector2):
+    if is_holding_weapon:
+        var weapon = weapon_scene.instantiate()
+        var main_scene = get_tree().get_root().get_node("Main") 
+        main_scene.add_child(weapon)
+        weapon.global_position = global_position
+        weapon.throw(direction)
+        weapon.rotation = direction.angle() + PI / 2
+
+    is_holding_weapon = false
 
 func kill():
     dead = true
