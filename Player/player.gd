@@ -72,6 +72,7 @@ func _process(delta: float) -> void:
         elif is_instance_valid(weapon):
             weapon.set_attack_button_pressed(false)
 
+    # Move according to the dash curve, if dashing
     var curve_value = dash_curve.sample(time)
     dash_offset.x = curve_value * dir.x
     dash_offset.y = curve_value * dir.y
@@ -80,12 +81,16 @@ func _process(delta: float) -> void:
         time = 0
         stop_dashing()
 
+    # While dashing, squish
     if is_dashing:
         bubble_sprite.scale.y = 0.6
 
+    # Rotate in the direction we're walking
     if dir != Vector2.ZERO:
         rotation = dir.angle()
         bubble_sprite.rotation = dir.angle()
+
+    # Move into the direction indicated by controller or keyboard
     position += dash_offset + dir * delta * movespeed
     
     # fix player sprite rotation so sprite highlight doesn't rotate
