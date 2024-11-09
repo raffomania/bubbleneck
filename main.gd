@@ -8,6 +8,7 @@ var current_stage
 
 @onready var spawner = $PlayerSpawner
 @onready var camera = $Camera2D
+@onready var scoring = $ScoringSystem
 
 func _ready() -> void:
     DebugMenu.style = DebugMenu.Style.VISIBLE_DETAILED

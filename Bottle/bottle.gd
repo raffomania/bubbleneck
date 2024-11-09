@@ -132,6 +132,8 @@ func minigame_finished(player: Player):
 
     player_has_entered = true
 
+    get_tree().root.get_node('Main').get_node('ScoringSystem').increase_score(player)
+
     var camera = get_tree().root.get_camera_2d()
     var zoom_tween = create_tween().set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_IN)
     zoom_tween.tween_property(camera, "zoom", Vector2(10, 10), 3.0)
