@@ -100,8 +100,9 @@ func stop_dashing():
 
 func set_player_color(color: Color):
     modulate = color
-    var sprite = $'Weapon/WeaponSprite'
-    sprite.material.set("shader_parameter/color", color)
+    if is_instance_valid(weapon):
+        var sprite = $'Weapon/WeaponSprite'
+        sprite.material.set("shader_parameter/color", color)
 
 func pick_up_weapon(new_weapon) -> void:
     weapon = new_weapon
