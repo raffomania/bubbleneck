@@ -58,7 +58,7 @@ func _process(delta: float) -> void:
         if Input.is_action_just_pressed(prefix + "_dash") and not dash_on_cooldown:
             is_dashing = true
 
-        if Input.is_action_just_pressed(prefix + "_throw") and is_instance_valid(weapon):
+        if Input.is_action_pressed(prefix + "_throw") and is_instance_valid(weapon):
             weapon.set_attack_button_pressed(true)
         elif is_instance_valid(weapon):
             weapon.set_attack_button_pressed(false)
