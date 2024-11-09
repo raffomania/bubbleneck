@@ -1,7 +1,7 @@
 [gd_scene load_steps=11 format=3 uid="uid://b1u5n0mlyoqu5"]
 
 [ext_resource type="Script" path="res://Bottle/bottle.gd" id="1_lxhjm"]
-[ext_resource type="PackedScene" uid="uid://cbyape3axp0qu" path="res://Bottle/inside_particles.tscn" id="2_liu18"]
+[ext_resource type="PackedScene" path="res://Bottle/inside_particles.tscn" id="2_liu18"]
 [ext_resource type="Texture2D" uid="uid://ccd6m7qoq5no5" path="res://Bottle/bottlecap.png" id="3_84vhy"]
 
 [sub_resource type="Curve" id="Curve_nbcki"]

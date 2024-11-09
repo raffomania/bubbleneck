@@ -72,9 +72,7 @@ func set_attack_button_pressed(now_pressed: bool) -> void:
     if just_released:
         $WeaponSprite.scale.x = base_weapon_scale.x
         $Highlight.visible = false
-        if attack_button_pressed_since < stab_button_press_threshold_seconds:
-            stab()
-        else:
+        if attack_button_pressed_since >= stab_button_press_threshold_seconds:
             throw()
         attack_button_pressed = false
         attack_button_pressed_since = 0.0
