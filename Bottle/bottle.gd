@@ -97,7 +97,30 @@ func _on_area_entered_entrance(area: Area2D) -> void:
     if not is_instance_of(area, Player) or not popped:
         return
 
-    (area as Player).start_minigame()
+    var player = area as Player
+    var minigame = player.start_minigame()
+    minigame.finished.connect(func(): self.minigame_finished(player, minigame))
+
+
+func minigame_finished(player, minigame):
+    minigame.queue_free()
+
+    var camera = get_tree().root.get_camera_2d()
+    var zoom_tween = create_tween().set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_IN)
+    zoom_tween.tween_property(camera, "zoom", Vector2(5, 5), 3.0)
+
+    create_tween().tween_property(player, "rotation", player.rotation + PI * 2, 2.0)
+
+    var tween = create_tween()
+    tween.tween_property(player, "global_position", entrance_area.global_position, 0.4)
+    await tween.finished
+
+    tween = create_tween().parallel()
+    tween.tween_property(player, "scale", player.scale * 0.6, 1.0)
+    tween.tween_property(player, "global_position", global_position, 2.0)
+
+    await zoom_tween.finished
+    get_tree().root.get_node("Main").restart()
 
 
 func get_bottle_floor(offset: int) -> Vector2:

@@ -15,3 +15,6 @@ script = ExtResource("1_m3pie")
 [node name="PlayerSpawner" type="Node2D" parent="."]
 position = Vector2(558, 308)
 script = ExtResource("4_h0alh")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+offset = Vector2(960, 540)

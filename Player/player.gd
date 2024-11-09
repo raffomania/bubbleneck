@@ -251,6 +251,8 @@ func start_minigame():
     minigame.device = device
     add_child(minigame)
 
+    return minigame
+
 func stop_minigame():
     if not is_in_minigame():
         return
