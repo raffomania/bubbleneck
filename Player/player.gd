@@ -78,8 +78,10 @@ func _process(delta: float) -> void:
         rotation = direction.angle()
         bubble_sprite.rotation = direction.angle()
 
-    # Move into the direction indicated by controller or keyboard
-    position += dash_offset + direction * delta * movespeed
+    var is_attacking = is_instance_valid(weapon) and (weapon.is_stabbing or weapon.is_throwing)
+    if not is_attacking:
+        # Move into the direction indicated by controller or keyboard
+        position += dash_offset + direction * delta * movespeed
     
     # fix player sprite rotation so sprite highlight doesn't rotate
     $BubbleSprite.global_rotation_degrees = 0
@@ -202,3 +204,4 @@ func is_keyboard_player():
 
 func get_keyboard_player_prefix():
     return "kb" + str(abs(device))
+
