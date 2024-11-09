@@ -45,6 +45,7 @@ scale = Vector2(0.2, 0.2)
 [node name="deathParticles" type="GPUParticles2D" parent="."]
 self_modulate = Color(0.12549, 1, 1, 1)
 material = SubResource("ShaderMaterial_5oj7f")
+emitting = false
 amount = 10
 sub_emitter = NodePath(".")
 process_material = SubResource("ParticleProcessMaterial_afeeu")
