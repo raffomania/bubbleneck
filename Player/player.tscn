@@ -1,12 +1,12 @@
 [gd_scene load_steps=7 format=3 uid="uid://pl2j5a30sd8w"]
 
 [ext_resource type="Script" path="res://Player/player.gd" id="1_02l3o"]
-[ext_resource type="PackedScene" uid="uid://bxwvn54hlicia" path="res://Player/death_particles.tscn" id="2_7kgd1"]
+[ext_resource type="PackedScene" path="res://Player/death_particles.tscn" id="2_7kgd1"]
 [ext_resource type="Texture2D" uid="uid://ekewl83mripo" path="res://assets/bubble_texture.png" id="4_13c7d"]
 [ext_resource type="PackedScene" uid="uid://bnyt1gu3wl8cg" path="res://Player/GooglyEyes/googly_eyes.tscn" id="4_vlgyh"]
 
 [sub_resource type="Curve" id="Curve_d2kbo"]
-_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.32199, 1), 0.0, 0.0, 0, 0]
+_data = [Vector2(0, 0), 0.0, 2.16766, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
 point_count = 2
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_8hwc6"]
@@ -15,7 +15,9 @@ radius = 16.0312
 [node name="Player" type="Area2D"]
 z_index = 1
 script = ExtResource("1_02l3o")
+movespeed = 300
 dash_curve = SubResource("Curve_d2kbo")
+dash_duration = 0.2
 
 [node name="deathParticles" parent="." instance=ExtResource("2_7kgd1")]
 

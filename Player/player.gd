@@ -41,9 +41,11 @@ var dash_timer: float = 0.0
 @export
 var dash_speed := 6
 # The time how long a dash should last.
+@export
 var dash_duration: float = 0.10
 # The timer that tracks how long the dash is on cooldown.
 var dash_cooldown: float = 0.0
+@export
 # How long a player needs to wait until they can dash again
 var dash_cooldown_seconds: float = 1.0
 
@@ -101,8 +103,6 @@ func _process(delta: float) -> void:
         rotation = direction.angle()
         bubble_sprite.rotation = direction.angle()
 
-    
-
     if is_movement_allowed():
         # Move into the direction indicated by controller or keyboard
         position += dash_offset + direction * delta * movespeed
@@ -148,6 +148,8 @@ func handle_dash(delta: float, direction: Vector2) -> Vector2:
     # Dash is active, increment the timer
     dash_timer += delta
 
+    bubble_sprite.skew = 0.6
+
     # Move according to the dash curve.
     # The dash curve expects values from `0-1`
     # To get the correct position on the curve, we simply calculate the curve position
@@ -164,6 +166,7 @@ func handle_dash(delta: float, direction: Vector2) -> Vector2:
         # Reset the dashing logic.
         dash_timer = 0
         is_dashing = false
+        bubble_sprite.skew = 0
         # Start the cooldown
         dash_cooldown = dash_cooldown_seconds
 
@@ -294,4 +297,3 @@ func bounce_back(direction: Vector2):
 func is_movement_allowed():
     var is_attacking = is_instance_valid(weapon) and (weapon.is_stabbing or weapon.attack_button_pressed)
     return !is_attacking and !is_in_minigame() and !is_in_bounce_back
-
