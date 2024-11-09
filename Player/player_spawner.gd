@@ -6,6 +6,7 @@ var player_scene = preload("res://Player/player.tscn")
 # TODO check this again tomorrow
 # this fixes a problem on my device where 2 players are spawned
 # outside of the arena bounds and after they die, they respawn outside again
+# the fix seems to work because _Input() is called before _ready()
 func _Input() -> void:
     for device in Input.get_connected_joypads():
         spawn_player(device)
