@@ -18,7 +18,7 @@ shader_parameter/threshold = 0.9
 radius = 26.9258
 
 [node name="Area2D" type="Area2D"]
-scale = Vector2(0.2, 0.2)
+scale = Vector2(0.2, 0.1)
 script = ExtResource("1_o8dmo")
 throw_curve = SubResource("Curve_ne7yh")
 time_factor = 2.0

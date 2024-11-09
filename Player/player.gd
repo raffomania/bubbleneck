@@ -22,13 +22,14 @@ var radius := 20
 var dead := false
 @export
 var respawn_time := 3.0
+@export
+var dash_range := 10
 
 @onready
 var bubble_sprite := $BubbleSprite
 
 var weapon
 var dead_color := Color.RED
-var dash_range := 10
 var time := 0.0
 var is_dashing := false
 var dash_on_cooldown := false
