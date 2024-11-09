@@ -1,7 +1,5 @@
 extends Node2D
 
-var minigame_scene = preload("res://Minigame/Minigame.tscn")
-
 # Describes whether the Bottle is popped.
 var popped = false
 # Seconds until bottle pops.
@@ -99,20 +97,8 @@ func _on_area_entered_entrance(area: Area2D) -> void:
     if not is_instance_of(area, Player) or not popped:
         return
 
-    start_minigame(area)
+    (area as Player).start_minigame()
 
-func start_minigame(player: Player):
-    if player.is_in_minigame:
-        return
-
-    var minigame = minigame_scene.instantiate()
-    minigame.color = player.player_color
-    minigame.device = player.device
-    player.is_in_minigame = true
-    player.add_child(minigame)
-    await minigame.finished
-    player.is_in_minigame = false
-    minigame.queue_free()
 
 func get_bottle_floor(offset: int) -> Vector2:
     var bottle_size = $Sprite2D.get_rect().size

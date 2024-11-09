@@ -3,6 +3,7 @@ extends Area2D
 class_name Player
 
 var weapon_scene = preload("res://Weapon/weapon.tscn")
+var minigame_scene = preload("res://Minigame/Minigame.tscn")
 
 @export
 var device := 0
@@ -22,7 +23,7 @@ var bubble_sprite := $BubbleSprite
 
 var weapon
 var dead_color := Color.BLACK
-var is_in_minigame := false
+var minigame = null
 
 # ----- Dash related variables ----- 
 # The curve that represents the the player dash movement.
@@ -79,7 +80,7 @@ func _process(delta: float) -> void:
         bubble_sprite.rotation = direction.angle()
 
     var is_attacking = is_instance_valid(weapon) and (weapon.is_stabbing or weapon.attack_button_pressed)
-    if not is_attacking and not is_in_minigame:
+    if not is_attacking and not is_in_minigame():
         # Move into the direction indicated by controller or keyboard
         position += dash_offset + direction * delta * movespeed
     
@@ -171,6 +172,7 @@ func kill():
         return
 
     dead = true
+    stop_minigame()
     set_player_color(dead_color)
     find_child('deathParticles').restart()
     find_child('deathParticles').emitting = true
@@ -192,16 +194,33 @@ func respawn():
     queue_redraw()
 
 func get_respawn_position() -> Vector2:
-    var rand_offset = Vector2(randf() * 100 -50 , randf() * 100 - 50)
+    var rand_offset = Vector2(randf() * 100 - 50, randf() * 100 - 50)
 
     if (false):
         return get_viewport_rect().size / 2
     else:
         return $"../Bottle".get_bottle_floor(200) + rand_offset
     
-
 func is_keyboard_player():
     return device < 0
 
 func get_keyboard_player_prefix():
     return "kb" + str(abs(device))
+
+func is_in_minigame():
+    return is_instance_valid(minigame)
+
+func start_minigame():
+    if is_in_minigame():
+        return
+
+    minigame = minigame_scene.instantiate()
+    minigame.color = player_color
+    minigame.device = device
+    add_child(minigame)
+
+func stop_minigame():
+    if not is_in_minigame():
+        return
+    
+    minigame.queue_free()
