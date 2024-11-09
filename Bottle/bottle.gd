@@ -111,10 +111,10 @@ func _on_area_entered_entrance(area: Area2D) -> void:
     var player = area as Player
     var minigame = player.start_minigame()
     if is_instance_valid(minigame):
-        minigame.finished.connect(func(): self.minigame_finished(player, minigame))
+        minigame.finished.connect(func(): self.minigame_finished(player))
 
 
-func minigame_finished(player: Player, minigame):
+func minigame_finished(player: Player):
     if player_has_entered:
         return
 
