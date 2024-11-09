@@ -117,3 +117,35 @@ monitorable = false
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="BodyArea"]
 position = Vector2(-270.001, 410)
 polygon = PackedVector2Array(-0.515991, -240, 9.48401, -273.333, 52.8174, -343.333, 152.817, -463.333, 166.151, -786.667, 166.151, -906.667, 156.151, -933.333, 166.151, -1010, 259.484, -1016.67, 349.484, -1013.33, 359.484, -983.333, 359.484, -966.667, 352.817, -870, 359.484, -590, 372.817, -456.667, 392.817, -443.333, 466.151, -340, 522.817, -226.667, 529.484, 916.667, 519.484, 976.667, 489.484, 1003.33, 59.484, 1010, 56.1507, 1010, 16.1507, 973.333, 2.81735, 946.667)
+
+[node name="BodyTopLeft" type="Area2D" parent="."]
+position = Vector2(-38.9666, -820)
+monitorable = false
+
+[node name="CollisionTopLeft" type="CollisionPolygon2D" parent="BodyTopLeft"]
+position = Vector2(-247.7, 820)
+polygon = PackedVector2Array(206.667, -913.333, 232.818, -33.3334, -3.84903, -33.3334, -3.84903, -236.667, 6.15097, -273.333, 49.4843, -343.333, 149.484, -463.333, 162.818, -776.667, 162.818, -910, 152.818, -933.333, 156.151, -973.333)
+
+[node name="BodyTopRight" type="Area2D" parent="."]
+position = Vector2(-19.4833, -410)
+monitorable = false
+
+[node name="CollisionTopRight" type="CollisionPolygon2D" parent="BodyTopRight"]
+position = Vector2(-540.002, 820)
+polygon = PackedVector2Array(532.819, -446.667, 796.152, -443.333, 796.152, -636.667, 739.485, -753.333, 662.819, -856.667, 646.152, -866.667, 632.819, -1003.33, 626.152, -1280, 632.819, -1376.67, 622.819, -1383.33, 579.485, -1320)
+
+[node name="BodyBottomLeft" type="Area2D" parent="."]
+position = Vector2(-19.4833, -410)
+monitorable = false
+
+[node name="CollisionBottomLeft" type="CollisionPolygon2D" parent="BodyBottomLeft"]
+position = Vector2(-1080.52, 1643.33)
+polygon = PackedVector2Array(1042.82, -1183.33, 916.67, -549.997, 866.67, -353.33, 826.154, -256.667, 810, -286.667, 806.154, -380, 806.154, -1183.33)
+
+[node name="BodyBottomRight" type="Area2D" parent="."]
+position = Vector2(-19.4833, -410)
+monitorable = false
+
+[node name="CollisionBottomRight" type="CollisionPolygon2D" parent="BodyBottomRight"]
+position = Vector2(-2161.03, 3286.67)
+polygon = PackedVector2Array(2300.51, -2293.34, 2387.18, -1980, 2410.52, -1900, 2420.52, -1963.33, 2420.52, -2823.33, 2197.18, -2823.33)

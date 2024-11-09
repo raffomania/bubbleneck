@@ -27,6 +27,14 @@ var entrance_area: Area2D = $EntranceArea
 var bottle_cap: Sprite2D = $BottleCap
 @onready
 var body_area: Area2D = $BodyArea
+@onready
+var top_left_area: Area2D = $BodyTopLeft
+@onready
+var top_right_area: Area2D = $BodyTopRight
+@onready
+var bottom_left_area: Area2D = $BodyBottomLeft
+@onready
+var bottom_right_area: Area2D = $BodyBottomRight
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -45,6 +53,10 @@ func _ready() -> void:
     inside_particles = $Line2D/InsideParticles
     entrance_area.area_entered.connect(_on_area_entered_entrance)
     body_area.area_entered.connect(_on_area_entered_body)
+    top_left_area.area_entered.connect(_on_top_left_entered_body)
+    top_right_area.area_entered.connect(_on_top_right_entered_body)
+    bottom_left_area.area_entered.connect(_on_bottom_left_entered_body)
+    bottom_right_area.area_entered.connect(_on_bottom_right_entered_body)
 
 
 func _process(delta: float) -> void:
@@ -143,6 +155,23 @@ func _on_area_entered_body(area: Area2D) -> void:
         var direction = (player.global_position - get_viewport_rect().size / 2).normalized()
         var strenght_factor = 100
         player.bounce_back(direction * strenght_factor)
+       
+func _on_top_left_entered_body(area: Area2D) -> void:
+    if is_instance_of(area, Player) and not player_has_entered:
+        hit(0.1)
+
+func _on_top_right_entered_body(area: Area2D) -> void:
+    if is_instance_of(area, Player) and not player_has_entered:
+        hit(-0.1)
+
+func _on_bottom_left_entered_body(area: Area2D) -> void:
+    if is_instance_of(area, Player) and not player_has_entered:
+        hit(-0.1)
+
+func _on_bottom_right_entered_body(area: Area2D) -> void:
+    if is_instance_of(area, Player) and not player_has_entered:
+        hit(0.1)
+
 
 
 func get_bottle_floor(offset: int) -> Vector2:
