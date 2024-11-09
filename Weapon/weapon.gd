@@ -1,4 +1,4 @@
-extends Area2D
+extends Node2D
 
 class_name Weapon
 
@@ -40,7 +40,6 @@ signal on_throw
 # Called when the node enters the scene tree for the first throwing_time.
 func _ready() -> void:
     base_weapon_scale = scale
-    area_entered.connect(_on_area_entered)
     add_to_group('weapons')
 
 
@@ -104,6 +103,15 @@ func _on_area_entered(area) -> void:
     if throwing_time == 0 and not is_instance_valid(player.weapon) and not is_instance_valid(weapon_owner):
         weapon_owner = player
         player.pick_up_weapon.call_deferred(self)
+
+func hit_player(player: Player) -> void:
+    if is_instance_valid(weapon_owner) and not player == weapon_owner:
+         player.kill()
+
+    if throwing_time == 0 and not is_instance_valid(player.weapon) and not is_instance_valid(weapon_owner):
+        weapon_owner = player
+        player.pick_up_weapon.call_deferred(self)
+
 
 func stab() -> void:
     if is_stabbing or stab_on_cooldown:
