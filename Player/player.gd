@@ -25,6 +25,7 @@ var is_in_bounce_back := false
 
 var weapon
 var dead_color := Color.BLACK
+var stage_lost := false
 
 # ----- Minigame ----- 
 var minigame = null
@@ -248,6 +249,8 @@ func kill():
     respawn()
 
 func respawn():
+    if stage_lost:
+        return
     dead = false
     # Spawn protection
     make_invincible(spawn_protection_duration)
@@ -304,6 +307,7 @@ func win():
         weapon.queue_free()
     for player in get_tree().get_nodes_in_group("players"):
         if player != self:
+            player.stage_lost = true
             player.kill()
 
 func bounce_back(direction: Vector2):
