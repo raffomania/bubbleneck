@@ -157,22 +157,22 @@ func _on_area_entered_body(area: Area2D) -> void:
         player.bounce_back(direction * strenght_factor)
        
 func _on_top_left_entered_body(area: Area2D) -> void:
-    if is_instance_of(area, Player) and not player_has_entered:
-        hit(0.25)
+    hit_bottle(area, 1)
 
 func _on_top_right_entered_body(area: Area2D) -> void:
-    if is_instance_of(area, Player) and not player_has_entered:
-        hit(-0.25)
+    hit_bottle(area, -1)
 
 func _on_bottom_left_entered_body(area: Area2D) -> void:
-    if is_instance_of(area, Player) and not player_has_entered:
-        hit(-0.25)
+    hit_bottle(area, -1)
 
 func _on_bottom_right_entered_body(area: Area2D) -> void:
-    if is_instance_of(area, Player) and not player_has_entered:
-        hit(0.25)
+    hit_bottle(area, 1)
 
-
+func hit_bottle(area: Area2D, direction: int) -> void:
+    if is_instance_of(area, WeaponHitbox) and not player_has_entered:
+        var weapon = area.get_parent() as Weapon
+        if weapon.is_throwing or weapon.is_stabbing:
+            hit(0.25 * direction)
 
 func get_bottle_floor(offset: int) -> Vector2:
     var bottle_size = $Line2D.get_viewport_rect().size
