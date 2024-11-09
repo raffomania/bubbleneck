@@ -47,7 +47,7 @@ func _process(delta: float) -> void:
         pop_countdown -= delta
 
     # Check if the bottle should pop.
-    if pop_countdown <= 0:
+    if pop_countdown <= 0 or Input.is_action_just_pressed("debug_pop_bottle"):
         popped = true
         pop_bottle()
 
