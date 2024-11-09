@@ -12,45 +12,69 @@ var throw_range_factor := 1.0
 var stab_cooldown_seconds: float
 @export
 var stab_duration_seconds: float
+@export
+var stab_button_press_threshold_seconds: float
 
-var time := 0.0
+var throwing_time := 0.0
 var is_throwing := false
 var is_stabbing := false
 var stab_on_cooldown := false
 var dir
 var weapon_owner
+var attack_button_pressed := false
+var attack_button_pressed_since: float
 
-# Called when the node enters the scene tree for the first time.
+signal on_throw
+
+# Called when the node enters the scene tree for the first throwing_time.
 func _ready() -> void:
     area_entered.connect(_on_area_entered)
 
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
+# Called every frame. 'delta' is the elapsed throwing_time since the previous frame.
 func _process(delta: float) -> void:
-
     if is_throwing:
-        time += delta * time_factor
-        var curve_value = dash_curve.sample(time)
+        throwing_time += delta * time_factor
+        var curve_value = dash_curve.sample(throwing_time)
         throw_distance = curve_value * throw_range_factor
         global_position += dir * delta * throw_distance
 
-    if time > 1.0:
+    if throwing_time > 1.0:
         is_throwing = false
-        time = 0
+        throwing_time = 0
+
+    if attack_button_pressed:
+        attack_button_pressed_since += delta
 
 
-func throw(direction_vector: Vector2) -> void:
+func set_attack_button_pressed(now_pressed: bool) -> void:
+    var just_pressed = not attack_button_pressed and now_pressed
+    var just_released = attack_button_pressed and not now_pressed
+    if just_pressed:
+        attack_button_pressed = true
+    if just_released:
+        if attack_button_pressed_since < stab_button_press_threshold_seconds:
+            stab()
+        else:
+            throw()
+        attack_button_pressed = false
+        attack_button_pressed_since = 0.0
+
+func throw() -> void:
+    dir = Vector2(1, 0).rotated(global_rotation)
+    var main_scene = get_tree().get_root().get_node("Main")
+    reparent(main_scene)
     is_throwing = true
-    dir = direction_vector
+    on_throw.emit()
 
 func _on_area_entered(area) -> void:
-    if time <= 1 and time > 0 and area.has_method("kill") and not area == weapon_owner:
-        area.kill()
+    if throwing_time <= 1 and throwing_time > 0 and area.has_method("kill") and not area == weapon_owner:
+         area.kill()
 
-    if time == 0 and area.has_method("kill") and not area.holding_weapon:
+    if throwing_time == 0 and area.has_method("kill") and not area.holding_weapon:
         weapon_owner = area
         area.pick_up_weapon(self)
-        
+
     if is_stabbing and area.has_method("kill"):
         area.kill()
 

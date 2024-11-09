@@ -24,6 +24,9 @@ var respawn_time := 3.0
 @onready
 var bubble_sprite := $BubbleSprite
 
+@onready
+var weapon := $Weapon
+
 var dead_color := Color.RED
 var dash_range := 10
 var time := 0.0
@@ -31,13 +34,13 @@ var is_dashing := false
 var dash_on_cooldown := false
 var holding_weapon := true
     
-func setup_player():
-    set_player_color(player_color)
-    setup_weapon()
-
 func _ready():
     add_to_group('players')
     setup_player()
+
+func setup_player():
+    set_player_color(player_color)
+    pick_up_weapon(weapon)
 
 func _process(delta: float) -> void:
     if (dead):
@@ -54,8 +57,10 @@ func _process(delta: float) -> void:
         if Input.is_action_just_pressed(prefix + "_dash") and not dash_on_cooldown:
             is_dashing = true
 
-        if Input.is_action_just_pressed(prefix + "_throw"):
-            throw_weapon(dir)
+        if Input.is_action_just_pressed(prefix + "_throw") and holding_weapon:
+            weapon.set_attack_button_pressed(true)
+        elif holding_weapon:
+            weapon.set_attack_button_pressed(false)
 
     else:
         # Player is using a controller
@@ -65,11 +70,10 @@ func _process(delta: float) -> void:
         if Input.is_joy_button_pressed(device, JOY_BUTTON_A) and not dash_on_cooldown:
             is_dashing = true
 
-        if Input.is_joy_button_pressed(device, JOY_BUTTON_B):
-            throw_weapon(dir)
-
-        if Input.is_joy_button_pressed(device, JOY_BUTTON_X):
-            stab_weapon()
+        if Input.is_joy_button_pressed(device, JOY_BUTTON_B) and holding_weapon:
+            weapon.set_attack_button_pressed(true)
+        elif holding_weapon:
+            weapon.set_attack_button_pressed(false)
 
     var curve_value = dash_curve.sample(time)
     dash_offset.x = curve_value * dir.x
@@ -96,33 +100,23 @@ func stop_dashing():
 
 func set_player_color(color: Color):
     modulate = color
-    var weapon = $'Weapon/WeaponSprite'
-    weapon.material.set("shader_parameter/color", color)
+    var sprite = $'Weapon/WeaponSprite'
+    sprite.material.set("shader_parameter/color", color)
 
-
-func setup_weapon():
-    var weapon = $'Weapon/WeaponSprite'
-    weapon.material.set("shader_parameter/color", player_color)
-    
-func throw_weapon(direction: Vector2) -> void:
-    if holding_weapon:
-        var main_scene = get_tree().get_root().get_node("Main")
-        var weapon = $Weapon
-        weapon.reparent(main_scene)
-        weapon.throw(direction)
-        weapon.weapon_owner = self
-
-    holding_weapon = false
-
-func pick_up_weapon(weapon) -> void:
+func pick_up_weapon(new_weapon) -> void:
+    var sprite = weapon.get_node('WeaponSprite')
+    sprite.material.set("shader_parameter/color", player_color)
+    weapon = new_weapon
     weapon.reparent.call_deferred(self)
     weapon.rotation = rotation + PI / 2.0
+    weapon.weapon_owner = self
+
+    weapon.on_throw.connect(on_throw_weapon)
 
     holding_weapon = true
 
-func stab_weapon():
-    if is_holding_weapon:
-        $Weapon.stab()
+func on_throw_weapon():
+    holding_weapon = false
 
 func kill():
     dead = true
