@@ -113,6 +113,9 @@ func _process(delta: float) -> void:
     # Googly eyes
     if direction:
         $GooglyEyes.walking_animation()
+    else:
+        $GooglyEyes.reset_googly_position()
+
 
 # Handle the player dash
 # Returns a Vector that indicates the dash direction.

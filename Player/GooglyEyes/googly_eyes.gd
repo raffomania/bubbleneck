@@ -10,6 +10,14 @@ var eternal_time_variable := 0.0
 
 var raising = false
 
+var base_right_eye_position
+
+var base_left_eye_position
+
+func _ready() -> void:
+    base_right_eye_position = $LeftOuter.position
+    base_left_eye_position = $RightOuter.position
+
 func _process(delta: float) -> void:
     eternal_time_variable += delta
 
@@ -17,6 +25,10 @@ func set_player_direction(dir: Vector2, delta: float) -> void:
     var strength = dir.length()
     $LeftOuter/LeftInner.position.y = strength * delta * 5000
     $RightOuter/RightInner.position.y = strength * delta * 5000
+
+func reset_googly_position() -> void:
+    $LeftOuter.position = base_right_eye_position
+    $RightOuter.position = base_left_eye_position
 
 func walking_animation() -> void:
     $LeftOuter.position.y -= sin(eternal_time_variable * time_factor) * 0.5
