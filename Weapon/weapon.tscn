@@ -20,7 +20,7 @@ radius = 26.9258
 [node name="Area2D" type="Area2D"]
 scale = Vector2(0.2, 0.2)
 script = ExtResource("1_o8dmo")
-dash_curve = SubResource("Curve_ne7yh")
+throw_curve = SubResource("Curve_ne7yh")
 time_factor = 2.0
 throw_range_factor = 2000.0
 stab_cooldown_seconds = 0.1

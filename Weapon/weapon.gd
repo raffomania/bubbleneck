@@ -3,7 +3,7 @@ extends Area2D
 @export
 var throw_distance := 0.0
 @export
-var dash_curve: Curve
+var throw_curve: Curve
 @export
 var time_factor := 1.0
 @export
@@ -37,7 +37,7 @@ func _ready() -> void:
 func _process(delta: float) -> void:
     if is_throwing:
         throwing_time += delta * time_factor
-        var curve_value = dash_curve.sample(throwing_time)
+        var curve_value = throw_curve.sample(throwing_time)
         throw_distance = curve_value * throw_range_factor
         global_position += dir * delta * throw_distance
 
