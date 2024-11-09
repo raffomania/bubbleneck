@@ -1,4 +1,6 @@
-extends Node2D
+extends Area2D
+
+var weapon_scene = preload("res://Weapon/weapon.tscn")
 
 @export
 var device := 0
@@ -17,13 +19,14 @@ var dead := false
 @export
 var respawn_time := 3.0
 
+@onready
+var bubble_sprite := $BubbleSprite
+
 var dead_color := Color.RED
 var dash_range := 10
 var time := 0.0
 var is_dashing := false
-
-@onready
-var bubble_sprite := $BubbleSprite
+var is_holding_weapon := true
     
 func _draw() -> void:
     if (dead):
@@ -50,6 +53,9 @@ func _process(delta: float) -> void:
         if Input.is_action_just_pressed(prefix + "_dash"):
             is_dashing = true
 
+        if Input.is_action_just_pressed(prefix + "_throw"):
+            throw_weapon(dir)
+
     else:
         # Player is using a controller
         dir = Vector2(1, 0) * Input.get_joy_axis(device, JOY_AXIS_LEFT_X)
@@ -57,6 +63,10 @@ func _process(delta: float) -> void:
         
         if Input.is_joy_button_pressed(device, JOY_BUTTON_A):
             is_dashing = true
+
+
+        if Input.is_joy_button_pressed(device, JOY_BUTTON_B):
+            throw_weapon(dir)
 
     var curve_value = dash_curve.sample(time)
     dash_offset.x = curve_value * dir.x
@@ -82,16 +92,19 @@ func get_keyboard_player_prefix():
     return "kb" + str(abs(device))
 
 func setup_weapon():
-    var weapon = $Weapon
+    var weapon = $'Weapon/WeaponSprite'
     weapon.material.set("shader_parameter/color", player_color)
     
-func respawn():
-    dead = false
-    find_child('deathParticles').emitting = false
-    var viewport = get_viewport_rect()
-    global_position.x = viewport.size.x / 2
-    global_position.y = viewport.size.y / 2
-    queue_redraw()
+func throw_weapon(direction: Vector2):
+    if is_holding_weapon:
+        var weapon = weapon_scene.instantiate()
+        var main_scene = get_tree().get_root().get_node("Main")
+        main_scene.add_child(weapon)
+        weapon.global_position = global_position
+        weapon.throw(direction)
+        weapon.rotation = direction.angle() + PI / 2
+
+    is_holding_weapon = false
 
 func kill():
     dead = true
@@ -100,3 +113,11 @@ func kill():
     await get_tree().create_timer(respawn_time).timeout
     print('respawn')
     respawn()
+
+func respawn():
+    dead = false
+    find_child('deathParticles').emitting = false
+    var viewport = get_viewport_rect()
+    global_position.x = viewport.size.x / 2
+    global_position.y = viewport.size.y / 2
+    queue_redraw()
