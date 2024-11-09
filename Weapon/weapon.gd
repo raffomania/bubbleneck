@@ -92,10 +92,7 @@ func stick() -> void:
     throwing_time = 0
 
 
-func _on_area_entered(area) -> void:
-    if not is_instance_of(area, Player):
-        return
-
+func attach_to_player(area) -> void:
     var player = area as Player
     if is_instance_valid(weapon_owner) and not player == weapon_owner:
         player.kill()

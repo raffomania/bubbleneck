@@ -1,10 +1,11 @@
-[gd_scene load_steps=9 format=3 uid="uid://b70qbilpbes2r"]
+[gd_scene load_steps=11 format=3 uid="uid://b70qbilpbes2r"]
 
 [ext_resource type="Script" path="res://Weapon/weapon.gd" id="1_o8dmo"]
 [ext_resource type="Shader" path="res://Weapon/weapon.gdshader" id="1_oyge1"]
 [ext_resource type="Texture2D" uid="uid://rxiqkyxcive4" path="res://Weapon/weapon.png" id="2_pf2np"]
 [ext_resource type="Texture2D" uid="uid://3sm6210qqkwn" path="res://Weapon/star01.png" id="4_olwv6"]
 [ext_resource type="Script" path="res://Weapon/hitbox.gd" id="5_mpj1i"]
+[ext_resource type="Script" path="res://Weapon/collectbox.gd" id="6_hdvvb"]
 
 [sub_resource type="Curve" id="Curve_ne7yh"]
 _data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.180628, 0.864162), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
@@ -18,6 +19,9 @@ shader_parameter/threshold = 0.9
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_hbfi2"]
 radius = 4.60977
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_6pi77"]
+size = Vector2(4.375, 32.25)
 
 [node name="Weapon" type="Node2D"]
 scale = Vector2(2, 1)
@@ -48,3 +52,10 @@ script = ExtResource("5_mpj1i")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
 position = Vector2(-0.5, -14)
 shape = SubResource("CircleShape2D_hbfi2")
+
+[node name="Collectbox" type="Area2D" parent="."]
+script = ExtResource("6_hdvvb")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Collectbox"]
+position = Vector2(-0.5, 7)
+shape = SubResource("RectangleShape2D_6pi77")
