@@ -25,9 +25,8 @@ var respawn_time := 3.0
 
 @onready
 var bubble_sprite := $BubbleSprite
-@onready
-var weapon := $Weapon
 
+var weapon
 var dead_color := Color.RED
 var dash_range := 10
 var time := 0.0
@@ -36,11 +35,8 @@ var dash_on_cooldown := false
     
 func _ready():
     add_to_group('players')
-    setup_player()
-
-func setup_player():
+    get_new_weapon()
     set_player_color(player_color)
-    pick_up_weapon(weapon)
 
 func _process(delta: float) -> void:
     if (dead):
@@ -107,6 +103,11 @@ func set_player_color(color: Color):
         var sprite = weapon.get_node('WeaponSprite')
         sprite.material.set("shader_parameter/color", color)
 
+func get_new_weapon() -> void:
+    var new_weapon = weapon_scene.instantiate()
+    add_child(new_weapon)
+    pick_up_weapon(new_weapon)
+
 func pick_up_weapon(new_weapon) -> void:
     weapon = new_weapon
     var sprite = weapon.get_node('WeaponSprite')
@@ -140,6 +141,8 @@ func respawn():
     var viewport = get_viewport_rect()
     global_position.x = viewport.size.x / 2
     global_position.y = viewport.size.y / 2
+    if not is_instance_valid(weapon):
+        get_new_weapon()
     queue_redraw()
 
 func is_keyboard_player():
