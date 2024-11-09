@@ -31,15 +31,13 @@ var is_dashing := false
 var dash_on_cooldown := false
 var holding_weapon := true
     
-func _draw() -> void:
-    if (dead):
-        return
-    var color = dead_color if dead else player_color
-    draw_circle(Vector2.ZERO, radius, color, 2)
+func setup_player():
+    set_player_color(player_color)
+    setup_weapon()
 
 func _ready():
     add_to_group('players')
-    setup_weapon()
+    setup_player()
 
 func _process(delta: float) -> void:
     if (dead):
@@ -96,6 +94,12 @@ func stop_dashing():
     await get_tree().create_timer(dash_cooldown_seconds).timeout
     dash_on_cooldown = false
 
+func set_player_color(color: Color):
+    modulate = color
+    var weapon = $'Weapon/WeaponSprite'
+    weapon.material.set("shader_parameter/color", color)
+
+
 func setup_weapon():
     var weapon = $'Weapon/WeaponSprite'
     weapon.material.set("shader_parameter/color", player_color)
@@ -122,7 +126,7 @@ func stab_weapon():
 
 func kill():
     dead = true
-    queue_redraw()
+    set_player_color(dead_color)
     find_child('deathParticles').emitting = true
     $BubbleSprite.visible = false
     await get_tree().create_timer(respawn_time).timeout
@@ -131,6 +135,7 @@ func kill():
 
 func respawn():
     dead = false
+    set_player_color(player_color)
     find_child('deathParticles').emitting = false
     $BubbleSprite.visible = true
     var viewport = get_viewport_rect()
