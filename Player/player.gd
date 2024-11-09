@@ -32,25 +32,35 @@ var dash_curve: Curve
 var is_dashing := false
 # The timer that tracks how far we're in a dash.
 @export
-var dash_timer := 0.0
+var dash_timer: float = 0.0
 # How far the player should be able to dash.
 @export
 var dash_speed := 6
 # The time how long a dash should last.
-var dash_duration := 0.10
+var dash_duration: float = 0.10
 # The timer that tracks how long the dash is on cooldown.
-var dash_cooldown: float = 0
+var dash_cooldown: float = 0.0
 # How long a player needs to wait until they can dash again
-var dash_cooldown_seconds := 1.0
+var dash_cooldown_seconds: float = 1.0
+
+# ----- Invincibility related variables ----- 
+var spawn_protection_duration: float = 1.5
+var dash_protection_duration: float = 0.5
+var invincibility_countdown: float = 0.0
 
 func _ready():
     add_to_group('players')
     get_new_weapon()
     set_player_color(player_color)
 
+    # Spawn protection
+    make_invincible(spawn_protection_duration)
+
 func _process(delta: float) -> void:
     if (dead):
         return
+
+    handle_invincibility(delta)
 
     var direction: Vector2
     if is_keyboard_player():
@@ -108,9 +118,11 @@ func handle_dash(delta: float, direction: Vector2) -> Vector2:
             var prefix = get_keyboard_player_prefix()
             if Input.is_action_just_pressed(prefix + "_dash"):
                 is_dashing = true
+                make_invincible(dash_protection_duration)
         else:
             if Input.is_joy_button_pressed(device, JOY_BUTTON_A):
                 is_dashing = true
+                make_invincible(dash_protection_duration)
 
         # Return early if no button is pressed
         if not is_dashing:
@@ -139,6 +151,20 @@ func handle_dash(delta: float, direction: Vector2) -> Vector2:
         dash_cooldown = dash_cooldown_seconds
 
     return dash_offset
+
+# Handle all logic around the player's invincibility (blinking + timer)
+func handle_invincibility(delta: float):
+    if is_invincible():
+        invincibility_countdown -= delta
+
+
+func make_invincible(duration: float):
+    invincibility_countdown = duration
+
+
+func is_invincible() -> bool:
+    return invincibility_countdown > 0.0
+
 
 func set_player_color(color: Color):
     $BubbleSprite.self_modulate = color
@@ -170,6 +196,9 @@ func on_throw_weapon():
 func kill():
     if dead:
         return
+    # Don't kill invincible players.
+    if is_invincible():
+        return
 
     dead = true
     stop_minigame()
@@ -184,6 +213,9 @@ func kill():
 
 func respawn():
     dead = false
+    # Spawn protection
+    make_invincible(spawn_protection_duration)
+
     set_player_color(player_color)
     find_child('deathParticles').emitting = false
     $BubbleSprite.visible = true
