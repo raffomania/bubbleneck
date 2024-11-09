@@ -9,6 +9,7 @@ var label_children: Array[PressLabel] = []
 var device: int = -1
 var axis_threshold = 0.5
 var color := Color.HOT_PINK
+var on_cooldown := false
 
 var is_finished := false
 
@@ -39,11 +40,24 @@ func _process(_delta: float) -> void:
     if label_to_press == null:
         return
 
-    if get_pressed_direction() == label_to_press.dir:
+    var pressed_direction = get_pressed_direction()
+    if pressed_direction == label_to_press.dir and not on_cooldown:
         label_to_press.set_pressed(true)
+        on_cooldown = true
         if find_next_label_to_press() == null:
-            is_finished = true
-            finished.emit()
+            finish()
+
+    if pressed_direction == "":
+        on_cooldown = false
+
+func finish():
+    is_finished = true
+    finished.emit()
+    for label in label_children:
+        await get_tree().create_timer(0.02).timeout
+        await label.vanish_animation()
+        label.queue_free()
+    queue_free()
 
 func find_next_label_to_press():
     for child in label_children:

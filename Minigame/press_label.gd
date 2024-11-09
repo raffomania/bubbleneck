@@ -34,6 +34,13 @@ func set_pressed(new_pressed: bool):
     reset_tween.tween_property(self, "scale", Vector2(1, 1), 0.1)
     reset_tween.tween_property(self, "rotation", 0, 0.05)
 
+func vanish_animation():
+    var tween = create_tween().parallel()
+    tween.tween_property(self, "scale", Vector2(0.05, 1.5), 0.05)
+    tween.tween_property(self, "rotation", PI / 12, 0.05)
+    await tween.finished
+
+
 func update_texture():
     if is_pressed:
         self.texture = pressed_textures[dir]
