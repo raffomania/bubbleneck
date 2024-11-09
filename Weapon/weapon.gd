@@ -14,6 +14,8 @@ var stab_cooldown_seconds: float
 var stab_duration_seconds: float
 @export
 var stab_button_press_threshold_seconds: float
+@export
+var stab_distance: int = 30
 
 var throwing_time := 0.0
 var is_throwing := false
@@ -91,7 +93,7 @@ func stab() -> void:
     is_stabbing = true
 
     var x_before = position.x
-    position.x += 30
+    position.x += stab_distance
 
     await get_tree().create_timer(stab_duration_seconds).timeout
 
