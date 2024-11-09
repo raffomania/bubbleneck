@@ -104,6 +104,7 @@ func start_minigame(player: Player):
 
     var minigame = minigame_scene.instantiate()
     minigame.color = player.player_color
+    minigame.device = player.device
     player.is_in_minigame = true
     player.add_child(minigame)
     await minigame.finished
@@ -113,4 +114,3 @@ func start_minigame(player: Player):
 func get_bottle_floor(offset: int) -> Vector2:
     var bottle_size = $Sprite2D.get_rect().size
     return to_global(Vector2(0, (bottle_size.y / 2) + offset))
-

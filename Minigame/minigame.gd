@@ -54,7 +54,6 @@ func get_pressed_direction() -> String:
     if is_keyboard_player():
         var prefix = get_keyboard_player_prefix()
         dir = Input.get_vector(prefix + "_left", prefix + "_right", prefix + "_up", prefix + "_down")
-
     else:
         # Player is using a controller
         dir = Vector2(1, 0) * Input.get_joy_axis(device, JOY_AXIS_LEFT_X)
