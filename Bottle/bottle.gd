@@ -22,6 +22,8 @@ var inside_particles: GPUParticles2D
 
 @onready
 var entrance_area: Area2D = $EntranceArea
+@onready
+var bottle_cap: Sprite2D = $BottleCap
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -54,6 +56,7 @@ func _process(delta: float) -> void:
 
 # Emits the popping particles.
 func pop_bottle() -> void:
+    bottle_cap.visible = false
     inside_particles.lifetime = 0.8
     inside_particles.emitting = false
 
