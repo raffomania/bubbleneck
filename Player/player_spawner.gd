@@ -12,7 +12,7 @@ var player_scene = preload("res://Player/player.tscn")
 func _ready() -> void:
     # Wait until everything's ready
     await get_tree().create_timer(0.1).timeout
-    # 2 for keyboard
+    #+ 2 for keyboard
     var num_devices = Input.get_connected_joypads().size() + 2
 
     for device in Input.get_connected_joypads():
@@ -42,6 +42,6 @@ func spawn_player(device: int, num_devices: int):
 func random_player_color(player_index: int, num_players: int):
     # +2 because of 2 negative keyboard devices
     var hue = (float(player_index + 2) / float(num_players))
-    print("hue: ", hue, " player_index: ", player_index, " num_players: ", num_players)
+    # print("hue: ", hue, " player_index: ", player_index, " num_players: ", num_players)
     return Color.from_hsv(hue, 0.8, 0.9, 1)
 

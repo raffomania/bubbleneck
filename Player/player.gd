@@ -90,6 +90,9 @@ func _process(delta: float) -> void:
         rotation = dir.angle()
         bubble_sprite.rotation = dir.angle()
     position += dash_offset + dir * delta * movespeed
+    
+    # fix player sprite rotation so sprite highlight doesn't rotate
+    $BubbleSprite.global_rotation_degrees= 0
 
 func stop_dashing():
     is_dashing = false
