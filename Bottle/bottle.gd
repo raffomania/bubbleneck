@@ -7,8 +7,8 @@ var popped = false
 # Seconds until bottle pops.
 var pop_countdown = 0
 # Min/Max Time until bottle pops.
-var pop_countdown_min = 30
-var pop_countdown_max = 60
+var pop_countdown_min = 10
+var pop_countdown_max = 20
 
 # The current rotational speed of the bottle
 var rotation_speed: float = 0.5
