@@ -108,9 +108,12 @@ func stab() -> void:
     is_stabbing = true
 
     var x_before = position.x
-    position.x += stab_distance
+    # Set an in-between hitbox position during the stab to prevent the hitbox missing the enemy
+    position.x += stab_distance / 2
+    await get_tree().create_timer(stab_duration_seconds / 2).timeout
+    position.x += stab_distance / 2
+    await get_tree().create_timer(stab_duration_seconds / 2).timeout
 
-    await get_tree().create_timer(stab_duration_seconds).timeout
 
     position.x = x_before
     is_stabbing = false
