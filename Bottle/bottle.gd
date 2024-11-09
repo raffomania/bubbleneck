@@ -8,8 +8,8 @@ var popped = false
 var pop_countdown = 0
 var pop_countdown_start = 0
 # Min/Max Time until bottle pops.
-var pop_countdown_min = 30
-var pop_countdown_max = 60
+var pop_countdown_min = 20
+var pop_countdown_max = 40
 # Min/Max rate at which the countdown runs.
 var pop_countdown_min_speed = 0.5
 var pop_countdown_max_speed = 1.5
