@@ -33,7 +33,11 @@ func spawn_player(device: int):
     player.name = "Player" + str(device)
     player.device = device
     player.player_color = random_player_color(device)
-    player.global_position = $"../Bottle".get_bottle_floor(20)
+    
+    # player.global_position = player.get_respawn_position()
+    var rand_offset = Vector2(randf() * 100 -50 , randf() * 100 - 50)
+    player.global_position = $"../Bottle".get_bottle_floor(200) + rand_offset 
+
     $'..'.add_child(player)
     spawned_devices.append(device)
 
