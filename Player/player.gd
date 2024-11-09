@@ -263,6 +263,8 @@ func start_minigame():
     minigame.device = device
     add_child(minigame)
 
+    minigame.finished.connect(self.win)
+
     return minigame
 
 func stop_minigame():
@@ -271,6 +273,12 @@ func stop_minigame():
         return
     
     minigame.queue_free()
+
+func win():
+    weapon.queue_free()
+    for player in get_tree().get_nodes_in_group("players"):
+        if player != self:
+            player.kill()
 
 func bounce_back(direction: Vector2):
     var tween = get_tree().create_tween()
