@@ -119,7 +119,6 @@ func minigame_finished(player: Player, minigame):
         return
 
     player_has_entered = true
-    minigame.queue_free()
     # Lock the player to prevent them from moving during the final animation.
     player.allow_movement = false
 
