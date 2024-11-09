@@ -237,7 +237,8 @@ func get_respawn_position() -> Vector2:
     if (false):
         return get_viewport_rect().size / 2
     else:
-        return $"../Bottle".get_bottle_floor(200) + rand_offset
+        var bottle = get_tree().root.get_node("Main/PlayerSpawner").bottle
+        return bottle.get_bottle_floor(200) + rand_offset
     
 func is_keyboard_player():
     return device < 0
@@ -270,5 +271,3 @@ func bounce_back(direction: Vector2):
     allow_movement = false
     tween.tween_property(self, "global_position", global_position + direction, 0.05)
     tween.tween_callback(func(): allow_movement = true)
-
-
