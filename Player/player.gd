@@ -32,7 +32,6 @@ var dash_range := 10
 var time := 0.0
 var is_dashing := false
 var dash_on_cooldown := false
-var holding_weapon := true
     
 func _ready():
     add_to_group('players')
@@ -57,9 +56,9 @@ func _process(delta: float) -> void:
         if Input.is_action_just_pressed(prefix + "_dash") and not dash_on_cooldown:
             is_dashing = true
 
-        if Input.is_action_just_pressed(prefix + "_throw") and holding_weapon:
+        if Input.is_action_just_pressed(prefix + "_throw") and is_instance_valid(weapon):
             weapon.set_attack_button_pressed(true)
-        elif holding_weapon:
+        elif is_instance_valid(weapon):
             weapon.set_attack_button_pressed(false)
 
     else:
@@ -70,9 +69,9 @@ func _process(delta: float) -> void:
         if Input.is_joy_button_pressed(device, JOY_BUTTON_A) and not dash_on_cooldown:
             is_dashing = true
 
-        if Input.is_joy_button_pressed(device, JOY_BUTTON_B) and holding_weapon:
+        if Input.is_joy_button_pressed(device, JOY_BUTTON_B) and is_instance_valid(weapon):
             weapon.set_attack_button_pressed(true)
-        elif holding_weapon:
+        elif is_instance_valid(weapon):
             weapon.set_attack_button_pressed(false)
 
     var curve_value = dash_curve.sample(time)
@@ -113,10 +112,8 @@ func pick_up_weapon(new_weapon) -> void:
 
     weapon.on_throw.connect(on_throw_weapon)
 
-    holding_weapon = true
-
 func on_throw_weapon():
-    holding_weapon = false
+    weapon = null
 
 func kill():
     dead = true
