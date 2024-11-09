@@ -5,8 +5,8 @@
 [ext_resource type="Texture2D" uid="uid://rxiqkyxcive4" path="res://Weapon/weapon.png" id="2_pf2np"]
 
 [sub_resource type="Curve" id="Curve_ne7yh"]
-_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
-point_count = 2
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.180628, 0.864162), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 3
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_7ml6n"]
 resource_local_to_scene = true
