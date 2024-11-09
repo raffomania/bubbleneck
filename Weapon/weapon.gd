@@ -77,6 +77,13 @@ func set_attack_button_pressed(now_pressed: bool) -> void:
         attack_button_pressed = false
         attack_button_pressed_since = 0.0
 
+func cancel_attack_charge():
+    attack_button_pressed = false
+    attack_button_pressed_since = 0.0
+    $Highlight.visible = false
+    $WeaponSprite.scale.x = base_weapon_scale.x
+    position.x = base_weapon_position.x
+
 func throw() -> void:
     dir = Vector2(0, -1).rotated(global_rotation)
     var main_scene = get_tree().get_root().get_node("Main")

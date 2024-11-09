@@ -223,6 +223,9 @@ func kill():
     if is_invincible():
         return
 
+    if is_instance_valid(weapon):
+        weapon.cancel_attack_charge()
+
     dead = true
     stop_minigame()
     set_player_color(dead_color)
