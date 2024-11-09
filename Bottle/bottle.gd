@@ -57,13 +57,16 @@ func _process(delta: float) -> void:
 # Emits the popping particles.
 func pop_bottle() -> void:
     bottle_cap.visible = false
-    inside_particles.lifetime = 0.8
+    inside_particles.lifetime = 1
     inside_particles.emitting = false
 
     bottleneck_particles.emitting = true
+    await get_tree().create_timer(0.7).timeout
     pop_particles.emitting = true
-    await get_tree().create_timer(1.0).timeout
+    await get_tree().create_timer(0.3).timeout
     bottleneck_particles.emitting = false
+    # without this it breaks. do not ask why.
+    await get_tree().create_timer(0.6).timeout
     pop_particles.emitting = false
 
 # Call this to hit the bottle.
