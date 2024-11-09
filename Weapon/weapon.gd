@@ -11,7 +11,7 @@ var time_factor := 1.0
 @export
 var throw_range_factor := 1.0
 @export
-var stab_cooldown_seconds: float
+var stab_cooldown_seconds: float = 0.5
 @export
 var stab_duration_seconds: float
 @export

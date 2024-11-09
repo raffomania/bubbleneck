@@ -32,7 +32,6 @@ script = ExtResource("1_o8dmo")
 throw_curve = SubResource("Curve_ne7yh")
 time_factor = 2.0
 throw_range_factor = 2000.0
-stab_cooldown_seconds = 0.1
 stab_duration_seconds = 0.1
 stab_button_press_threshold_seconds = 0.2
 max_throwing_range_seconds = 1.0
