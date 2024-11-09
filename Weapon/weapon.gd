@@ -54,6 +54,7 @@ func _process(delta: float) -> void:
     if throwing_time > throwing_range_seconds:
         is_throwing = false
         throwing_time = 0
+        weapon_owner = null
 
     if attack_button_pressed:
         attack_button_pressed_since = min(max_throwing_range_seconds, attack_button_pressed_since + delta)
@@ -84,7 +85,6 @@ func throw() -> void:
     reparent(main_scene)
     is_throwing = true
     throwing_range_seconds = attack_button_pressed_since
-    weapon_owner = null
     on_throw.emit()
     
 func stick() -> void:
@@ -102,7 +102,8 @@ func attach_to_player(area) -> void:
 func hit_player(player: Player) -> void:
     # Weapon cannot kill owner and only while throwing or stabbing
     if not player == weapon_owner and (is_throwing or is_stabbing):
-         player.kill()
+        print(player, weapon_owner)
+        player.kill()
 
 
 func stab() -> void:
