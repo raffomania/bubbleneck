@@ -45,6 +45,10 @@ func _ready() -> void:
 
 # Called every frame. 'delta' is the elapsed throwing_time since the previous frame.
 func _process(delta: float) -> void:
+    if is_throwing or is_stabbing or attack_button_pressed or weapon_owner == null:
+        visible = true
+    else:
+        visible = false
     if is_throwing:
         throwing_time += delta * time_factor
         var curve_value = throw_curve.sample(throwing_time)
