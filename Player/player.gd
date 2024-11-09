@@ -62,8 +62,6 @@ func _process(delta: float) -> void:
         if Input.is_joy_button_pressed(device, JOY_BUTTON_A):
             is_dashing = true
 
-    set_weapon_rotation(dir)
-
     var curve_value = dash_curve.sample(time)
     dash_offset.x = curve_value * dir.x
     dash_offset.y = curve_value * dir.y
@@ -75,8 +73,9 @@ func _process(delta: float) -> void:
 
     if is_dashing:
         scale.y = 0.6
-        rotation = dir.angle()
 
+    if dir != Vector2.ZERO:
+        rotation = dir.angle()
     position += dash_offset + dir * delta * movespeed
 
 func is_keyboard_player():
@@ -88,8 +87,6 @@ func get_keyboard_player_prefix():
 func setup_weapon():
     var weapon = $Weapon
     weapon.material.set("shader_parameter/color", player_color)
-    var weapon_offset = 10
-    weapon.position.x += radius + weapon_offset
     
 func respawn():
     dead = false
@@ -98,11 +95,6 @@ func respawn():
     global_position.x = viewport.size.x / 2
     global_position.y = viewport.size.y / 2
     queue_redraw()
-
-func set_weapon_rotation(dir):
-    if (dir == Vector2.ZERO):
-        return
-    rotation = dir.angle() + PI / 2
 
 func kill():
     dead = true

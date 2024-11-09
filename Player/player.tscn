@@ -40,6 +40,8 @@ script = ExtResource("1_02l3o")
 dash_curve = SubResource("Curve_d2kbo")
 
 [node name="Weapon" parent="." instance=ExtResource("2_tyojq")]
+position = Vector2(8, 25)
+rotation = 1.5708
 scale = Vector2(0.2, 0.2)
 
 [node name="deathParticles" type="GPUParticles2D" parent="."]
