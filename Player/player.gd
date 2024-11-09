@@ -286,7 +286,8 @@ func stop_minigame():
     minigame.queue_free()
 
 func win():
-    weapon.queue_free()
+    if is_instance_valid(weapon):
+        weapon.queue_free()
     for player in get_tree().get_nodes_in_group("players"):
         if player != self:
             player.kill()
