@@ -14,6 +14,10 @@ var rotation_speed: float = 0.5
 # `1` equals rotation per second in radians.
 var max_rotation_speed: float = 1
 
+var bottleneck_particles: GPUParticles2D
+var pop_particles: GPUParticles2D
+var inside_particles: GPUParticles2D
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
     # center the bottle
@@ -26,7 +30,11 @@ func _ready() -> void:
     rng.seed = Time.get_unix_time_from_system()
     pop_countdown = rng.randi_range(pop_countdown_min, pop_countdown_max)
 
+    bottleneck_particles = $BottleneckParticles
+    pop_particles = $PopParticles
+    inside_particles = $Sprite2D/InsideParticles
 
+ 
 func _process(delta: float) -> void:
     if not popped:
         rotation += rotation_speed * delta
@@ -35,7 +43,19 @@ func _process(delta: float) -> void:
     # Check if the bottle should pop.
     if pop_countdown <= 0:
         popped = true
+        pop_bottle()
 
+
+# Emits the popping particles.
+func pop_bottle() -> void:
+    inside_particles.lifetime = 0.8
+    inside_particles.emitting = false
+
+    bottleneck_particles.emitting = true
+    pop_particles.emitting = true
+    await get_tree().create_timer(1.0).timeout
+    bottleneck_particles.emitting = false
+    pop_particles.emitting = false
 
 # Call this to hit the bottle.
 # Reduces the countdown until pop and adds some impulse to the bottle.
