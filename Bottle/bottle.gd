@@ -100,6 +100,7 @@ func start_minigame(player: Player):
         return
 
     var minigame = minigame_scene.instantiate()
+    minigame.color = player.player_color
     player.add_child(minigame)
     await minigame.finished
     minigame.queue_free()
