@@ -4,7 +4,7 @@ class_name Minigame
 
 var label_scene = preload("res://Minigame/PressLabel.tscn")
 
-var key_sequence = ["up", "up", "down", "left", "right"]
+var available_directions = ["up", "down", "left", "right"]
 var label_children: Array[PressLabel] = []
 var device: int = -1
 var axis_threshold = 0.5
@@ -20,7 +20,8 @@ func _ready() -> void:
 
 func create_labels():
     var label_position = Vector2.ZERO
-    for dir in key_sequence:
+    for _i in range(0, 5):
+        var dir = available_directions[randi() % available_directions.size()]
         var label: PressLabel = label_scene.instantiate()
         label.set_direction(dir)
         label.position = label_position
