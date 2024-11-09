@@ -119,8 +119,6 @@ func minigame_finished(player: Player):
         return
 
     player_has_entered = true
-    # Lock the player to prevent them from moving during the final animation.
-    player.allow_movement = false
 
     var camera = get_tree().root.get_camera_2d()
     var zoom_tween = create_tween().set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_IN)
