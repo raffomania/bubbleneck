@@ -50,6 +50,11 @@ func _process(delta: float) -> void:
         rotation += rotation_speed * delta
         pop_countdown -= delta
 
+        if rotation_speed > 0:
+            rotation_speed -= delta * 0.05
+        elif rotation_speed < 0:
+            rotation_speed += delta * 0.05
+
     # Check if the bottle should pop.
     if pop_countdown <= 0 or Input.is_action_just_pressed("debug_pop_bottle"):
         popped = true
