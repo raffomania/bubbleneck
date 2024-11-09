@@ -126,3 +126,4 @@ kb2_throw={
 [rendering]
 
 renderer/rendering_method="mobile"
+environment/defaults/default_clear_color=Color(0.794121, 0.794121, 0.794121, 1)

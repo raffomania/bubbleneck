@@ -12,7 +12,7 @@ func _ready() -> void:
     radius = min(viewport.size.x, viewport.size.y) / 2
 
 func _draw() -> void:
-    draw_circle(Vector2(0, 0), radius, Color.BISQUE, 1)
+    draw_circle(Vector2(0, 0), radius, Color(58 / 256.0, 81 / 256.0, 120 / 256.0), 1)
 
 
 func _process(_delta: float) -> void:
