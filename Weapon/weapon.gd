@@ -23,6 +23,7 @@ var max_throwing_range_seconds: float
 
 var throwing_time := 0.0
 var throwing_range_seconds := 0.0
+@export
 var is_throwing := false
 var is_stabbing := false
 var stab_on_cooldown := false
@@ -36,6 +37,7 @@ signal on_throw
 # Called when the node enters the scene tree for the first throwing_time.
 func _ready() -> void:
     area_entered.connect(_on_area_entered)
+    add_to_group('weapons')
 
 
 # Called every frame. 'delta' is the elapsed throwing_time since the previous frame.
@@ -76,6 +78,11 @@ func throw() -> void:
     throwing_range_seconds = attack_button_pressed_since
     weapon_owner = null
     on_throw.emit()
+    
+func stick() -> void:
+    is_throwing = false
+    throwing_time = 0
+
 
 func _on_area_entered(area) -> void:
     if not is_instance_of(area, Player):

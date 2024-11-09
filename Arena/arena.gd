@@ -24,3 +24,9 @@ func _process(_delta: float) -> void:
        var dist = player.global_position.distance_to(center)
        if (!player.dead and dist > radius - player.radius):
            player.kill()
+
+    for node: Node2D in get_tree().get_nodes_in_group('weapons'):
+       var weapon = node as Node2D
+       var dist = weapon.global_position.distance_to(center)
+       if (weapon.is_throwing and dist > radius - 10):
+           weapon.stick()

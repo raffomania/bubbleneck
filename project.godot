@@ -30,6 +30,7 @@ enabled=PackedStringArray()
 [global_group]
 
 players="All players"
+weapons="All weapons"
 
 [input]
 
