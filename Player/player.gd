@@ -78,7 +78,7 @@ func _process(delta: float) -> void:
         rotation = direction.angle()
         bubble_sprite.rotation = direction.angle()
 
-    var is_attacking = is_instance_valid(weapon) and (weapon.is_stabbing or weapon.is_throwing)
+    var is_attacking = is_instance_valid(weapon) and (weapon.is_stabbing or weapon.attack_button_pressed)
     if not is_attacking:
         # Move into the direction indicated by controller or keyboard
         position += dash_offset + direction * delta * movespeed
