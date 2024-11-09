@@ -9,6 +9,7 @@ var time_factor := 1
 var eternal_time_variable := 0.0
 
 var raising = false
+var blinking = false
 
 var base_right_eye_position
 
@@ -45,8 +46,21 @@ func raise_eye() -> void:
     await get_tree().create_timer(0.2).timeout
     ($RightOuter as Node2D).scale.y = prevL
     ($LeftOuter as Node2D).scale.y = prevR
-    
     raising = false
+    
+func blink(duration: float) -> void:
+    if blinking:
+        return
+    blinking = true
+    var prevL = ($LeftOuter as Node2D).scale.y
+    var prevR = ($RightOuter as Node2D).scale.y
+    ($RightOuter as Node2D).scale.y = 0.0
+    ($LeftOuter as Node2D).scale.y = 0.0
+    await get_tree().create_timer(duration).timeout
+    ($RightOuter as Node2D).scale.y = prevL
+    ($LeftOuter as Node2D).scale.y = prevR
+    
+    blinking = false
 
 func kill():
     visible = false

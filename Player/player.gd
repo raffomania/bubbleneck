@@ -138,10 +138,12 @@ func handle_dash(delta: float, direction: Vector2) -> Vector2:
             var prefix = get_keyboard_player_prefix()
             if Input.is_action_just_pressed(prefix + "_dash"):
                 is_dashing = true
+                $'GooglyEyes'.blink(dash_duration)
                 make_invincible(dash_protection_duration)
         else:
             if Input.is_joy_button_pressed(device, JOY_BUTTON_A):
                 is_dashing = true
+                $'GooglyEyes'.blink(dash_duration)
                 make_invincible(dash_protection_duration)
 
         # Return early if no button is pressed
