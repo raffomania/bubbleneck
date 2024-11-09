@@ -60,9 +60,12 @@ func _process(delta: float) -> void:
 func set_attack_button_pressed(now_pressed: bool) -> void:
     var just_pressed = not attack_button_pressed and now_pressed
     var just_released = attack_button_pressed and not now_pressed
+
     if just_pressed:
+        $Highlight.visible = true
         attack_button_pressed = true
     if just_released:
+        $Highlight.visible = false
         if attack_button_pressed_since < stab_button_press_threshold_seconds:
             stab()
         else:

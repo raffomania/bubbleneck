@@ -1,8 +1,9 @@
-[gd_scene load_steps=7 format=3 uid="uid://b70qbilpbes2r"]
+[gd_scene load_steps=8 format=3 uid="uid://b70qbilpbes2r"]
 
 [ext_resource type="Script" path="res://Weapon/weapon.gd" id="1_o8dmo"]
 [ext_resource type="Shader" path="res://Weapon/weapon.gdshader" id="1_oyge1"]
 [ext_resource type="Texture2D" uid="uid://rxiqkyxcive4" path="res://Weapon/weapon.png" id="2_pf2np"]
+[ext_resource type="Texture2D" uid="uid://3sm6210qqkwn" path="res://Weapon/star01.png" id="4_olwv6"]
 
 [sub_resource type="Curve" id="Curve_ne7yh"]
 _data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.180628, 0.864162), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
@@ -36,3 +37,9 @@ texture = ExtResource("2_pf2np")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(-2, -225)
 shape = SubResource("CircleShape2D_hbfi2")
+
+[node name="Highlight" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(26.25, -296.188)
+scale = Vector2(0.0684524, 0.130821)
+texture = ExtResource("4_olwv6")
