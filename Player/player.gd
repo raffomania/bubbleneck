@@ -83,8 +83,10 @@ func _process(delta: float) -> void:
         direction = Vector2(1, 0) * Input.get_joy_axis(device, JOY_AXIS_LEFT_X)
         direction.y = Input.get_joy_axis(device, JOY_AXIS_LEFT_Y)
         
-        if Input.is_joy_button_pressed(device, JOY_BUTTON_B) and is_instance_valid(weapon):
+        if Input.get_joy_axis(device, JOY_AXIS_TRIGGER_RIGHT) > 0.5 and is_instance_valid(weapon):
             weapon.set_attack_button_pressed(true)
+        elif Input.get_joy_axis(device, JOY_AXIS_TRIGGER_LEFT) > 0.5 and is_instance_valid(weapon):
+            weapon.stab()
         elif is_instance_valid(weapon):
             weapon.set_attack_button_pressed(false)
 
