@@ -3,6 +3,7 @@
 [ext_resource type="Script" path="res://Player/player.gd" id="1_02l3o"]
 [ext_resource type="PackedScene" uid="uid://b70qbilpbes2r" path="res://Weapon/weapon.tscn" id="2_tyojq"]
 [ext_resource type="Shader" path="res://Player/deathparticles.gdshader" id="3_x4mws"]
+[ext_resource type="Texture2D" uid="uid://ekewl83mripo" path="res://assets/bubble_texture.png" id="4_13c7d"]
 
 [sub_resource type="Curve" id="Curve_d2kbo"]
 _data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.32199, 1), 0.0, 0.0, 0, 0]
@@ -15,20 +16,24 @@ shader = ExtResource("3_x4mws")
 lifetime_randomness = 0.5
 particle_flag_disable_z = true
 emission_shape = 1
-emission_sphere_radius = 3.0
+emission_sphere_radius = 2.0
 direction = Vector3(0, 0, 0)
 spread = 180.0
-initial_velocity_min = 144.96
-initial_velocity_max = 216.39
+initial_velocity_min = 145.96
+initial_velocity_max = 258.65
 gravity = Vector3(0, 0, 0)
 tangential_accel_min = -2.23517e-06
 tangential_accel_max = -2.23517e-06
-damping_min = 31.183
-damping_max = 100.0
-scale_max = 5.0
+damping_min = 4.422
+damping_max = 49.296
 turbulence_enabled = true
-
-[sub_resource type="ImageTexture" id="ImageTexture_3aba5"]
+collision_mode = 1
+collision_friction = 0.0
+collision_bounce = 1.0
+collision_use_scale = true
+sub_emitter_mode = 2
+sub_emitter_amount_at_end = 8
+sub_emitter_keep_velocity = true
 
 [node name="Player" type="Node2D"]
 script = ExtResource("1_02l3o")
@@ -41,8 +46,12 @@ scale = Vector2(0.2, 0.2)
 self_modulate = Color(0.12549, 1, 1, 1)
 material = SubResource("ShaderMaterial_5oj7f")
 amount = 10
+sub_emitter = NodePath(".")
 process_material = SubResource("ParticleProcessMaterial_afeeu")
-texture = SubResource("ImageTexture_3aba5")
-lifetime = 3.0
+texture = ExtResource("4_13c7d")
+lifetime = 2.0
 explosiveness = 1.0
 randomness = 1.0
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("4_13c7d")

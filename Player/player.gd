@@ -30,6 +30,8 @@ var dead := false
 var respawn_time := 3.0
     
 func _draw() -> void:
+    if (dead):
+        return
     var color = dead_color if dead else player_color
     draw_circle(Vector2.ZERO, radius, color, 2)
 
