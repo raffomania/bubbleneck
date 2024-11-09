@@ -70,6 +70,9 @@ func _process(delta: float) -> void:
         if Input.is_joy_button_pressed(device, JOY_BUTTON_B):
             throw_weapon(dir)
 
+        if Input.is_joy_button_pressed(device, JOY_BUTTON_X):
+            stab_weapon()
+
     var curve_value = dash_curve.sample(time)
     dash_offset.x = curve_value * dir.x
     dash_offset.y = curve_value * dir.y
@@ -112,6 +115,10 @@ func pick_up_weapon(weapon) -> void:
     weapon.rotation = rotation + PI / 2.0
 
     holding_weapon = true
+
+func stab_weapon():
+    if is_holding_weapon:
+        $Weapon.stab()
 
 func kill():
     dead = true
