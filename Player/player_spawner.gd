@@ -15,22 +15,18 @@ func _ready() -> void:
 
     for device in Input.get_connected_joypads():
         spawn_player(device)
-        await get_tree().create_timer(0.8).timeout
 
     # Spawn keyboard players
     for device in [-1, -2]:
         spawn_player(device)
-        await get_tree().create_timer(0.8).timeout
 
     Input.joy_connection_changed.connect(self.joy_connection_changed)
 
 func joy_connection_changed(device, connected: bool):
-    if connected:
+    if connected and not device in spawned_devices:
         spawn_player(device)
 
 func spawn_player(device: int):
-    if device in spawned_devices:
-        return
     print("spawning player with device ", device)
        
     var player = player_scene.instantiate()
