@@ -16,8 +16,13 @@ var stab_duration_seconds: float
 var stab_button_press_threshold_seconds: float
 @export
 var stab_distance: int = 30
+@export
+var base_weapon_position: Vector2
+@export
+var max_throwing_range_seconds: float
 
 var throwing_time := 0.0
+var throwing_range_seconds := 0.0
 var is_throwing := false
 var is_stabbing := false
 var stab_on_cooldown := false
@@ -41,12 +46,13 @@ func _process(delta: float) -> void:
         throw_distance = curve_value * throw_range_factor
         global_position += dir * delta * throw_distance
 
-    if throwing_time > 1.0:
+    if throwing_time > throwing_range_seconds:
         is_throwing = false
         throwing_time = 0
 
     if attack_button_pressed:
-        attack_button_pressed_since += delta
+        attack_button_pressed_since = min(max_throwing_range_seconds, attack_button_pressed_since + delta)
+        position.x = base_weapon_position.x - attack_button_pressed_since * 20
 
 
 func set_attack_button_pressed(now_pressed: bool) -> void:
@@ -54,9 +60,7 @@ func set_attack_button_pressed(now_pressed: bool) -> void:
     var just_released = attack_button_pressed and not now_pressed
     if just_pressed:
         attack_button_pressed = true
-        position.x -= 20
     if just_released:
-        position.x += 20
         if attack_button_pressed_since < stab_button_press_threshold_seconds:
             stab()
         else:
@@ -69,6 +73,7 @@ func throw() -> void:
     var main_scene = get_tree().get_root().get_node("Main")
     reparent(main_scene)
     is_throwing = true
+    throwing_range_seconds = attack_button_pressed_since
     on_throw.emit()
 
 func _on_area_entered(area) -> void:
