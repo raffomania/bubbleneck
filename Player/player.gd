@@ -92,7 +92,7 @@ func _process(delta: float) -> void:
     position += dash_offset + dir * delta * movespeed
     
     # fix player sprite rotation so sprite highlight doesn't rotate
-    $BubbleSprite.global_rotation_degrees= 0
+    $BubbleSprite.global_rotation_degrees = 0
 
 func stop_dashing():
     is_dashing = false
@@ -104,7 +104,7 @@ func stop_dashing():
 func set_player_color(color: Color):
     modulate = color
     if is_instance_valid(weapon):
-        var sprite = $'Weapon/WeaponSprite'
+        var sprite = weapon.get_node('WeaponSprite')
         sprite.material.set("shader_parameter/color", color)
 
 func pick_up_weapon(new_weapon) -> void:
