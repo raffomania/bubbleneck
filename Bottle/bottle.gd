@@ -22,6 +22,8 @@ var inside_particles: GPUParticles2D
 var entrance_area: Area2D = $EntranceArea
 @onready
 var bottle_cap: Sprite2D = $BottleCap
+@onready
+var body_area: Area2D = $BodyArea
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -39,6 +41,8 @@ func _ready() -> void:
     pop_particles = $PopParticles
     inside_particles = $Sprite2D/InsideParticles
     entrance_area.area_entered.connect(_on_area_entered_entrance)
+    body_area.area_entered.connect(_on_area_entered_body)
+
 
  
 func _process(delta: float) -> void:
@@ -121,6 +125,13 @@ func minigame_finished(player, minigame):
 
     await zoom_tween.finished
     get_tree().root.get_node("Main").restart()
+
+func _on_area_entered_body(area: Area2D) -> void:
+    if is_instance_of(area, Player):
+        var player = area
+        var direction = player.global_position - get_viewport_rect().size / 2
+        var strenght_factor = 1
+        player.bounce_back(direction * strenght_factor)
 
 
 func get_bottle_floor(offset: int) -> Vector2:

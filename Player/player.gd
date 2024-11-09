@@ -21,6 +21,8 @@ var respawn_time := 3.0
 @onready
 var bubble_sprite := $BubbleSprite
 
+var allow_movement := true
+
 var weapon
 var dead_color := Color.BLACK
 var minigame = null
@@ -85,12 +87,12 @@ func _process(delta: float) -> void:
     var dash_offset = handle_dash(delta, direction)
 
     # Rotate in the direction we're walking
-    if direction != Vector2.ZERO:
+    if direction != Vector2.ZERO and allow_movement:
         rotation = direction.angle()
         bubble_sprite.rotation = direction.angle()
 
     var is_attacking = is_instance_valid(weapon) and (weapon.is_stabbing or weapon.attack_button_pressed)
-    if not is_attacking and not is_in_minigame():
+    if not is_attacking and not is_in_minigame() and allow_movement:
         # Move into the direction indicated by controller or keyboard
         position += dash_offset + direction * delta * movespeed
     
@@ -258,3 +260,11 @@ func stop_minigame():
         return
     
     minigame.queue_free()
+
+func bounce_back(direction: Vector2):
+    var tween = get_tree().create_tween()
+    allow_movement = false
+    tween.tween_property(self, "global_position", global_position + direction, 0.05)
+    tween.tween_callback(func(): allow_movement = true)
+
+
