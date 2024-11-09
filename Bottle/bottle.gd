@@ -19,6 +19,7 @@ var max_rotation_speed: float = 1
 var bottleneck_particles: GPUParticles2D
 var pop_particles: GPUParticles2D
 var inside_particles: GPUParticles2D
+var player_has_entered := false
 
 @onready
 var entrance_area: Area2D = $EntranceArea
@@ -104,9 +105,10 @@ func add_impulse(impulse: float) -> void:
         rotation_speed = -max_rotation_speed
 
 func _on_area_entered_entrance(area: Area2D) -> void:
-    if not is_instance_of(area, Player) or not popped:
+    if not is_instance_of(area, Player) or not popped or player_has_entered:
         return
 
+    player_has_entered = true
     var player = area as Player
     var minigame = player.start_minigame()
     if is_instance_valid(minigame):
@@ -136,7 +138,7 @@ func minigame_finished(player: Player, minigame):
     get_tree().root.get_node("Main").next_stage()
 
 func _on_area_entered_body(area: Area2D) -> void:
-    if is_instance_of(area, Player):
+    if is_instance_of(area, Player) and not player_has_entered:
         var player = area
         var direction = (player.global_position - get_viewport_rect().size / 2).normalized()
         var strenght_factor = 100
