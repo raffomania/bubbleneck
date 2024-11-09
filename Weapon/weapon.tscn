@@ -17,10 +17,10 @@ shader_parameter/color = null
 shader_parameter/threshold = 0.9
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_hbfi2"]
-radius = 26.9258
+radius = 4.60977
 
 [node name="Weapon" type="Node2D"]
-scale = Vector2(0.2, 0.1)
+scale = Vector2(2, 1)
 script = ExtResource("1_o8dmo")
 throw_curve = SubResource("Curve_ne7yh")
 time_factor = 2.0
@@ -28,17 +28,16 @@ throw_range_factor = 2000.0
 stab_cooldown_seconds = 0.1
 stab_duration_seconds = 0.1
 stab_button_press_threshold_seconds = 0.2
-stab_distance = 70
 max_throwing_range_seconds = 1.0
 
 [node name="WeaponSprite" type="Sprite2D" parent="."]
 material = SubResource("ShaderMaterial_7ml6n")
+scale = Vector2(0.2, 0.07)
 texture = ExtResource("2_pf2np")
 
 [node name="Highlight" type="Sprite2D" parent="."]
-visible = false
-position = Vector2(26.25, -296.188)
-scale = Vector2(0.0684524, 0.130821)
+position = Vector2(2.5, -14)
+scale = Vector2(0.00485062, 0.00916358)
 texture = ExtResource("4_olwv6")
 
 [node name="Node2D" type="Node2D" parent="."]
@@ -47,5 +46,5 @@ texture = ExtResource("4_olwv6")
 script = ExtResource("5_mpj1i")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
-position = Vector2(-2, -225)
+position = Vector2(-0.5, -14)
 shape = SubResource("CircleShape2D_hbfi2")

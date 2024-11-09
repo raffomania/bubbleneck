@@ -39,7 +39,7 @@ signal on_throw
 
 # Called when the node enters the scene tree for the first throwing_time.
 func _ready() -> void:
-    base_weapon_scale = scale
+    base_weapon_scale = $WeaponSprite.scale
     add_to_group('weapons')
 
 
@@ -58,7 +58,7 @@ func _process(delta: float) -> void:
     if attack_button_pressed:
         attack_button_pressed_since = min(max_throwing_range_seconds, attack_button_pressed_since + delta)
         position.x = base_weapon_position.x - attack_button_pressed_since * 20
-        scale.x = base_weapon_scale.x + attack_button_pressed_since
+        $WeaponSprite.scale.x = base_weapon_scale.x + attack_button_pressed_since * 0.2
 
 
 func set_attack_button_pressed(now_pressed: bool) -> void:
@@ -69,7 +69,7 @@ func set_attack_button_pressed(now_pressed: bool) -> void:
         $Highlight.visible = true
         attack_button_pressed = true
     if just_released:
-        scale.x = base_weapon_scale.x
+        $WeaponSprite.scale.x = base_weapon_scale.x
         $Highlight.visible = false
         if attack_button_pressed_since < stab_button_press_threshold_seconds:
             stab()
