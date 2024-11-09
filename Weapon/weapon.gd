@@ -89,7 +89,7 @@ func _on_area_entered(area) -> void:
         return
 
     var player = area as Player
-    if not player == weapon_owner:
+    if is_instance_valid(weapon_owner) and not player == weapon_owner:
          player.kill()
 
     if throwing_time == 0 and not is_instance_valid(player.weapon) and not is_instance_valid(weapon_owner):
