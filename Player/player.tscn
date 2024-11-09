@@ -56,5 +56,5 @@ lifetime = 3.0
 explosiveness = 1.0
 randomness = 1.0
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
+[node name="BubbleSprite" type="Sprite2D" parent="."]
 texture = ExtResource("4_13c7d")

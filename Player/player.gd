@@ -4,30 +4,26 @@ extends Node2D
 var device := 0
 @export
 var movespeed := 400
-
 @export
 var player_color := Color.VIOLET
-
-var dead_color := Color.RED
-
 @export
 var dash_curve: Curve
-
 @export
 var time_factor := 20
-
 @export
 var radius := 20
+@export
+var dead := false
+@export
+var respawn_time := 3.0
 
+var dead_color := Color.RED
 var dash_range := 10
 var time := 0.0
 var is_dashing := false
 
-@export
-var dead := false
-
-@export
-var respawn_time := 3.0
+@onready
+var bubble_sprite := $BubbleSprite
     
 func _draw() -> void:
     if (dead):
@@ -69,13 +65,14 @@ func _process(delta: float) -> void:
     if time >= 1:
         time = 0
         is_dashing = false
-        create_tween().tween_property(self, "scale", Vector2.ONE, 0.1)
+        create_tween().tween_property(bubble_sprite, "scale", Vector2.ONE, 0.1)
 
     if is_dashing:
-        scale.y = 0.6
+        bubble_sprite.scale.y = 0.6
 
     if dir != Vector2.ZERO:
         rotation = dir.angle()
+        bubble_sprite.rotation = dir.angle()
     position += dash_offset + dir * delta * movespeed
 
 func is_keyboard_player():
