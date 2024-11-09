@@ -50,7 +50,7 @@ amount = 10
 sub_emitter = NodePath(".")
 process_material = SubResource("ParticleProcessMaterial_afeeu")
 texture = ExtResource("4_13c7d")
-lifetime = 2.0
+lifetime = 3.0
 explosiveness = 1.0
 randomness = 1.0
 
