@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://b1u5n0mlyoqu5"]
+[gd_scene load_steps=9 format=3 uid="uid://b1u5n0mlyoqu5"]
 
 [ext_resource type="Script" path="res://Bottle/bottle.gd" id="1_lxhjm"]
 [ext_resource type="Texture2D" uid="uid://cfhp2d60h4r7q" path="res://Bottle/bottle.png" id="2_fj3et"]
@@ -82,5 +82,6 @@ amount = 500
 amount_ratio = 0.75
 process_material = SubResource("ParticleProcessMaterial_aqyuu")
 randomness = 1.0
+local_coords = true
 trail_enabled = true
 trail_lifetime = 0.05
