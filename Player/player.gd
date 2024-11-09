@@ -171,6 +171,9 @@ func on_throw_weapon():
     weapon = null
 
 func kill():
+    if dead:
+        return
+
     dead = true
     set_player_color(dead_color)
     find_child('deathParticles').restart()
