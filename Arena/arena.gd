@@ -4,7 +4,6 @@ extends Node2D
 var radius = 0
 var center = Vector2(0, 0)
 
-# Called when the node enters the scene tree for the first time.
 func _ready() -> void:
     var viewport = get_viewport_rect()
 
@@ -16,8 +15,7 @@ func _draw() -> void:
     draw_circle(Vector2(0, 0), radius, Color.BISQUE, 1)
 
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
     var viewport = get_viewport_rect()
 
     center.x = viewport.size.x / 2
