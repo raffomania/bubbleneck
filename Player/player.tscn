@@ -13,6 +13,7 @@ point_count = 2
 radius = 16.0312
 
 [node name="Player" type="Area2D"]
+z_index = 1
 script = ExtResource("1_02l3o")
 dash_curve = SubResource("Curve_d2kbo")
 

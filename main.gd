@@ -16,10 +16,13 @@ func _ready() -> void:
 func next_stage():
     if is_instance_valid(current_stage):
         current_stage.queue_free()
+        
+    spawner.remove_all_players()
 
     var stage_scene = stages[randi() % stages.size()]
     current_stage = stage_scene.instantiate()
+    
     add_child(current_stage)
-    spawner.spawn_all_players.call_deferred()
     camera.zoom = Vector2.ONE
     spawner.bottle = current_stage.find_child("Bottle")
+    spawner.spawn_all_players.call_deferred()
