@@ -17,7 +17,7 @@ var stab_duration_seconds: float
 @export
 var stab_button_press_threshold_seconds: float
 @export
-var stab_distance: float = 30
+var stab_distance: float = 50
 @export
 var base_weapon_position: Vector2
 @export
