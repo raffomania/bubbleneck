@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3 uid="uid://naat0547o4nc"]
+
+[ext_resource type="PackedScene" uid="uid://vya5gp3frnx5" path="res://Arena/arena.tscn" id="1_1iqbg"]
+[ext_resource type="PackedScene" uid="uid://b1u5n0mlyoqu5" path="res://Bottle/bottle.tscn" id="2_386lg"]
+
+[node name="StageA" type="Node2D"]
+
+[node name="Arena" parent="." instance=ExtResource("1_1iqbg")]
+
+[node name="Bottle" parent="." instance=ExtResource("2_386lg")]

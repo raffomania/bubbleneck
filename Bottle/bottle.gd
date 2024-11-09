@@ -44,7 +44,6 @@ func _ready() -> void:
     body_area.area_entered.connect(_on_area_entered_body)
 
 
- 
 func _process(delta: float) -> void:
     if not popped:
         rotation += rotation_speed * delta
@@ -116,7 +115,7 @@ func minigame_finished(player, minigame):
 
     var camera = get_tree().root.get_camera_2d()
     var zoom_tween = create_tween().set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_IN)
-    zoom_tween.tween_property(camera, "zoom", Vector2(5, 5), 3.0)
+    zoom_tween.tween_property(camera, "zoom", Vector2(10, 10), 3.0)
 
     create_tween().tween_property(player, "rotation", player.rotation + PI * 2, 2.0)
 
@@ -129,7 +128,7 @@ func minigame_finished(player, minigame):
     tween.tween_property(player, "global_position", global_position, 2.0)
 
     await zoom_tween.finished
-    get_tree().root.get_node("Main").restart()
+    get_tree().root.get_node("Main").next_stage()
 
 func _on_area_entered_body(area: Area2D) -> void:
     if is_instance_of(area, Player):
