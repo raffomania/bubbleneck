@@ -90,6 +90,7 @@ func throw() -> void:
 func stick() -> void:
     is_throwing = false
     throwing_time = 0
+    weapon_owner = null
 
 
 func attach_to_player(area) -> void:

@@ -104,7 +104,8 @@ func _process(delta: float) -> void:
     $BubbleSprite.global_rotation_degrees = 0
 
     # Googly eyes
-    $GooglyEyes.set_player_direction(direction, delta)
+    if direction:
+        $GooglyEyes.walking_animation()
 
 # Handle the player dash
 # Returns a Vector that indicates the dash direction.

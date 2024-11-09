@@ -8,19 +8,22 @@
 position = Vector2(8, 0)
 rotation = 1.5708
 script = ExtResource("1_aatq6")
+time_factor = 20
 
 [node name="LeftOuter" type="Sprite2D" parent="."]
-position = Vector2(-5, 0)
-scale = Vector2(0.03, 0.03)
+position = Vector2(-14, 5.06997e-05)
+scale = Vector2(0.085997, 0.0598316)
 texture = ExtResource("2_ny87f")
 
 [node name="LeftInner" type="Sprite2D" parent="LeftOuter"]
 texture = ExtResource("3_360ca")
+metadata/_edit_lock_ = true
 
 [node name="RightOuter" type="Sprite2D" parent="."]
-position = Vector2(5, 0)
-scale = Vector2(0.03, 0.03)
+position = Vector2(14, -1.00005)
+scale = Vector2(0.0911371, 0.0530785)
 texture = ExtResource("2_ny87f")
 
 [node name="RightInner" type="Sprite2D" parent="RightOuter"]
 texture = ExtResource("3_360ca")
+metadata/_edit_lock_ = true
