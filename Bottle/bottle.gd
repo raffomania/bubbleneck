@@ -41,7 +41,7 @@ func _ready() -> void:
 
     bottleneck_particles = $BottleneckParticles
     pop_particles = $PopParticles
-    inside_particles = $Sprite2D/InsideParticles
+    inside_particles = $Line2D/InsideParticles
     entrance_area.area_entered.connect(_on_area_entered_entrance)
     body_area.area_entered.connect(_on_area_entered_body)
 
@@ -144,5 +144,5 @@ func _on_area_entered_body(area: Area2D) -> void:
 
 
 func get_bottle_floor(offset: int) -> Vector2:
-    var bottle_size = $Sprite2D.get_rect().size
+    var bottle_size = $Line2D.get_viewport_rect().size
     return to_global(Vector2(0, (bottle_size.y / 2) + offset))
