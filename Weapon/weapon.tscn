@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://b70qbilpbes2r"]
+[gd_scene load_steps=12 format=3 uid="uid://b70qbilpbes2r"]
 
 [ext_resource type="Script" path="res://Weapon/weapon.gd" id="1_o8dmo"]
 [ext_resource type="Shader" path="res://Weapon/weapon.gdshader" id="1_oyge1"]
@@ -16,6 +16,9 @@ resource_local_to_scene = true
 shader = ExtResource("1_oyge1")
 shader_parameter/color = null
 shader_parameter/threshold = 0.9
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_j0e5j"]
+blend_mode = 1
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_hbfi2"]
 radius = 4.60977
@@ -41,8 +44,9 @@ texture = ExtResource("2_pf2np")
 
 [node name="Highlight" type="Sprite2D" parent="."]
 visible = false
+material = SubResource("CanvasItemMaterial_j0e5j")
 position = Vector2(2.5, -14)
-scale = Vector2(0.00485062, 0.00916358)
+scale = Vector2(0.0132567, 0.0250441)
 texture = ExtResource("4_olwv6")
 
 [node name="Node2D" type="Node2D" parent="."]
