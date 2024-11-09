@@ -49,12 +49,6 @@ hue_variation_min = -2.23517e-08
 hue_variation_max = 0.3
 hue_variation_curve = SubResource("CurveTexture_kwjlk")
 
-[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_61h6y"]
-particle_flag_disable_z = true
-orbit_velocity_min = 9.49949e-08
-orbit_velocity_max = 9.49949e-08
-gravity = Vector3(0, 98, 0)
-
 [node name="Bottle" type="Node2D"]
 position = Vector2(496.845, 300)
 scale = Vector2(0.3, 0.3)
@@ -87,19 +81,6 @@ scale = Vector2(3.33333, 3.33333)
 amount = 500
 amount_ratio = 0.75
 process_material = SubResource("ParticleProcessMaterial_aqyuu")
-randomness = 1.0
-trail_enabled = true
-trail_lifetime = 0.05
-
-[node name="GPUParticles2D3" type="GPUParticles2D" parent="."]
-modulate = Color(0.352941, 0.827451, 1, 0.72549)
-self_modulate = Color(0, 0.756863, 1, 1)
-show_behind_parent = true
-position = Vector2(-19.4834, 86.6667)
-scale = Vector2(3.33333, 3.33333)
-amount = 500
-amount_ratio = 0.75
-process_material = SubResource("ParticleProcessMaterial_61h6y")
 randomness = 1.0
 trail_enabled = true
 trail_lifetime = 0.05
