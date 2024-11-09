@@ -99,9 +99,9 @@ func setup_weapon():
     
 func throw_weapon(direction: Vector2):
     if is_holding_weapon:
-        var weapon = weapon_scene.instantiate()
         var main_scene = get_tree().get_root().get_node("Main")
-        main_scene.add_child(weapon)
+        var weapon = $Weapon
+        weapon.reparent(main_scene)
         weapon.global_position = global_position
         weapon.throw(direction)
         weapon.rotation = direction.angle() + PI / 2

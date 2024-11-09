@@ -1,4 +1,4 @@
-extends Node2D
+extends Area2D
 
 @export
 var throw_distance := 0.0
@@ -18,7 +18,7 @@ var dir
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-    pass # Replace with function body.
+    area_entered.connect(_on_area_entered)
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -38,3 +38,7 @@ func _process(delta: float) -> void:
 func throw(direction_vector : Vector2) -> void:
     is_throwing = true
     dir = direction_vector
+
+func _on_area_entered(area) -> void:
+    if time <= 1 and time > 0 and area.has_method("kill"):
+        area.kill()

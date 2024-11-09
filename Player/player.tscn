@@ -40,12 +40,19 @@ radius = 16.0312
 
 [node name="Player" type="Area2D"]
 script = ExtResource("1_02l3o")
+device = null
+movespeed = null
+player_color = null
 dash_curve = SubResource("Curve_d2kbo")
+dash_cooldown_seconds = null
+time_factor = null
+radius = null
+dead = null
+respawn_time = null
 
 [node name="Weapon" parent="." instance=ExtResource("2_tyojq")]
 position = Vector2(8, 25)
 rotation = 1.5708
-scale = Vector2(0.2, 0.2)
 
 [node name="deathParticles" type="GPUParticles2D" parent="."]
 self_modulate = Color(0.12549, 1, 1, 1)

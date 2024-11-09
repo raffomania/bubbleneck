@@ -9,6 +9,7 @@
 [node name="Arena" parent="." instance=ExtResource("3_j16lt")]
 
 [node name="Bottle" parent="." instance=ExtResource("2_i8da5")]
+visible = false
 
 [node name="PlayerSpawner" type="Node2D" parent="."]
 position = Vector2(558, 308)
