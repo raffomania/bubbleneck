@@ -1,7 +1,8 @@
-[gd_scene load_steps=4 format=3 uid="uid://dv03v2o4qgx7j"]
+[gd_scene load_steps=5 format=3 uid="uid://dv03v2o4qgx7j"]
 
 [ext_resource type="PackedScene" uid="uid://b1u5n0mlyoqu5" path="res://Bottle/bottle.tscn" id="2_i8da5"]
 [ext_resource type="PackedScene" uid="uid://vya5gp3frnx5" path="res://Arena/arena.tscn" id="3_j16lt"]
+[ext_resource type="Script" path="res://fps_label.gd" id="4_gn7km"]
 [ext_resource type="Script" path="res://Player/player_spawner.gd" id="4_h0alh"]
 
 [node name="Main" type="Node2D"]
@@ -13,3 +14,11 @@
 [node name="PlayerSpawner" type="Node2D" parent="."]
 position = Vector2(558, 308)
 script = ExtResource("4_h0alh")
+
+[node name="FPSLabel" type="Label" parent="."]
+offset_left = 12.0
+offset_top = 8.0
+offset_right = 52.0
+offset_bottom = 31.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+script = ExtResource("4_gn7km")
