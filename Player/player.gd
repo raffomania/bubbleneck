@@ -133,6 +133,7 @@ func on_throw_weapon():
 func kill():
     dead = true
     set_player_color(dead_color)
+    find_child('deathParticles').restart()
     find_child('deathParticles').emitting = true
     $BubbleSprite.visible = false
     await get_tree().create_timer(respawn_time).timeout
