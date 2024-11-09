@@ -27,6 +27,8 @@ func create_labels():
         label_children.append(label)
 
 func _process(_delta: float) -> void:
+    global_rotation = 0
+
     if is_finished:
         return
 

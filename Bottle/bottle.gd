@@ -90,7 +90,7 @@ func add_impulse(impulse: float) -> void:
         rotation_speed = -max_rotation_speed
 
 func _on_area_entered_entrance(area: Area2D) -> void:
-    if not is_instance_of(area, Player):
+    if not is_instance_of(area, Player) or not popped:
         return
 
     start_minigame(area)
