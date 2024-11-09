@@ -23,6 +23,6 @@ func _process(delta: float) -> void:
     center.x = viewport.size.x / 2
     center.y = viewport.size.y / 2
     for player: Node2D in get_tree().get_nodes_in_group('players'):
-       var dist = player.position.distance_to(center)
+       var dist = player.global_position.distance_to(center)
        if (!player.dead and dist > radius - player.radius):
            player.kill()

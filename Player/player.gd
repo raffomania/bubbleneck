@@ -36,7 +36,6 @@ func _draw() -> void:
     draw_circle(Vector2.ZERO, radius, color, 2)
 
 func _ready():
-    print(Input.get_connected_joypads())
     add_to_group('players')
     setup_weapon()
 
@@ -96,8 +95,8 @@ func respawn():
     dead = false
     find_child('deathParticles').emitting = false
     var viewport = get_viewport_rect()
-    position.x = viewport.size.x / 2
-    position.y = viewport.size.y / 2
+    global_position.x = viewport.size.x / 2
+    global_position.y = viewport.size.y / 2
     queue_redraw()
 
 func set_weapon_rotation(dir):
