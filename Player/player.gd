@@ -221,8 +221,8 @@ func respawn():
     $BubbleSprite.visible = true
     $GooglyEyes.respawn()
     global_position = get_respawn_position()
-    if not is_instance_valid(weapon):
-        get_new_weapon()
+    # if not is_instance_valid(weapon):
+    #     get_new_weapon()
     queue_redraw()
 
 func get_respawn_position() -> Vector2:
