@@ -77,7 +77,7 @@ func _on_area_entered(area) -> void:
 
     if throwing_time == 0 and not is_instance_valid(player.weapon):
         weapon_owner = player
-        player.pick_up_weapon(self)
+        player.pick_up_weapon.call_deferred(self)
 
     if is_stabbing:
         player.kill()

@@ -25,7 +25,6 @@ var respawn_time := 3.0
 
 @onready
 var bubble_sprite := $BubbleSprite
-
 @onready
 var weapon := $Weapon
 
@@ -105,16 +104,19 @@ func set_player_color(color: Color):
     sprite.material.set("shader_parameter/color", color)
 
 func pick_up_weapon(new_weapon) -> void:
+    weapon = new_weapon
     var sprite = weapon.get_node('WeaponSprite')
     sprite.material.set("shader_parameter/color", player_color)
-    weapon = new_weapon
-    weapon.reparent.call_deferred(self)
-    weapon.rotation = rotation + PI / 2.0
+    weapon.reparent(self)
+    weapon.rotation = PI / 2.0
     weapon.weapon_owner = self
+    weapon.position = Vector2(8, 25)
 
     weapon.on_throw.connect(on_throw_weapon)
 
 func on_throw_weapon():
+    if weapon.on_throw.is_connected(on_throw_weapon):
+        weapon.on_throw.disconnect(on_throw_weapon)
     weapon = null
 
 func kill():
