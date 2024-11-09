@@ -10,9 +10,6 @@ var eternal_time_variable := 0.0
 
 var raising = false
 
-func _ready() -> void:
-    modulate = Color(1, 1, 1, 0.7)
-
 func _process(delta: float) -> void:
     eternal_time_variable += delta
 
