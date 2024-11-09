@@ -36,10 +36,11 @@ max_throwing_range_seconds = 1.0
 
 [node name="WeaponSprite" type="Sprite2D" parent="."]
 material = SubResource("ShaderMaterial_7ml6n")
-scale = Vector2(0.2, 0.07)
+scale = Vector2(0.1, 0.1)
 texture = ExtResource("2_pf2np")
 
 [node name="Highlight" type="Sprite2D" parent="."]
+visible = false
 position = Vector2(2.5, -14)
 scale = Vector2(0.00485062, 0.00916358)
 texture = ExtResource("4_olwv6")
@@ -50,12 +51,12 @@ texture = ExtResource("4_olwv6")
 script = ExtResource("5_mpj1i")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
-position = Vector2(-0.5, -14)
+position = Vector2(0, -23)
 shape = SubResource("CircleShape2D_hbfi2")
 
 [node name="Collectbox" type="Area2D" parent="."]
 script = ExtResource("6_hdvvb")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Collectbox"]
-position = Vector2(-0.5, 7)
+position = Vector2(0, -2)
 shape = SubResource("RectangleShape2D_6pi77")
