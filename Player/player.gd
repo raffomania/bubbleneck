@@ -1,5 +1,7 @@
 extends Area2D
 
+class_name Player
+
 var weapon_scene = preload("res://Weapon/weapon.tscn")
 
 @export

@@ -68,15 +68,19 @@ func throw() -> void:
     on_throw.emit()
 
 func _on_area_entered(area) -> void:
-    if throwing_time <= 1 and throwing_time > 0 and area.has_method("kill") and not area == weapon_owner:
-         area.kill()
+    if not is_instance_of(area, Player):
+        return
 
-    if throwing_time == 0 and area.has_method("kill") and not area.holding_weapon:
-        weapon_owner = area
-        area.pick_up_weapon(self)
+    var player = area as Player
+    if throwing_time <= 1 and throwing_time > 0 and not player == weapon_owner:
+         player.kill()
 
-    if is_stabbing and area.has_method("kill"):
-        area.kill()
+    if throwing_time == 0 and not is_instance_valid(player.weapon):
+        weapon_owner = player
+        player.pick_up_weapon(self)
+
+    if is_stabbing:
+        player.kill()
 
 func stab() -> void:
     if is_stabbing or stab_on_cooldown:
