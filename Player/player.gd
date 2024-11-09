@@ -95,8 +95,10 @@ func _process(delta: float) -> void:
         rotation = direction.angle()
         bubble_sprite.rotation = direction.angle()
 
-    var is_attacking = is_instance_valid(weapon) and (weapon.is_stabbing or weapon.attack_button_pressed)
-    if not is_attacking and not is_in_minigame() and allow_movement:
+    if (is_instance_valid(weapon) and (weapon.is_stabbing or weapon.attack_button_pressed)):
+        allow_movement = false
+
+    if allow_movement:
         # Move into the direction indicated by controller or keyboard
         position += dash_offset + direction * delta * movespeed
     
@@ -251,6 +253,7 @@ func is_in_minigame():
     return is_instance_valid(minigame)
 
 func start_minigame():
+    allow_movement = false
     if is_in_minigame():
         return minigame
 
@@ -262,6 +265,7 @@ func start_minigame():
     return minigame
 
 func stop_minigame():
+    allow_movement = true
     if not is_in_minigame():
         return
     
