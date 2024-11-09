@@ -11,29 +11,36 @@ var movespeed := 400
 @export
 var player_color := Color.VIOLET
 @export
-var dash_curve: Curve
-@export
-var dash_cooldown_seconds := 0.5
-@export
-var time_factor := 20
-@export
 var radius := 20
 @export
 var dead := false
 @export
 var respawn_time := 3.0
-@export
-var dash_range := 10
 
 @onready
 var bubble_sprite := $BubbleSprite
 
 var weapon
 var dead_color := Color.BLACK
-var time := 0.0
+
+# ----- Dash related variables ----- 
+# The curve that represents the the player dash movement.
+@export
+var dash_curve: Curve
 var is_dashing := false
-var dash_on_cooldown := false
-    
+# The timer that tracks how far we're in a dash.
+@export
+var dash_timer := 0.0
+# How far the player should be able to dash.
+@export
+var dash_speed := 10
+# The time how long a dash should last.
+var dash_duration := 0.05
+# The timer that tracks how long the dash is on cooldown.
+var dash_cooldown := 0
+# How long a player needs to wait until they can dash again
+var dash_cooldown_seconds := 1.0
+
 func _ready():
     add_to_group('players')
     get_new_weapon()
@@ -42,17 +49,11 @@ func _ready():
 func _process(delta: float) -> void:
     if (dead):
         return
-    var dash_offset = Vector2()
-    var dir: Vector2
-    if is_dashing:
-        time += delta * time_factor
 
+    var direction: Vector2
     if is_keyboard_player():
         var prefix = get_keyboard_player_prefix()
-        dir = Input.get_vector(prefix + "_left", prefix + "_right", prefix + "_up", prefix + "_down")
-
-        if Input.is_action_just_pressed(prefix + "_dash") and not dash_on_cooldown:
-            is_dashing = true
+        direction = Input.get_vector(prefix + "_left", prefix + "_right", prefix + "_up", prefix + "_down")
 
         if Input.is_action_pressed(prefix + "_throw") and is_instance_valid(weapon):
             weapon.set_attack_button_pressed(true)
@@ -61,56 +62,91 @@ func _process(delta: float) -> void:
 
     else:
         # Player is using a controller
-        dir = Vector2(1, 0) * Input.get_joy_axis(device, JOY_AXIS_LEFT_X)
-        dir.y = Input.get_joy_axis(device, JOY_AXIS_LEFT_Y)
+        direction = Vector2(1, 0) * Input.get_joy_axis(device, JOY_AXIS_LEFT_X)
+        direction.y = Input.get_joy_axis(device, JOY_AXIS_LEFT_Y)
         
-        if Input.is_joy_button_pressed(device, JOY_BUTTON_A) and not dash_on_cooldown:
-            is_dashing = true
-
         if Input.is_joy_button_pressed(device, JOY_BUTTON_B) and is_instance_valid(weapon):
             weapon.set_attack_button_pressed(true)
         elif is_instance_valid(weapon):
             weapon.set_attack_button_pressed(false)
 
-    # Move according to the dash curve, if dashing
-    var curve_value = dash_curve.sample(time)
-    dash_offset.x = curve_value * dir.x
-    dash_offset.y = curve_value * dir.y
-    dash_offset *= dash_range
-    if time >= 1:
-        time = 0
-        stop_dashing()
-
-    # While dashing, squish
-    if is_dashing:
-        bubble_sprite.scale.y = 0.6
+    var dash_offset = handle_dash(delta, direction)
 
     # Rotate in the direction we're walking
-    if dir != Vector2.ZERO:
-        rotation = dir.angle()
-        bubble_sprite.rotation = dir.angle()
+    if direction != Vector2.ZERO:
+        rotation = direction.angle()
+        bubble_sprite.rotation = direction.angle()
 
     # Move into the direction indicated by controller or keyboard
-    position += dash_offset + dir * delta * movespeed
+    position += dash_offset + direction * delta * movespeed
     
     # fix player sprite rotation so sprite highlight doesn't rotate
     $BubbleSprite.global_rotation_degrees = 0
 
     # Googly eyes
-    $GooglyEyes.set_player_direction(dir, delta)
+    $GooglyEyes.set_player_direction(direction, delta)
 
-func stop_dashing():
-    is_dashing = false
-    dash_on_cooldown = true
-    create_tween().tween_property(bubble_sprite, "scale", Vector2.ONE, 0.1)
-    await get_tree().create_timer(dash_cooldown_seconds).timeout
-    dash_on_cooldown = false
+# Handle the player dash
+# Returns a Vector that indicates the dash direction.
+# The vector is empty if no dash is active.
+func handle_dash(delta: float, direction: Vector2) -> Vector2:
+    var dash_offset = Vector2()
+
+    # The dash is still on cooldown, reduce the cooldown.
+    if dash_cooldown > 0:
+        print("dash_cooldown active: %s, ms: %s, curve: %s" % [dash_cooldown])
+        dash_cooldown -= delta
+        return dash_offset
+
+    # The player isn't dashing yet and the cooldown is not active.
+    # Check whether we should start a new dash.
+    if not is_dashing:
+        if is_keyboard_player():
+            var prefix = get_keyboard_player_prefix()
+            if Input.is_action_just_pressed(prefix + "_dash"):
+                print("Activating dash")
+                is_dashing = true
+        else:
+            if Input.is_joy_button_pressed(device, JOY_BUTTON_A):
+                print("Activating dash")
+                is_dashing = true
+
+        # Return early if no button is pressed
+        if not is_dashing:
+            return dash_offset
+
+    # Dash is active, increment the timer
+    dash_timer += delta
+
+    # Move according to the dash curve.
+    # The dash curve expects values from `0-1`
+    # To get the correct position on the curve, we simply calculate the curve position
+    # Based on the relative elapsed time to the total dash time.
+    var relative_elapsed_time = dash_timer/ dash_duration
+    var curve_value = dash_curve.sample(relative_elapsed_time)
+    print("timer: %s, ms: %s, curve: %s" % [dash_timer, relative_elapsed_time, curve_value])
+    dash_offset.x = curve_value * direction.x
+    dash_offset.y = curve_value * direction.y
+    dash_offset *= dash_speed
+
+    # If we reached the end of the dashing duration.
+    # Cancel the dash and start the cooldown.
+    if dash_timer >= dash_duration:
+        print("Stopping dash timer")
+        # Reset the dashing logic.
+        dash_timer = 0
+        is_dashing = false
+        # Start the cooldown
+        dash_cooldown = dash_cooldown_seconds
+
+    return dash_offset
 
 func set_player_color(color: Color):
     $BubbleSprite.self_modulate = color
     if is_instance_valid(weapon):
         var sprite = weapon.get_node('WeaponSprite')
         sprite.material.set("shader_parameter/color", color)
+
 
 func get_new_weapon() -> void:
     var new_weapon = weapon_scene.instantiate()
