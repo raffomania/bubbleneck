@@ -21,7 +21,7 @@ shader_parameter/threshold = 0.9
 radius = 4.60977
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_6pi77"]
-size = Vector2(4.375, 32.25)
+size = Vector2(4.375, 53.125)
 
 [node name="Weapon" type="Node2D"]
 scale = Vector2(2, 1)
@@ -58,5 +58,5 @@ shape = SubResource("CircleShape2D_hbfi2")
 script = ExtResource("6_hdvvb")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Collectbox"]
-position = Vector2(0, -2)
+position = Vector2(0, 8.4375)
 shape = SubResource("RectangleShape2D_6pi77")
