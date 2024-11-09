@@ -29,7 +29,7 @@ var dash_range := 10
 var time := 0.0
 var is_dashing := false
 var dash_on_cooldown := false
-var is_holding_weapon := true
+var holding_weapon := true
     
 func _draw() -> void:
     if (dead):
@@ -97,14 +97,21 @@ func setup_weapon():
     var weapon = $'Weapon/WeaponSprite'
     weapon.material.set("shader_parameter/color", player_color)
     
-func throw_weapon(direction: Vector2):
-    if is_holding_weapon:
+func throw_weapon(direction: Vector2) -> void:
+    if holding_weapon:
         var main_scene = get_tree().get_root().get_node("Main")
         var weapon = $Weapon
         weapon.reparent(main_scene)
         weapon.throw(direction)
+        weapon.weapon_owner = self
 
-    is_holding_weapon = false
+    holding_weapon = false
+
+func pick_up_weapon(weapon) -> void:
+    weapon.reparent.call_deferred(self)
+    weapon.rotation = rotation + PI / 2.0
+
+    holding_weapon = true
 
 func kill():
     dead = true

@@ -15,6 +15,7 @@ var throw_range_factor := 1.0
 var time := 0.0
 var is_throwing := false
 var dir
+var weapon_owner
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -40,5 +41,10 @@ func throw(direction_vector : Vector2) -> void:
     dir = direction_vector
 
 func _on_area_entered(area) -> void:
-    if time <= 1 and time > 0 and area.has_method("kill"):
+    if time <= 1 and time > 0 and area.has_method("kill") and not area == weapon_owner:
         area.kill()
+
+    if time == 0 and area.has_method("kill") and not area.holding_weapon:
+        weapon_owner = area
+        area.pick_up_weapon(self)
+        
