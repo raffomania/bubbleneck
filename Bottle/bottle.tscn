@@ -1,7 +1,15 @@
-[gd_scene load_steps=5 format=3 uid="uid://b1u5n0mlyoqu5"]
+[gd_scene load_steps=10 format=3 uid="uid://b1u5n0mlyoqu5"]
 
 [ext_resource type="Script" path="res://Bottle/bottle.gd" id="1_lxhjm"]
 [ext_resource type="Texture2D" uid="uid://cfhp2d60h4r7q" path="res://Bottle/bottle.png" id="2_fj3et"]
+
+[sub_resource type="Curve" id="Curve_nbcki"]
+min_value = -1.0
+_data = [Vector2(0.25, -0.304044), 0.0, 0.0, 0, 0, Vector2(1, -0.000777602), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_rnqng"]
+curve = SubResource("Curve_nbcki")
 
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_pwhv5"]
 lifetime_randomness = 0.5
@@ -14,6 +22,17 @@ initial_velocity_min = 144.96
 initial_velocity_max = 216.39
 gravity = Vector3(0, 0, 0)
 scale_max = 5.0
+hue_variation_min = -2.23517e-08
+hue_variation_max = 0.3
+hue_variation_curve = SubResource("CurveTexture_rnqng")
+
+[sub_resource type="Curve" id="Curve_wwtob"]
+min_value = -1.0
+_data = [Vector2(0.252083, -0.304044), 0.0, 0.0, 0, 0, Vector2(1, -0.000777602), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_kwjlk"]
+curve = SubResource("Curve_wwtob")
 
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_aqyuu"]
 lifetime_randomness = 0.5
@@ -26,6 +45,15 @@ initial_velocity_min = 144.96
 initial_velocity_max = 216.39
 gravity = Vector3(0, 0, 0)
 scale_max = 5.0
+hue_variation_min = -2.23517e-08
+hue_variation_max = 0.3
+hue_variation_curve = SubResource("CurveTexture_kwjlk")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_61h6y"]
+particle_flag_disable_z = true
+orbit_velocity_min = 9.49949e-08
+orbit_velocity_max = 9.49949e-08
+gravity = Vector3(0, 98, 0)
 
 [node name="Bottle" type="Node2D"]
 position = Vector2(496.845, 300)
@@ -59,6 +87,19 @@ scale = Vector2(3.33333, 3.33333)
 amount = 500
 amount_ratio = 0.75
 process_material = SubResource("ParticleProcessMaterial_aqyuu")
+randomness = 1.0
+trail_enabled = true
+trail_lifetime = 0.05
+
+[node name="GPUParticles2D3" type="GPUParticles2D" parent="."]
+modulate = Color(0.352941, 0.827451, 1, 0.72549)
+self_modulate = Color(0, 0.756863, 1, 1)
+show_behind_parent = true
+position = Vector2(-19.4834, 86.6667)
+scale = Vector2(3.33333, 3.33333)
+amount = 500
+amount_ratio = 0.75
+process_material = SubResource("ParticleProcessMaterial_61h6y")
 randomness = 1.0
 trail_enabled = true
 trail_lifetime = 0.05
