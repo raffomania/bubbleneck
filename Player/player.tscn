@@ -1,8 +1,9 @@
-[gd_scene load_steps=6 format=3 uid="uid://pl2j5a30sd8w"]
+[gd_scene load_steps=7 format=3 uid="uid://pl2j5a30sd8w"]
 
 [ext_resource type="Script" path="res://Player/player.gd" id="1_02l3o"]
-[ext_resource type="PackedScene" uid="uid://bxwvn54hlicia" path="res://Player/death_particles.tscn" id="2_7kgd1"]
+[ext_resource type="PackedScene" path="res://Player/death_particles.tscn" id="2_7kgd1"]
 [ext_resource type="Texture2D" uid="uid://ekewl83mripo" path="res://assets/bubble_texture.png" id="4_13c7d"]
+[ext_resource type="PackedScene" uid="uid://bnyt1gu3wl8cg" path="res://Player/GooglyEyes/googly_eyes.tscn" id="4_vlgyh"]
 
 [sub_resource type="Curve" id="Curve_d2kbo"]
 _data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.32199, 1), 0.0, 0.0, 0, 0]
@@ -23,3 +24,5 @@ texture = ExtResource("4_13c7d")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_8hwc6")
+
+[node name="GooglyEyes" parent="." instance=ExtResource("4_vlgyh")]
