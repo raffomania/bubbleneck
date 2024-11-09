@@ -1,5 +1,7 @@
 extends Node2D
 
+class_name Minigame
+
 var label_scene = preload("res://Minigame/PressLabel.tscn")
 
 var key_sequence = ["up", "up", "down", "left", "right"]

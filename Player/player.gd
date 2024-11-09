@@ -25,6 +25,8 @@ var allow_movement := true
 
 var weapon
 var dead_color := Color.BLACK
+
+# ----- Minigame ----- 
 var minigame = null
 
 # ----- Dash related variables ----- 
@@ -246,7 +248,7 @@ func is_in_minigame():
 
 func start_minigame():
     if is_in_minigame():
-        return
+        return minigame
 
     minigame = minigame_scene.instantiate()
     minigame.color = player_color

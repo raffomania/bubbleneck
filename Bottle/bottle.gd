@@ -110,8 +110,10 @@ func _on_area_entered_entrance(area: Area2D) -> void:
     minigame.finished.connect(func(): self.minigame_finished(player, minigame))
 
 
-func minigame_finished(player, minigame):
+func minigame_finished(player: Player, minigame):
     minigame.queue_free()
+    # Lock the player to prevent them from moving during the final animation.
+    player.allow_movement = false
 
     var camera = get_tree().root.get_camera_2d()
     var zoom_tween = create_tween().set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_IN)
