@@ -16,6 +16,8 @@ func spawn_all_players() -> void:
     for device in [-1, -2]:
         spawn_player(device)
 
+    get_tree().root.get_node('Main').get_node('ScoringSystem').init_scores()
+
 func remove_all_players():
     get_tree().call_group("players", "queue_free")
     spawned_devices = []
@@ -23,6 +25,7 @@ func remove_all_players():
 func joy_connection_changed(device, connected: bool):
     if connected and not device in spawned_devices:
         spawn_player(device)
+    get_tree().root.get_node('Main').get_node('ScoringSystem').init_scores()
 
 func spawn_player(device: int):
     if device in spawned_devices:

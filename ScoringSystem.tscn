@@ -3,4 +3,11 @@
 [ext_resource type="Script" path="res://scoring_system.gd" id="1_h05sx"]
 
 [node name="Node2D" type="Node2D"]
+z_index = 1
 script = ExtResource("1_h05sx")
+
+[node name="ScoreText" type="RichTextLabel" parent="."]
+offset_right = 562.0
+offset_bottom = 469.0
+text = "Score
+-"
