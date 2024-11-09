@@ -93,7 +93,7 @@ func _process(delta: float) -> void:
     var dash_offset = handle_dash(delta, direction)
 
     # Rotate in the direction we're walking
-    if direction != Vector2.ZERO and allow_movement:
+    if direction != Vector2.ZERO:
         rotation = direction.angle()
         bubble_sprite.rotation = direction.angle()
 
