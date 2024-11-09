@@ -18,6 +18,7 @@ func next_stage():
         current_stage.queue_free()
         
     spawner.remove_all_players()
+    get_tree().call_group("weapons", "queue_free")
 
     var stage_scene = stages[randi() % stages.size()]
     current_stage = stage_scene.instantiate()
