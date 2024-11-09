@@ -79,7 +79,7 @@ func _process(delta: float) -> void:
         bubble_sprite.rotation = direction.angle()
 
     var is_attacking = is_instance_valid(weapon) and (weapon.is_stabbing or weapon.attack_button_pressed)
-    if not is_attacking:
+    if not is_attacking and not is_in_minigame:
         # Move into the direction indicated by controller or keyboard
         position += dash_offset + direction * delta * movespeed
     
@@ -199,4 +199,3 @@ func is_keyboard_player():
 
 func get_keyboard_player_prefix():
     return "kb" + str(abs(device))
-
