@@ -149,6 +149,7 @@ func respawn():
     set_player_color(player_color)
     find_child('deathParticles').emitting = false
     $BubbleSprite.visible = true
+    $GooglyEyes.respawn()
     var viewport = get_viewport_rect()
     global_position.x = viewport.size.x / 2
     global_position.y = viewport.size.y / 2
