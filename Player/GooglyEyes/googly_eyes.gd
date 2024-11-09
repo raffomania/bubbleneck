@@ -1,11 +1,15 @@
-extends Sprite2D
+extends Node2D
 
 
-# Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-    pass # Replace with function body.
+    modulate = Color(1, 1, 1, 0.7)
 
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-    pass
+func set_player_direction(dir: Vector2, delta: float) -> void:
+    var strength = dir.length()
+    $LeftOuter/LeftInner.position.y = strength * delta * 5000
+    $RightOuter/RightInner.position.y = strength * delta * 5000
+
+func kill():
+    visible = false
+

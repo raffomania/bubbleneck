@@ -96,6 +96,9 @@ func _process(delta: float) -> void:
     # fix player sprite rotation so sprite highlight doesn't rotate
     $BubbleSprite.global_rotation_degrees = 0
 
+    # Googly eyes
+    $GooglyEyes.set_player_direction(dir, delta)
+
 func stop_dashing():
     is_dashing = false
     dash_on_cooldown = true
@@ -104,7 +107,7 @@ func stop_dashing():
     dash_on_cooldown = false
 
 func set_player_color(color: Color):
-    modulate = color
+    $BubbleSprite.self_modulate = color
     if is_instance_valid(weapon):
         var sprite = weapon.get_node('WeaponSprite')
         sprite.material.set("shader_parameter/color", color)
@@ -136,6 +139,7 @@ func kill():
     find_child('deathParticles').restart()
     find_child('deathParticles').emitting = true
     $BubbleSprite.visible = false
+    $GooglyEyes.kill()
     await get_tree().create_timer(respawn_time).timeout
     print('respawn')
     respawn()

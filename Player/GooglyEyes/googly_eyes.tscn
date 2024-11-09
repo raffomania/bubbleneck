@@ -1,3 +1,26 @@
-[gd_scene format=3 uid="uid://bnyt1gu3wl8cg"]
+[gd_scene load_steps=4 format=3 uid="uid://bnyt1gu3wl8cg"]
+
+[ext_resource type="Script" path="res://Player/GooglyEyes/googly_eyes.gd" id="1_aatq6"]
+[ext_resource type="Texture2D" uid="uid://bu7qq7bccnk45" path="res://Player/GooglyEyes/googly_eye_outer.png" id="2_ny87f"]
+[ext_resource type="Texture2D" uid="uid://v7qc8f5t1y2s" path="res://Player/GooglyEyes/googly_eye_inner.png" id="3_360ca"]
 
 [node name="GooglyEyes" type="Node2D"]
+position = Vector2(8, 0)
+rotation = 1.5708
+script = ExtResource("1_aatq6")
+
+[node name="LeftOuter" type="Sprite2D" parent="."]
+position = Vector2(-5, 0)
+scale = Vector2(0.03, 0.03)
+texture = ExtResource("2_ny87f")
+
+[node name="LeftInner" type="Sprite2D" parent="LeftOuter"]
+texture = ExtResource("3_360ca")
+
+[node name="RightOuter" type="Sprite2D" parent="."]
+position = Vector2(5, 0)
+scale = Vector2(0.03, 0.03)
+texture = ExtResource("2_ny87f")
+
+[node name="RightInner" type="Sprite2D" parent="RightOuter"]
+texture = ExtResource("3_360ca")
