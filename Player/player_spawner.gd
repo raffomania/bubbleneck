@@ -25,6 +25,6 @@ func spawn_player(device: int):
     player.name = "Player" + str(device)
     player.device = device
     player.position = get_viewport_rect().size / 2
-    player.player_color = Color.from_hsv(randf(), randf(), randf(),1)
+    player.player_color = Color.from_hsv(randf(), 0.8, 0.9,1)
     add_child(player)
     spawned_devices.append(device)
