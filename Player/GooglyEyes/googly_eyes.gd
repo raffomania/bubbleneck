@@ -13,3 +13,6 @@ func set_player_direction(dir: Vector2, delta: float) -> void:
 func kill():
     visible = false
 
+func respawn():
+    visible = true
+
