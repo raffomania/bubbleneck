@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://d1vv63di7jqde"]
+
+[ext_resource type="Script" path="res://Minigame/press_label.gd" id="1_h75ti"]
+
+[node name="PressLabel" type="Sprite2D"]
+script = ExtResource("1_h75ti")
