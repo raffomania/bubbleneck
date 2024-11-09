@@ -23,7 +23,7 @@ func _process(_delta: float) -> void:
     for player: Node2D in get_tree().get_nodes_in_group('players'):
        var dist = player.global_position.distance_to(center)
        if (!player.dead and dist > radius - player.radius):
-           player.kill()
+           player.position -= 0.01 * (player.position - center)
 
     for node: Node2D in get_tree().get_nodes_in_group('weapons'):
        var weapon = node as Weapon
