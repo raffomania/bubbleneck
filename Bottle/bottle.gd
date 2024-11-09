@@ -134,7 +134,7 @@ func minigame_finished(player, minigame):
 func _on_area_entered_body(area: Area2D) -> void:
     if is_instance_of(area, Player):
         var player = area
-        var direction = player.global_position - get_viewport_rect().size / 2
+        var direction = (player.global_position - get_viewport_rect().size / 2).normalized()
         var strenght_factor = 1
         player.bounce_back(direction * strenght_factor)
 
