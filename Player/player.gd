@@ -299,6 +299,7 @@ func stop_minigame():
     minigame.queue_free()
 
 func win():
+    make_invincible(5.0)
     if is_instance_valid(weapon):
         weapon.queue_free()
     for player in get_tree().get_nodes_in_group("players"):
