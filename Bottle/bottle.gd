@@ -47,7 +47,7 @@ func _process(delta: float) -> void:
         pop_countdown -= delta
 
     # Check if the bottle should pop.
-    if pop_countdown <= 0:
+    if pop_countdown <= 0 or Input.is_action_just_pressed("debug_pop_bottle"):
         popped = true
         pop_bottle()
 
@@ -101,6 +101,13 @@ func start_minigame(player: Player):
 
     var minigame = minigame_scene.instantiate()
     minigame.color = player.player_color
+    player.is_in_minigame = true
     player.add_child(minigame)
     await minigame.finished
+    player.is_in_minigame = false
     minigame.queue_free()
+
+func get_bottle_floor(offset: int) -> Vector2:
+    var bottle_size = $Sprite2D.get_rect().size
+    return to_global(Vector2(0, (bottle_size.y / 2) + offset))
+

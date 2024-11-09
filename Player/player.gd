@@ -79,7 +79,7 @@ func _process(delta: float) -> void:
         bubble_sprite.rotation = direction.angle()
 
     var is_attacking = is_instance_valid(weapon) and (weapon.is_stabbing or weapon.attack_button_pressed)
-    if not is_attacking:
+    if not is_attacking and not is_in_minigame:
         # Move into the direction indicated by controller or keyboard
         position += dash_offset + direction * delta * movespeed
     
@@ -187,16 +187,20 @@ func respawn():
     find_child('deathParticles').emitting = false
     $BubbleSprite.visible = true
     $GooglyEyes.respawn()
-    var viewport = get_viewport_rect()
-    global_position.x = viewport.size.x / 2
-    global_position.y = viewport.size.y / 2
+    global_position = get_respawn_position()
     if not is_instance_valid(weapon):
         get_new_weapon()
     queue_redraw()
+
+func get_respawn_position() -> Vector2:
+    if (false):
+        return get_viewport_rect().size / 2
+    else:
+        return $"../Bottle".get_bottle_floor(200) 
+    
 
 func is_keyboard_player():
     return device < 0
 
 func get_keyboard_player_prefix():
     return "kb" + str(abs(device))
-
