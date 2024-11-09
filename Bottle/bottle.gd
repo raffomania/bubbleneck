@@ -108,7 +108,6 @@ func _on_area_entered_entrance(area: Area2D) -> void:
     if not is_instance_of(area, Player) or not popped or player_has_entered:
         return
 
-    player_has_entered = true
     var player = area as Player
     var minigame = player.start_minigame()
     if is_instance_valid(minigame):
@@ -116,6 +115,7 @@ func _on_area_entered_entrance(area: Area2D) -> void:
 
 
 func minigame_finished(player: Player, minigame):
+    player_has_entered = true
     minigame.queue_free()
     # Lock the player to prevent them from moving during the final animation.
     player.allow_movement = false
