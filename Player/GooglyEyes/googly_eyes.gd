@@ -18,8 +18,8 @@ func set_player_direction(dir: Vector2, delta: float) -> void:
     $RightOuter/RightInner.position.y = strength * delta * 5000
 
 func walking_animation() -> void:
-    $LeftOuter.position.y -= sin(eternal_time_variable * time_factor) * 0.1
-    $RightOuter.position.y += sin(eternal_time_variable * time_factor) * 0.1
+    $LeftOuter.position.y -= sin(eternal_time_variable * time_factor) * 0.5
+    $RightOuter.position.y += sin(eternal_time_variable * time_factor) * 0.5
 
 func kill():
     visible = false
