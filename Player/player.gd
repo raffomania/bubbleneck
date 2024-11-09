@@ -29,7 +29,7 @@ var dash_range := 10
 var bubble_sprite := $BubbleSprite
 
 var weapon
-var dead_color := Color.RED
+var dead_color := Color.BLACK
 var time := 0.0
 var is_dashing := false
 var dash_on_cooldown := false
