@@ -22,6 +22,7 @@ var bubble_sprite := $BubbleSprite
 
 var weapon
 var dead_color := Color.BLACK
+var is_in_minigame := false
 
 # ----- Dash related variables ----- 
 # The curve that represents the the player dash movement.
@@ -122,7 +123,7 @@ func handle_dash(delta: float, direction: Vector2) -> Vector2:
     # The dash curve expects values from `0-1`
     # To get the correct position on the curve, we simply calculate the curve position
     # Based on the relative elapsed time to the total dash time.
-    var relative_elapsed_time = dash_timer/ dash_duration
+    var relative_elapsed_time = dash_timer / dash_duration
     var curve_value = dash_curve.sample(relative_elapsed_time)
     print("timer: %s, ms: %s, curve: %s" % [dash_timer, relative_elapsed_time, curve_value])
     dash_offset.x = curve_value * direction.x

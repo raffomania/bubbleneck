@@ -1,5 +1,7 @@
 extends Node2D
 
+var minigame_scene = preload("res://Minigame/Minigame.tscn")
+
 # Describes whether the Bottle is popped.
 var popped = false
 # Seconds until bottle pops.
@@ -18,6 +20,9 @@ var bottleneck_particles: GPUParticles2D
 var pop_particles: GPUParticles2D
 var inside_particles: GPUParticles2D
 
+@onready
+var entrance_area: Area2D = $EntranceArea
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
     # center the bottle
@@ -33,6 +38,7 @@ func _ready() -> void:
     bottleneck_particles = $BottleneckParticles
     pop_particles = $PopParticles
     inside_particles = $Sprite2D/InsideParticles
+    entrance_area.area_entered.connect(_on_area_entered_entrance)
 
  
 func _process(delta: float) -> void:
@@ -83,3 +89,17 @@ func add_impulse(impulse: float) -> void:
     elif rotation_speed < -max_rotation_speed:
         rotation_speed = -max_rotation_speed
 
+func _on_area_entered_entrance(area: Area2D) -> void:
+    if not is_instance_of(area, Player):
+        return
+
+    start_minigame(area)
+
+func start_minigame(player: Player):
+    if player.is_in_minigame:
+        return
+
+    var minigame = minigame_scene.instantiate()
+    player.add_child(minigame)
+    await minigame.finished
+    minigame.queue_free()
