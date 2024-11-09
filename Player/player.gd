@@ -12,7 +12,7 @@ var movespeed := 400
 @export
 var player_color := Color.VIOLET
 @export
-var radius := 20
+var radius := 1.5
 @export
 var dead := false
 @export
@@ -35,7 +35,7 @@ var minigame = null
 var dash_curve: Curve
 var is_dashing := false
 # The timer that tracks how far we're in a dash.
-@export
+
 var dash_timer: float = 0.0
 # How far the player should be able to dash.
 @export
@@ -59,6 +59,8 @@ func _ready():
 
     # Spawn protection
     make_invincible(spawn_protection_duration)
+    
+    scale = Vector2(radius, radius)
 
 func _process(delta: float) -> void:
     if (dead):
