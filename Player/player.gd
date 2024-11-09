@@ -38,7 +38,7 @@ var dash_speed := 10
 # The time how long a dash should last.
 var dash_duration := 0.05
 # The timer that tracks how long the dash is on cooldown.
-var dash_cooldown := 0
+var dash_cooldown: float = 0
 # How long a player needs to wait until they can dash again
 var dash_cooldown_seconds := 1.0
 
@@ -97,7 +97,6 @@ func handle_dash(delta: float, direction: Vector2) -> Vector2:
 
     # The dash is still on cooldown, reduce the cooldown.
     if dash_cooldown > 0:
-        print("dash_cooldown active: %s, ms: %s, curve: %s" % [dash_cooldown])
         dash_cooldown -= delta
         return dash_offset
 
@@ -107,11 +106,9 @@ func handle_dash(delta: float, direction: Vector2) -> Vector2:
         if is_keyboard_player():
             var prefix = get_keyboard_player_prefix()
             if Input.is_action_just_pressed(prefix + "_dash"):
-                print("Activating dash")
                 is_dashing = true
         else:
             if Input.is_joy_button_pressed(device, JOY_BUTTON_A):
-                print("Activating dash")
                 is_dashing = true
 
         # Return early if no button is pressed
@@ -127,7 +124,6 @@ func handle_dash(delta: float, direction: Vector2) -> Vector2:
     # Based on the relative elapsed time to the total dash time.
     var relative_elapsed_time = dash_timer / dash_duration
     var curve_value = dash_curve.sample(relative_elapsed_time)
-    print("timer: %s, ms: %s, curve: %s" % [dash_timer, relative_elapsed_time, curve_value])
     dash_offset.x = curve_value * direction.x
     dash_offset.y = curve_value * direction.y
     dash_offset *= dash_speed
@@ -135,7 +131,6 @@ func handle_dash(delta: float, direction: Vector2) -> Vector2:
     # If we reached the end of the dashing duration.
     # Cancel the dash and start the cooldown.
     if dash_timer >= dash_duration:
-        print("Stopping dash timer")
         # Reset the dashing logic.
         dash_timer = 0
         is_dashing = false
