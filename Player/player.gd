@@ -102,7 +102,11 @@ func _process(delta: float) -> void:
 
     # Rotate in the direction we're walking
     if direction != Vector2.ZERO:
-        rotation = direction.angle()
+        if is_keyboard_player() and not is_movement_allowed():
+            # For keyboard players, while aiming, only rotate a little
+            rotation += direction.x * delta * 2
+        else:
+            rotation = direction.angle()
         bubble_sprite.rotation = direction.angle()
 
     if is_movement_allowed():
