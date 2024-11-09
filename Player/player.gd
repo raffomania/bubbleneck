@@ -75,14 +75,13 @@ func _process(delta: float) -> void:
         var prefix = get_keyboard_player_prefix()
         direction = Input.get_vector(prefix + "_left", prefix + "_right", prefix + "_up", prefix + "_down")
 
-        if Input.is_action_pressed(prefix + "_throw"):
-            $'GooglyEyes'.raise_eye()
-            if is_instance_valid(weapon):
+        if is_instance_valid(weapon):
+            if Input.is_action_pressed(prefix + "_throw"):
+                $'GooglyEyes'.raise_eye()
                 weapon.set_attack_button_pressed(true)
-        elif Input.is_action_pressed(prefix + "_stab"):
-            if is_instance_valid(weapon):
+            elif Input.is_action_pressed(prefix + "_stab"):
                 weapon.stab()
-        elif is_instance_valid(weapon):
+            else:
                 weapon.set_attack_button_pressed(false)
 
     else:
@@ -90,13 +89,13 @@ func _process(delta: float) -> void:
         direction = Vector2(1, 0) * Input.get_joy_axis(device, JOY_AXIS_LEFT_X)
         direction.y = Input.get_joy_axis(device, JOY_AXIS_LEFT_Y)
         
-        if Input.get_joy_axis(device, JOY_AXIS_TRIGGER_RIGHT) > 0.5:
-            $'GooglyEyes'.raise_eye()
-            if is_instance_valid(weapon):
+        if is_instance_valid(weapon):
+            if Input.get_joy_axis(device, JOY_AXIS_TRIGGER_RIGHT) > 0.5:
+                $'GooglyEyes'.raise_eye()
                 weapon.set_attack_button_pressed(true)
-        elif Input.get_joy_axis(device, JOY_AXIS_TRIGGER_LEFT) > 0.5 and is_instance_valid(weapon):
-            weapon.stab()
-        elif is_instance_valid(weapon):
+            elif Input.get_joy_axis(device, JOY_AXIS_TRIGGER_LEFT) > 0.5:
+                weapon.stab()
+            else:
                 weapon.set_attack_button_pressed(false)
 
     var dash_offset = handle_dash(delta, direction)
