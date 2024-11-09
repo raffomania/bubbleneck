@@ -103,10 +103,6 @@ func hit_player(player: Player) -> void:
     if not player == weapon_owner:
          player.kill()
 
-    if throwing_time == 0 and not is_instance_valid(player.weapon) and not is_instance_valid(weapon_owner):
-        weapon_owner = player
-        player.pick_up_weapon.call_deferred(self)
-
 
 func stab() -> void:
     if is_stabbing or stab_on_cooldown:
