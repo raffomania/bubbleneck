@@ -89,15 +89,12 @@ func _on_area_entered(area) -> void:
         return
 
     var player = area as Player
-    if throwing_time <= 1 and throwing_time > 0 and not player == weapon_owner:
+    if not player == weapon_owner:
          player.kill()
 
     if throwing_time == 0 and not is_instance_valid(player.weapon) and not is_instance_valid(weapon_owner):
         weapon_owner = player
         player.pick_up_weapon.call_deferred(self)
-
-    if is_stabbing:
-        player.kill()
 
 func stab() -> void:
     if is_stabbing or stab_on_cooldown:
