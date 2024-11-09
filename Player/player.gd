@@ -11,6 +11,8 @@ var player_color := Color.VIOLET
 @export
 var dash_curve: Curve
 @export
+var dash_cooldown_seconds := 0.5
+@export
 var time_factor := 20
 @export
 var radius := 20
@@ -26,6 +28,7 @@ var dead_color := Color.RED
 var dash_range := 10
 var time := 0.0
 var is_dashing := false
+var dash_on_cooldown := false
 var is_holding_weapon := true
     
 func _draw() -> void:
@@ -50,7 +53,7 @@ func _process(delta: float) -> void:
         var prefix = get_keyboard_player_prefix()
         dir = Input.get_vector(prefix + "_left", prefix + "_right", prefix + "_up", prefix + "_down")
 
-        if Input.is_action_just_pressed(prefix + "_dash"):
+        if Input.is_action_just_pressed(prefix + "_dash") and not dash_on_cooldown:
             is_dashing = true
 
         if Input.is_action_just_pressed(prefix + "_throw"):
@@ -61,9 +64,8 @@ func _process(delta: float) -> void:
         dir = Vector2(1, 0) * Input.get_joy_axis(device, JOY_AXIS_LEFT_X)
         dir.y = Input.get_joy_axis(device, JOY_AXIS_LEFT_Y)
         
-        if Input.is_joy_button_pressed(device, JOY_BUTTON_A):
+        if Input.is_joy_button_pressed(device, JOY_BUTTON_A) and not dash_on_cooldown:
             is_dashing = true
-
 
         if Input.is_joy_button_pressed(device, JOY_BUTTON_B):
             throw_weapon(dir)
@@ -74,8 +76,7 @@ func _process(delta: float) -> void:
     dash_offset *= dash_range
     if time >= 1:
         time = 0
-        is_dashing = false
-        create_tween().tween_property(bubble_sprite, "scale", Vector2.ONE, 0.1)
+        stop_dashing()
 
     if is_dashing:
         bubble_sprite.scale.y = 0.6
@@ -85,11 +86,12 @@ func _process(delta: float) -> void:
         bubble_sprite.rotation = dir.angle()
     position += dash_offset + dir * delta * movespeed
 
-func is_keyboard_player():
-    return device < 0
-
-func get_keyboard_player_prefix():
-    return "kb" + str(abs(device))
+func stop_dashing():
+    is_dashing = false
+    dash_on_cooldown = true
+    create_tween().tween_property(bubble_sprite, "scale", Vector2.ONE, 0.1)
+    await get_tree().create_timer(dash_cooldown_seconds).timeout
+    dash_on_cooldown = false
 
 func setup_weapon():
     var weapon = $'Weapon/WeaponSprite'
@@ -110,6 +112,7 @@ func kill():
     dead = true
     queue_redraw()
     find_child('deathParticles').emitting = true
+    $BubbleSprite.visible = false
     await get_tree().create_timer(respawn_time).timeout
     print('respawn')
     respawn()
@@ -117,7 +120,14 @@ func kill():
 func respawn():
     dead = false
     find_child('deathParticles').emitting = false
+    $BubbleSprite.visible = true
     var viewport = get_viewport_rect()
     global_position.x = viewport.size.x / 2
     global_position.y = viewport.size.y / 2
     queue_redraw()
+
+func is_keyboard_player():
+    return device < 0
+
+func get_keyboard_player_prefix():
+    return "kb" + str(abs(device))
