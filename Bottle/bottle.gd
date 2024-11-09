@@ -159,22 +159,34 @@ func _on_area_entered_body(area: Area2D) -> void:
         player.bounce_back(direction * strenght_factor)
        
 func _on_top_left_entered_body(area: Area2D) -> void:
-    hit_bottle(area, 1)
+    hit_bottle(area, "topleft")
 
 func _on_top_right_entered_body(area: Area2D) -> void:
-    hit_bottle(area, -1)
+    hit_bottle(area, "topright")
 
 func _on_bottom_left_entered_body(area: Area2D) -> void:
-    hit_bottle(area, -1)
+    hit_bottle(area, "bottomleft")
 
 func _on_bottom_right_entered_body(area: Area2D) -> void:
-    hit_bottle(area, 1)
+    hit_bottle(area, "bottomright")
 
-func hit_bottle(area: Area2D, direction: int) -> void:
+func hit_bottle(area: Area2D, direction: String) -> void:
+    var impulse_direction = 0
+    if direction == "topleft":
+        impulse_direction = 1
+    elif direction == "topright":
+        impulse_direction = -1
+    elif direction == "bottomleft":
+        impulse_direction = -1
+    elif direction == "bottomright":
+        impulse_direction = 1
+    
     if is_instance_of(area, WeaponHitbox) and not player_has_entered:
         var weapon = area.get_parent() as Weapon
         if weapon.is_throwing or weapon.is_stabbing:
-            hit(0.25 * direction)
+            print("Hit impulse %s from direction %s" % [impulse_direction, direction])
+            weapon.hit_bottle = true
+            hit(0.25 * impulse_direction)
 
 func get_bottle_floor(offset: int) -> Vector2:
     var bottle_size = $Line2D.get_viewport_rect().size

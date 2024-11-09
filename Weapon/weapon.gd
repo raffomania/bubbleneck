@@ -34,6 +34,7 @@ var weapon_owner
 var attack_button_pressed := false
 var attack_button_pressed_since: float
 var base_weapon_scale: Vector2
+var hit_bottle: bool = false
 
 signal on_throw
 
@@ -134,6 +135,7 @@ func stab() -> void:
     position.x = x_before
     is_stabbing = false
     stab_on_cooldown = true
+    hit_bottle = false
 
     await get_tree().create_timer(stab_cooldown_seconds).timeout
 
