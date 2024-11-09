@@ -9,6 +9,7 @@ var current_stage
 
 @onready var spawner = $PlayerSpawner
 @onready var camera = $Camera2D
+@onready var scoring = $ScoringSystem
 
 func _ready() -> void:
     randomize()
