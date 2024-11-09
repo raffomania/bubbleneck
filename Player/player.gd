@@ -76,10 +76,10 @@ func _process(delta: float) -> void:
         direction = Input.get_vector(prefix + "_left", prefix + "_right", prefix + "_up", prefix + "_down")
 
         if is_instance_valid(weapon):
-            if Input.is_action_pressed(prefix + "_throw"):
+            if Input.is_action_pressed(prefix + "_throw") and not is_in_minigame():
                 $'GooglyEyes'.raise_eye()
                 weapon.set_attack_button_pressed(true)
-            elif Input.is_action_pressed(prefix + "_stab"):
+            elif Input.is_action_pressed(prefix + "_stab") and not is_in_minigame():
                 weapon.stab()
             else:
                 weapon.set_attack_button_pressed(false)
@@ -90,10 +90,10 @@ func _process(delta: float) -> void:
         direction.y = Input.get_joy_axis(device, JOY_AXIS_LEFT_Y)
         
         if is_instance_valid(weapon):
-            if Input.get_joy_axis(device, JOY_AXIS_TRIGGER_RIGHT) > 0.5:
+            if Input.get_joy_axis(device, JOY_AXIS_TRIGGER_RIGHT) > 0.5 and not is_in_minigame():
                 $'GooglyEyes'.raise_eye()
                 weapon.set_attack_button_pressed(true)
-            elif Input.get_joy_axis(device, JOY_AXIS_TRIGGER_LEFT) > 0.5:
+            elif Input.get_joy_axis(device, JOY_AXIS_TRIGGER_LEFT) > 0.5 and not is_in_minigame():
                 weapon.stab()
             else:
                 weapon.set_attack_button_pressed(false)
