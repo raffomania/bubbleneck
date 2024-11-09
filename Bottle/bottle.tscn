@@ -1,7 +1,7 @@
 [gd_scene load_steps=11 format=3 uid="uid://b1u5n0mlyoqu5"]
 
 [ext_resource type="Script" path="res://Bottle/bottle.gd" id="1_lxhjm"]
-[ext_resource type="PackedScene" path="res://Bottle/inside_particles.tscn" id="2_liu18"]
+[ext_resource type="PackedScene" uid="uid://cbyape3axp0qu" path="res://Bottle/inside_particles.tscn" id="2_liu18"]
 [ext_resource type="Texture2D" uid="uid://ccd6m7qoq5no5" path="res://Bottle/bottlecap.png" id="3_84vhy"]
 
 [sub_resource type="Curve" id="Curve_nbcki"]
@@ -60,13 +60,15 @@ metadata/_edit_lock_ = true
 
 [node name="Line2D" type="Line2D" parent="."]
 position = Vector2(-289.484, 0)
-points = PackedVector2Array(263.333, 1006.67, 440, 1006.67, 490, 1003.33, 520, 976.667, 530, 913.333, 533.333, 770, 533.333, 476.667, 526.667, 33.3333, 523.333, -226.667, 466.667, -343.333, 390, -446.667, 373.333, -456.667, 360, -593.333, 353.333, -873.333, 360, -966.667, 346.667, -1016.67, 260, -1023.33, 170, -1013.33, 160, -970, 156.667, -933.333, 166.667, -910, 166.667, -790, 156.667, -596.667, 153.333, -463.333, 106.667, -410, 53.3335, -343.333, 10.0001, -273.333, 0.00012207, -236.667, 0.00012207, -140, -3.33325, 23.3333, -3.33325, 210, -3.33325, 416.667, -3.33325, 660, -3.33325, 843.333, 3.3335, 946.667, 16.6667, 973.333, 36.6667, 993.333, 56.6667, 1010, 263.333, 1006.67)
+points = PackedVector2Array(263.333, 1006.67, 440, 1006.67, 490, 1003.33, 509.484, 993.333, 520, 976.667, 526.151, 953.333, 530, 913.333, 533.333, 770, 533.333, 476.667, 526.667, 33.3333, 526.325, -134.579, 522.817, -230, 512.817, -263.333, 466.667, -343.333, 376.151, -463.333, 369.484, -596.667, 359.484, -790, 352.817, -906.667, 359.484, -970, 342.817, -1016.67, 260, -1023.33, 170, -1013.33, 160, -970, 169.484, -906.667, 166.667, -790, 156.667, -596.667, 153.333, -463.333, 106.667, -410, 53.3335, -343.333, 10.0001, -273.333, 0.00012207, -236.667, 0.00012207, -140, -3.33325, 23.3333, -3.33325, 210, -3.33325, 416.667, -3.33325, 660, -3.33325, 843.333, -0.515991, 913.333, 3.3335, 946.667, 16.1507, 976.667, 39.484, 1000, 79.484, 1006.67, 263.333, 1006.67)
 closed = true
 antialiased = true
 
 [node name="InsideParticles" parent="Line2D" instance=ExtResource("2_liu18")]
+visible = false
 
 [node name="PopParticles" type="GPUParticles2D" parent="."]
+visible = false
 modulate = Color(0.352941, 0.827451, 1, 0.72549)
 self_modulate = Color(0, 0.756863, 1, 1)
 show_behind_parent = true
@@ -82,6 +84,7 @@ trail_enabled = true
 trail_lifetime = 0.05
 
 [node name="BottleneckParticles" type="GPUParticles2D" parent="."]
+visible = false
 modulate = Color(0.352941, 0.827451, 1, 0.72549)
 self_modulate = Color(0, 0.756863, 1, 1)
 show_behind_parent = true
@@ -97,40 +100,49 @@ trail_enabled = true
 trail_lifetime = 0.05
 
 [node name="BottleCap" type="Sprite2D" parent="."]
+visible = false
 modulate = Color(0.758192, 0.758192, 0.758191, 1)
 position = Vector2(-29.4833, -1000)
 scale = Vector2(1.1, 1.1)
 texture = ExtResource("3_84vhy")
 
 [node name="EntranceArea" type="Area2D" parent="."]
+visible = false
 position = Vector2(-32.8166, -1113.33)
 monitorable = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="EntranceArea"]
+visible = false
 position = Vector2(3.33323, 66.6633)
 shape = SubResource("CircleShape2D_5gv34")
 
 [node name="BodyArea" type="Area2D" parent="."]
+visible = false
 position = Vector2(-19.4833, -410)
 monitorable = false
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="BodyArea"]
+visible = false
 position = Vector2(-270.001, 410)
 polygon = PackedVector2Array(-0.515991, -240, 9.48401, -273.333, 52.8174, -343.333, 152.817, -463.333, 166.151, -786.667, 166.151, -906.667, 156.151, -933.333, 166.151, -1010, 259.484, -1016.67, 349.484, -1013.33, 359.484, -983.333, 359.484, -966.667, 352.817, -870, 359.484, -590, 372.817, -456.667, 392.817, -443.333, 466.151, -340, 522.817, -226.667, 529.484, 916.667, 519.484, 976.667, 489.484, 1003.33, 59.484, 1010, 56.1507, 1010, 16.1507, 973.333, 2.81735, 946.667)
 
 [node name="BodyTopLeft" type="Area2D" parent="."]
+visible = false
 position = Vector2(-38.9666, -820)
 monitorable = false
 
 [node name="CollisionTopLeft" type="CollisionPolygon2D" parent="BodyTopLeft"]
+visible = false
 position = Vector2(-247.7, 820)
 polygon = PackedVector2Array(206.667, -913.333, 232.818, -33.3334, -3.84903, -33.3334, -3.84903, -236.667, 6.15097, -273.333, 49.4843, -343.333, 149.484, -463.333, 162.818, -776.667, 162.818, -910, 152.818, -933.333, 156.151, -973.333)
 
 [node name="BodyTopRight" type="Area2D" parent="."]
+visible = false
 position = Vector2(-19.4833, -410)
 monitorable = false
 
 [node name="CollisionTopRight" type="CollisionPolygon2D" parent="BodyTopRight"]
+visible = false
 position = Vector2(-540.002, 820)
 polygon = PackedVector2Array(532.819, -446.667, 796.152, -443.333, 796.152, -636.667, 739.485, -753.333, 662.819, -856.667, 646.152, -866.667, 632.819, -1003.33, 626.152, -1280, 632.819, -1376.67, 622.819, -1383.33, 579.485, -1320)
 
