@@ -100,7 +100,8 @@ func attach_to_player(area) -> void:
         player.pick_up_weapon.call_deferred(self)
 
 func hit_player(player: Player) -> void:
-    if not player == weapon_owner:
+    # Weapon cannot kill owner and only while throwing or stabbing
+    if not player == weapon_owner and (is_throwing or is_stabbing):
          player.kill()
 
 
