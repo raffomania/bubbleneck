@@ -45,6 +45,7 @@ dash_curve = SubResource("Curve_d2kbo")
 [node name="Weapon" parent="." instance=ExtResource("2_tyojq")]
 position = Vector2(8, 25)
 rotation = 1.5708
+base_weapon_position = Vector2(8, 25)
 
 [node name="deathParticles" type="GPUParticles2D" parent="."]
 material = SubResource("ShaderMaterial_5oj7f")
