@@ -32,6 +32,7 @@ sub_emitter_amount_at_end = 8
 sub_emitter_keep_velocity = true
 
 [node name="deathParticles" type="GPUParticles2D"]
+modulate = Color(1, 1, 1, 0.458824)
 material = SubResource("ShaderMaterial_5oj7f")
 emitting = false
 amount = 15
