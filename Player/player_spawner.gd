@@ -15,18 +15,22 @@ func _ready() -> void:
 
     for device in Input.get_connected_joypads():
         spawn_player(device)
+        await get_tree().create_timer(0.8).timeout
 
     # Spawn keyboard players
     for device in [-1, -2]:
         spawn_player(device)
+        await get_tree().create_timer(0.8).timeout
 
     Input.joy_connection_changed.connect(self.joy_connection_changed)
 
 func joy_connection_changed(device, connected: bool):
-    if connected and device not in spawned_devices:
+    if connected:
         spawn_player(device)
 
 func spawn_player(device: int):
+    if device in spawned_devices:
+        return
     print("spawning player with device ", device)
        
     var player = player_scene.instantiate()
@@ -43,7 +47,6 @@ func random_player_color(player_index: int):
 
     var hue = color_index / 5.0
     if (player_index + 2) > 5:
-        hue += 1/10.0
+        hue += 1 / 10.0
 
     return Color.from_hsv(hue, 0.8, 0.9, 1)
-
