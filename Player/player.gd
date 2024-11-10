@@ -183,6 +183,7 @@ func handle_dash(delta: float, direction: Vector2) -> Vector2:
             dash_direction = Vector2(direction).normalized()
             $'GooglyEyes'.blink(dash_duration)
             make_invincible(dash_protection_duration)
+            $AudioStreamPlayer2D_Dash.play()
 
     # Return early if no button is pressed
     if not is_dashing:
@@ -355,6 +356,9 @@ func stop_minigame():
 
 func win():
     make_invincible(5.0)
+
+    $AudioStreamPlayer2D_Win.play()
+
     if is_instance_valid(weapon):
         weapon.queue_free()
     for player in get_tree().get_nodes_in_group("players"):

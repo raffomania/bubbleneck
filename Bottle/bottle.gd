@@ -132,6 +132,7 @@ func pop_bottle() -> void:
     inside_particles.lifetime = 1
     inside_particles.emitting = false
 
+    $AudioStreamPlayer2D.play()
     bottleneck_particles.emitting = true
     await get_tree().create_timer(0.7).timeout
     pop_particles.emitting = true

@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://pl2j5a30sd8w"]
+[gd_scene load_steps=12 format=3 uid="uid://pl2j5a30sd8w"]
 
 [ext_resource type="Script" path="res://Player/player.gd" id="1_02l3o"]
 [ext_resource type="PackedScene" path="res://Player/death_particles.tscn" id="2_7kgd1"]
@@ -7,6 +7,8 @@
 [ext_resource type="AudioStream" uid="uid://cnflcb4uncntf" path="res://assets/bubble pop 3.mp3" id="5_7jnye"]
 [ext_resource type="AudioStream" uid="uid://dfdy6o0wa05qq" path="res://assets/bubble pop 2.mp3" id="6_l6sdc"]
 [ext_resource type="AudioStream" uid="uid://bx2rvlpidhl8v" path="res://assets/bubble pop 1.mp3" id="7_mwqje"]
+[ext_resource type="AudioStream" uid="uid://cs254i8a8acmu" path="res://assets/drop.mp3" id="8_fubs7"]
+[ext_resource type="AudioStream" uid="uid://51ape50q0tb0" path="res://assets/drain.mp3" id="9_x3pfw"]
 
 [sub_resource type="Curve" id="Curve_d2kbo"]
 _data = [Vector2(0, 0), 0.0, 3.09952, 0, 0, Vector2(1, 1), 0.024502, 0.0, 0, 0]
@@ -44,4 +46,12 @@ volume_db = 9.519
 
 [node name="AudioStreamPlayer2D_Pop_0" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("7_mwqje")
+volume_db = 9.519
+
+[node name="AudioStreamPlayer2D_Dash" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("8_fubs7")
+volume_db = 9.519
+
+[node name="AudioStreamPlayer2D_Win" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("9_x3pfw")
 volume_db = 9.519
