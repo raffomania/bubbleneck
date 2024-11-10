@@ -15,16 +15,10 @@ radius = 16.0312
 [node name="Player" type="Area2D"]
 z_index = 1
 script = ExtResource("1_02l3o")
-device = null
 movespeed = 300
-player_color = null
-radius = null
-dead = null
-respawn_time = null
 dash_curve = SubResource("Curve_d2kbo")
 dash_speed = 17
 dash_duration = 0.2
-dash_cooldown_seconds = null
 
 [node name="deathParticles" parent="." instance=ExtResource("2_7kgd1")]
 

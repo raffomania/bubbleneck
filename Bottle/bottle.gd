@@ -27,7 +27,7 @@ var movement_type: String = "spin"
 var bottleneck_particles: GPUParticles2D
 var pop_particles: GPUParticles2D
 var max_inner_particle_lifetime = 10.0
-var min_inner_particle_lifetime = 0.1
+var min_inner_particle_lifetime = 0.01
 var min_lifetime_start_time = 12.0
 var inside_particles: GPUParticles2D
 
