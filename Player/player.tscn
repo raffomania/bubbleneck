@@ -1,9 +1,12 @@
-[gd_scene load_steps=7 format=3 uid="uid://pl2j5a30sd8w"]
+[gd_scene load_steps=10 format=3 uid="uid://pl2j5a30sd8w"]
 
 [ext_resource type="Script" path="res://Player/player.gd" id="1_02l3o"]
 [ext_resource type="PackedScene" uid="uid://bxwvn54hlicia" path="res://Player/death_particles.tscn" id="2_7kgd1"]
 [ext_resource type="Texture2D" uid="uid://1hsp3duivf5o" path="res://Player/player.png" id="3_gh5l1"]
 [ext_resource type="PackedScene" uid="uid://bnyt1gu3wl8cg" path="res://Player/GooglyEyes/googly_eyes.tscn" id="4_vlgyh"]
+[ext_resource type="AudioStream" uid="uid://cnflcb4uncntf" path="res://assets/bubble pop 3.mp3" id="5_7jnye"]
+[ext_resource type="AudioStream" uid="uid://dfdy6o0wa05qq" path="res://assets/bubble pop 2.mp3" id="6_l6sdc"]
+[ext_resource type="AudioStream" uid="uid://bx2rvlpidhl8v" path="res://assets/bubble pop 1.mp3" id="7_mwqje"]
 
 [sub_resource type="Curve" id="Curve_d2kbo"]
 _data = [Vector2(0, 0), 0.0, 3.09952, 0, 0, Vector2(1, 1), 0.024502, 0.0, 0, 0]
@@ -30,3 +33,15 @@ texture = ExtResource("3_gh5l1")
 shape = SubResource("CircleShape2D_8hwc6")
 
 [node name="GooglyEyes" parent="." instance=ExtResource("4_vlgyh")]
+
+[node name="AudioStreamPlayer2D_Pop_3" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("5_7jnye")
+volume_db = 9.519
+
+[node name="AudioStreamPlayer2D_Pop_2" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("6_l6sdc")
+volume_db = 9.519
+
+[node name="AudioStreamPlayer2D_Pop_1" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("7_mwqje")
+volume_db = 9.519

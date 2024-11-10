@@ -258,13 +258,14 @@ func get_new_weapon() -> void:
 
     var new_weapon = weapon_scene.instantiate()
     add_child.call_deferred(new_weapon)
-    pick_up_weapon(new_weapon)
+    pick_up_weapon.call_deferred(new_weapon)
 
 func pick_up_weapon(new_weapon) -> void:
     weapon = new_weapon
     var sprite = weapon.get_node('WeaponSprite')
     sprite.material.set("shader_parameter/color", player_color)
-    weapon.reparent(self)
+    if weapon.get_parent() != null:
+        weapon.reparent(self)
     weapon.rotation = PI / 2.0
     weapon.weapon_owner = self
     weapon.position = Vector2(8, 25)
@@ -289,6 +290,7 @@ func kill():
         weapon = null
 
     dead = true
+    play_death_sound()
     stop_minigame()
     find_child('deathParticles').restart()
     find_child('deathParticles').emitting = true
@@ -371,3 +373,8 @@ func bounce_back(direction: Vector2):
 func is_movement_allowed():
     var is_attacking = is_instance_valid(weapon) and (weapon.is_stabbing or weapon.attack_button_pressed)
     return !is_attacking and !is_in_minigame() and !is_in_bounce_back
+
+func play_death_sound():
+    var num : int = randi() % 3
+    get_node("AudioStreamPlayer2D_Pop_" + str(num)).play()
+
