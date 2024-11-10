@@ -258,13 +258,14 @@ func get_new_weapon() -> void:
 
     var new_weapon = weapon_scene.instantiate()
     add_child.call_deferred(new_weapon)
-    pick_up_weapon(new_weapon)
+    pick_up_weapon.call_deferred(new_weapon)
 
 func pick_up_weapon(new_weapon) -> void:
     weapon = new_weapon
     var sprite = weapon.get_node('WeaponSprite')
     sprite.material.set("shader_parameter/color", player_color)
-    weapon.reparent(self)
+    if weapon.get_parent() != null:
+        weapon.reparent(self)
     weapon.rotation = PI / 2.0
     weapon.weapon_owner = self
     weapon.position = Vector2(8, 25)
