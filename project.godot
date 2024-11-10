@@ -157,4 +157,5 @@ debug_next_scene={
 [rendering]
 
 renderer/rendering_method="mobile"
+textures/vram_compression/import_etc2_astc=true
 environment/defaults/default_clear_color=Color(0.07824, 0.0648, 0.09, 1)
