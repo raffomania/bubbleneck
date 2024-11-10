@@ -19,7 +19,7 @@ var shake_bottle_from_hit = false
 # Sudden death
 var sudden_death = false
 var sudden_death_countdown = 0.0
-var sudden_death_timeout = 5
+var sudden_death_timeout = 40
 
 # The current rotational speed of the bottle
 var rotation_speed: float = 0.5
