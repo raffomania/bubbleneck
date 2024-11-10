@@ -44,7 +44,8 @@ func init_scores() -> void:
         text.global_position = Vector2(0, 50 * (index + 3))
         text.modulate = player.player_color
         childs[index] = score
-        add_child(score)
+        if score.get_parent() == null:
+            add_child(score)
         queue_redraw()
 
 
