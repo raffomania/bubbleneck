@@ -118,7 +118,7 @@ func drop() -> void:
         on_throw.disconnect(connection.callable)
     weapon_owner = null
     var main_scene = get_tree().get_root().get_node("Main")
-    reparent(main_scene)
+    reparent.call_deferred(main_scene)
 
 func stab() -> void:
     if is_stabbing or stab_on_cooldown:
