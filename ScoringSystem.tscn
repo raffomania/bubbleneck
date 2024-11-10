@@ -1,13 +1,10 @@
-[gd_scene load_steps=2 format=3 uid="uid://c5c8t3bryu081"]
+[gd_scene load_steps=3 format=3 uid="uid://c5c8t3bryu081"]
 
 [ext_resource type="Script" path="res://scoring_system.gd" id="1_h05sx"]
+[ext_resource type="PackedScene" uid="uid://dnp7ldhr3k2lt" path="res://Scoring/score_text.tscn" id="2_4mlnf"]
 
 [node name="Node2D" type="Node2D"]
 z_index = 1
 script = ExtResource("1_h05sx")
 
-[node name="ScoreText" type="RichTextLabel" parent="."]
-offset_right = 562.0
-offset_bottom = 469.0
-text = "Score
--"
+[node name="ScoreText" parent="." instance=ExtResource("2_4mlnf")]

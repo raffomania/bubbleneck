@@ -1,0 +1,8 @@
+[gd_scene format=3 uid="uid://dnp7ldhr3k2lt"]
+
+[node name="ScoreText" type="RichTextLabel"]
+modulate = Color(1, 0.0705882, 1, 1)
+offset_right = 562.0
+offset_bottom = 469.0
+theme_override_font_sizes/normal_font_size = 39
+text = "Scores"

@@ -3,22 +3,29 @@ extends Node2D
 
 var scores: Dictionary
 
+var score_text = preload("res://Scoring/score_text.tscn")
+
+var childs = {}
+
 
 func _ready() -> void:
     scores = {}
 
 func init_scores() -> void:
-    for player in get_tree().get_nodes_in_group('players'):
+    for key in childs.keys():
+        remove_child(childs[key])
+    for node in get_tree().get_nodes_in_group('players'):
+        var player = node as Player
         if !scores.keys().has(player.device):
             scores[player.device] = 0
+        var score = score_text.instantiate()
+        var text = score as RichTextLabel
+        text.text = 'Player %s:   %s \n' % [player.device + 2, scores[player.device]]
+        text.global_position = Vector2(50, 50 * (player.device + 3))
+        text.modulate = player.player_color
+        childs[player.device] = score
+        add_child(score)
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-    var text = 'Score \n'
-    for key in scores.keys():
-        text += 'Player %s: %s \n' % [key + 2, scores[key]]
-    $ScoreText.text = text
-    $ScoreText.global_position = Vector2(20, 20)
 
 func increase_score(player):
     if scores.keys().has(player.device):
@@ -26,3 +33,4 @@ func increase_score(player):
     else:
         scores[player.device] = 1
     print(scores)
+    init_scores()
