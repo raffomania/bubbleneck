@@ -16,8 +16,8 @@ scale = Vector2(0.085997, 0.0598316)
 texture = ExtResource("2_ny87f")
 
 [node name="LeftInner" type="Sprite2D" parent="LeftOuter"]
+position = Vector2(11.6283, -16.7136)
 texture = ExtResource("3_360ca")
-metadata/_edit_lock_ = true
 
 [node name="RightOuter" type="Sprite2D" parent="."]
 position = Vector2(14, -1.00005)
@@ -25,5 +25,5 @@ scale = Vector2(0.0911371, 0.0530785)
 texture = ExtResource("2_ny87f")
 
 [node name="RightInner" type="Sprite2D" parent="RightOuter"]
+position = Vector2(-8.2016e-05, -18.84)
 texture = ExtResource("3_360ca")
-metadata/_edit_lock_ = true
