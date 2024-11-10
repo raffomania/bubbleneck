@@ -130,14 +130,13 @@ func _process(delta: float) -> void:
         sudden_death_countdown -= delta
         if not sudden_death and sudden_death_countdown <= 0:
             var players = get_tree().get_nodes_in_group('players')
-            var positions = []
             var player_angle = 0
             for node in players:
                 var player = node as Player
                 if player.dead:
                     player.respawn()
                 if player.is_in_minigame():
-                    player.stop_minigame() 
+                    player.stop_minigame()
                 node.position = viewpoint_center + Vector2.from_angle(player_angle) * 400
                 player_angle += (2 * PI) / players.size()
 

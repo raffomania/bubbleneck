@@ -4,13 +4,12 @@ var arena_offset: float = 20.0
 
 var radius = 0
 var center = Vector2(0, 0)
-var viewport: Rect2
 var arena_size: Vector2
 @export var color: Color
 @export var background_color: Color
 
 func _ready() -> void:
-    viewport = get_viewport_rect()
+    var viewport = get_viewport_rect()
 
     global_position.x = viewport.size.x / 2
     global_position.y = viewport.size.y / 2
@@ -18,6 +17,8 @@ func _ready() -> void:
     arena_size = Vector2(Vector2(viewport.size.x - arena_offset * 2.0, viewport.size.y - arena_offset * 2.0))
 
 func _draw() -> void:
+    var viewport = get_viewport_rect()
+
     draw_rect(Rect2(-viewport.size / 2, viewport.size), background_color)
     draw_rect(Rect2(Vector2(-viewport.size.x / 2.0 + arena_offset, -viewport.size.y / 2.0 + arena_offset), arena_size), color)
 

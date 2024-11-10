@@ -136,7 +136,7 @@ func _process(delta: float) -> void:
     $BubbleSprite.global_rotation_degrees = 0
 
 
-func _input(event):
+func _input(_event):
     if is_in_minigame():
         if is_keyboard_player():
             var prefix = get_keyboard_player_prefix()
@@ -157,7 +157,7 @@ func update_weapon_visibility():
 # Handle the player dash
 # Returns a Vector that indicates the dash direction.
 # The vector is empty if no dash is active.
-func handle_dash(delta: float, direction: Vector2) -> Vector2:
+func handle_dash(delta: float, current_player_direction: Vector2) -> Vector2:
     var dash_offset = Vector2()
 
     # The dash is still on cooldown, reduce the cooldown.
@@ -180,7 +180,7 @@ func handle_dash(delta: float, direction: Vector2) -> Vector2:
         # If we are now dashing, update some stuff.
         if just_started_dashing:
             is_dashing = true
-            dash_direction = Vector2(direction).normalized()
+            dash_direction = Vector2(current_player_direction).normalized()
             $'GooglyEyes'.blink(dash_duration)
             make_invincible(dash_protection_duration)
             $AudioStreamPlayer2D_Dash.play()
@@ -376,12 +376,12 @@ func win():
             player.stage_lost = true
             player.kill(true)
 
-func bounce_back(direction: Vector2):
+func bounce_back(bounce_direction: Vector2):
     if is_in_minigame():
         return
     var tween = get_tree().create_tween()
     is_in_bounce_back = true
-    tween.tween_property(self, "global_position", global_position + direction, 0.05)
+    tween.tween_property(self, "global_position", global_position + bounce_direction, 0.05)
     tween.tween_callback(func(): is_in_bounce_back = false)
 
 func is_movement_allowed():

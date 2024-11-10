@@ -73,10 +73,10 @@ func _process(delta: float) -> void:
 
 func _draw() -> void:
     if attack_button_pressed and weapon_owner:
-        var rotation = Vector2.from_angle(PI / 2 + 0.07)
+        var rotation_offset = Vector2.from_angle(PI / 2)
         var start = Vector2.ZERO
-        var direction_vector = rotation * (attack_button_pressed_since * 300 )
-        var end = position - direction_vector
+        var direction_vector = rotation_offset * (attack_button_pressed_since * 300)
+        var end = start - direction_vector
         draw_line(start, end, weapon_owner.player_color, -1.0, true)
 
 
