@@ -19,7 +19,7 @@ var shake_bottle_from_hit = false
 # Sudden death
 var sudden_death = false
 var sudden_death_countdown = 0.0
-var sudden_death_timeout = 40
+var sudden_death_timeout = 5
 
 # The current rotational speed of the bottle
 var rotation_speed: float = 0.5
@@ -136,6 +136,8 @@ func _process(delta: float) -> void:
                 var player = node as Player
                 if player.dead:
                     player.respawn()
+                if player.is_in_minigame():
+                    player.stop_minigame() 
                 node.position = viewpoint_center + Vector2.from_angle(player_angle) * 400
                 player_angle += (2 * PI) / players.size()
 
