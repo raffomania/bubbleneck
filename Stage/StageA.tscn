@@ -8,7 +8,7 @@
 
 [node name="Arena" parent="." instance=ExtResource("1_1iqbg")]
 color = Color(0.2108, 0.247173, 0.31, 1)
-background_color = Color(0.2925, 0.307125, 0.39, 1)
+background_color = Color(0.0666667, 0.0901961, 0.164706, 1)
 
 [node name="Background" parent="." instance=ExtResource("3_hu3tc")]
 offset_right = 1920.0
