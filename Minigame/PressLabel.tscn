@@ -1,6 +1,16 @@
-[gd_scene load_steps=2 format=3 uid="uid://d1vv63di7jqde"]
+[gd_scene load_steps=3 format=3 uid="uid://d1vv63di7jqde"]
 
+[ext_resource type="Texture2D" uid="uid://cakvdlm343i2j" path="res://Minigame/keyboard_arrow_down_outline.png" id="1_5yr40"]
 [ext_resource type="Script" path="res://Minigame/press_label.gd" id="1_h75ti"]
 
 [node name="PressLabel" type="Sprite2D"]
+z_index = 1
+texture = ExtResource("1_5yr40")
 script = ExtResource("1_h75ti")
+
+[node name="Background" type="ColorRect" parent="."]
+z_index = -1
+offset_left = -22.0
+offset_top = -22.0
+offset_right = 22.0
+offset_bottom = 22.0

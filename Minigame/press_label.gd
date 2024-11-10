@@ -23,6 +23,10 @@ func set_direction(new_dir: String):
     dir = new_dir
     update_texture()
 
+func set_color(color: Color):
+    self_modulate = color
+    $Background.self_modulate = color.lightened(0.8)
+
 func set_pressed(new_pressed: bool):
     is_pressed = new_pressed
     update_texture()
