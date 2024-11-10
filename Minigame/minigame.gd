@@ -27,7 +27,7 @@ func create_labels():
         label.set_color(color)
         label.set_direction(dir)
         label.position = label_position
-        label_position.x += 60
+        label_position.x += 120
         add_child(label)
         label_children.append(label)
 

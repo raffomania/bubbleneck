@@ -340,7 +340,7 @@ func start_minigame():
     minigame.device = device
     var direction_to_center = ((get_viewport_rect().size / 2) - global_position).normalized()
     get_parent().add_child(minigame)
-    minigame.global_position = global_position + direction_to_center * 100
+    minigame.global_position = global_position + direction_to_center * 200
 
     minigame.finished.connect(self.win)
 
