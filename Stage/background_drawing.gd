@@ -10,7 +10,6 @@ func player_killed(player: Player):
         print("WARNING: invalid player passed to global player killed signal")
         return
     var color: Color = Color(player.player_color).darkened(0.3)
-    color.a = 0.5
     var splotches = splotch_scene.instantiate()
     splotches.color = color
     splotches.global_position = Vector2(player.global_position)

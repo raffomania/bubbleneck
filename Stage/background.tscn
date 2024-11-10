@@ -2,5 +2,6 @@
 
 [ext_resource type="Script" path="res://Stage/background_drawing.gd" id="1_e3alf"]
 
-[node name="Background" type="Node2D"]
+[node name="Background" type="CanvasGroup"]
+self_modulate = Color(1, 1, 1, 0.458824)
 script = ExtResource("1_e3alf")
