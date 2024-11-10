@@ -157,4 +157,4 @@ debug_next_scene={
 [rendering]
 
 renderer/rendering_method="mobile"
-environment/defaults/default_clear_color=Color(0.794121, 0.794121, 0.794121, 1)
+environment/defaults/default_clear_color=Color(0.07824, 0.0648, 0.09, 1)

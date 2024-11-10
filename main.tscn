@@ -1,8 +1,17 @@
-[gd_scene load_steps=4 format=3 uid="uid://dv03v2o4qgx7j"]
+[gd_scene load_steps=5 format=3 uid="uid://dv03v2o4qgx7j"]
 
 [ext_resource type="Script" path="res://main.gd" id="1_m3pie"]
 [ext_resource type="PackedScene" uid="uid://c5c8t3bryu081" path="res://ScoringSystem.tscn" id="3_3hbry"]
 [ext_resource type="Script" path="res://Player/player_spawner.gd" id="4_h0alh"]
+
+[sub_resource type="Environment" id="Environment_grt4r"]
+background_mode = 3
+glow_enabled = true
+glow_levels/2 = 1.0
+glow_levels/3 = 0.5
+glow_levels/7 = 1.0
+glow_blend_mode = 1
+glow_hdr_threshold = 0.4
 
 [node name="Main" type="Node2D"]
 script = ExtResource("1_m3pie")
@@ -16,3 +25,6 @@ player_colors = Array[Color]([Color(0.109804, 0.964706, 0.937255, 1), Color(0.98
 offset = Vector2(960, 540)
 
 [node name="ScoringSystem" parent="." instance=ExtResource("3_3hbry")]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_grt4r")

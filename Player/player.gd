@@ -235,6 +235,7 @@ func is_invincible() -> bool:
 
 func set_player_color(color: Color):
     $BubbleSprite.self_modulate = color
+    $GooglyEyes.modulate = color.lightened(0.1)
     if is_instance_valid(weapon):
         var sprite = weapon.get_node('WeaponSprite')
         sprite.material.set("shader_parameter/color", color)
