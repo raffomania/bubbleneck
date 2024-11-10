@@ -37,19 +37,37 @@ func _process(_delta: float) -> void:
     if is_finished:
         return
 
+    # If there's no next label to press, there's nothing to do.
     var label_to_press = find_next_label_to_press()
     if label_to_press == null:
         return
 
     var pressed_direction = get_pressed_direction()
-    if pressed_direction == label_to_press.dir and not on_cooldown:
+
+    # Player has released the stick, reset the cooldown and then do nothing.
+    if pressed_direction == "":
+        on_cooldown = false
+        return
+
+    # We're on cooldown, but player hasn't released the stick yet.
+    if on_cooldown:
+        return
+
+    # correct direction pressed
+    if pressed_direction == label_to_press.dir:
         label_to_press.set_pressed(true)
         on_cooldown = true
         if find_next_label_to_press() == null:
             finish()
+        return
+    
+    # wrong direction pressed
+    var last_pressed = find_last_pressed_label()
+    if is_instance_valid(last_pressed):
+        last_pressed.set_pressed(false)
+        label_to_press.wrong_direction_pressed_animation()
+        on_cooldown = true
 
-    if pressed_direction == "":
-        on_cooldown = false
 
 func finish():
     is_finished = true
@@ -68,6 +86,13 @@ func find_next_label_to_press():
     for child in label_children:
         if not child.is_pressed:
             return child
+
+    return null
+
+func find_last_pressed_label():
+    for i in range(label_children.size() - 1, -1, -1):
+        if label_children[i].is_pressed:
+            return label_children[i]
 
     return null
 

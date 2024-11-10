@@ -38,6 +38,17 @@ func set_pressed(new_pressed: bool):
     reset_tween.tween_property(self, "scale", Vector2(1, 1), 0.1)
     reset_tween.tween_property(self, "rotation", 0, 0.1)
 
+func wrong_direction_pressed_animation():
+    var position_before = Vector2(position)
+    var tween = create_tween()
+    tween.tween_property(self, "position", position_before + Vector2(10, 0), 0.06)
+    tween.tween_property(self, "position", position_before + Vector2(-10, 0), 0.06)
+    tween.set_loops(2)
+    await tween.finished
+    tween = create_tween()
+    tween.tween_property(self, "position", position_before, 0.05)
+    await tween.finished
+
 func vanish_animation():
     var tween = create_tween()
     tween.tween_property(self, "scale", Vector2(0.05, 1.5), 0.1)
