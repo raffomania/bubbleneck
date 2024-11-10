@@ -257,7 +257,7 @@ func get_new_weapon() -> void:
         return
 
     var new_weapon = weapon_scene.instantiate()
-    add_child(new_weapon)
+    add_child.call_deferred(new_weapon)
     pick_up_weapon(new_weapon)
 
 func pick_up_weapon(new_weapon) -> void:
