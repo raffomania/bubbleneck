@@ -22,8 +22,9 @@ var max_rotation_speed: float = 1
 
 var bottleneck_particles: GPUParticles2D
 var pop_particles: GPUParticles2D
-var max_inner_particle_lifetime = 10
+var max_inner_particle_lifetime = 10.0
 var min_inner_particle_lifetime = 0.1
+var min_lifetime_start_time = 12.0
 var inside_particles: GPUParticles2D
 
 # Parameters to adjust the shaking effect 
@@ -84,6 +85,13 @@ func _process(delta: float) -> void:
         # Calculate particle lifetime depending on pop countdown.
         var countdown_percentage = pop_countdown / pop_countdown_start
         inside_particles.lifetime = max_inner_particle_lifetime * countdown_percentage + min_inner_particle_lifetime
+
+        # Calculate the new lifetime of the particles inside the bottle based on the countdown
+        if pop_countdown > min_lifetime_start_time:
+            inside_particles.lifetime = lerp(min_inner_particle_lifetime, max_inner_particle_lifetime, (pop_countdown - min_lifetime_start_time) / (pop_countdown_start - min_lifetime_start_time))
+        else:
+            # Stop decreasing at minimum lifetime
+            inside_particles.lifetime = min_inner_particle_lifetime
 
         if rotation_speed > 0:
             rotation_speed -= delta * 0.05
