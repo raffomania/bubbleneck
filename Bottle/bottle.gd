@@ -121,7 +121,7 @@ func _process(delta: float) -> void:
             position = Vector2(shake_x, shake_y) + position
 
     # Check if the bottle should pop.
-    if pop_countdown <= 0 or Input.is_action_just_pressed("debug_pop_bottle"):
+    if not popped and pop_countdown <= 0 or Input.is_action_just_pressed("debug_pop_bottle"):
         popped = true
         pop_bottle()
 
