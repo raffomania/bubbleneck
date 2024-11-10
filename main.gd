@@ -16,7 +16,7 @@ var current_stage
 
 func _ready() -> void:
     randomize()
-    DebugMenu.style = DebugMenu.Style.VISIBLE_DETAILED
+    # DebugMenu.style = DebugMenu.Style.VISIBLE_DETAILED
     next_stage()
 
 func _unhandled_input(event: InputEvent) -> void:
