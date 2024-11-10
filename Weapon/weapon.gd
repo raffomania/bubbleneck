@@ -47,12 +47,14 @@ func _ready() -> void:
 
 # Called every frame. 'delta' is the elapsed throwing_time since the previous frame.
 func _process(delta: float) -> void:
+    if attack_button_pressed:
+        queue_redraw()
+
     if is_throwing:
         throwing_time += delta * time_factor
         var curve_value = throw_curve.sample(throwing_time)
         throw_distance = curve_value * throw_range_factor
         global_position += dir * delta * throw_distance
-        queue_redraw()
 
     if throwing_time > throwing_range_seconds:
         $Hitbox.check_now()
@@ -73,9 +75,11 @@ func _process(delta: float) -> void:
 
 
 func _draw() -> void:
-    if weapon_owner:
-        print(position, Vector2.from_angle(rotation), throw_distance, position + Vector2.from_angle(rotation) * throw_distance)
-        draw_line(position,-(position + Vector2.from_angle(rotation) * throw_distance / 100), weapon_owner.player_color)
+    if attack_button_pressed:
+        var start = position
+        var end = position + -(Vector2.from_angle(rotation) * (throw_distance / 100))
+        #print(start, end)
+        draw_line(start, end, weapon_owner.player_color)
 
 
 func set_attack_button_pressed(now_pressed: bool) -> void:
