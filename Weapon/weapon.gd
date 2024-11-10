@@ -121,6 +121,11 @@ func hit_player(player: Player) -> void:
         print(player, weapon_owner)
         player.kill()
 
+        # When a player kills another player with a throw, give them a new spear.
+        if is_throwing:
+            weapon_owner.get_new_weapon()
+            weapon_owner = null
+
 func drop() -> void:
     for connection in on_throw.get_connections():
         on_throw.disconnect(connection.callable)
