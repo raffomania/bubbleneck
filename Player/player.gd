@@ -341,6 +341,9 @@ func is_in_minigame():
     return is_instance_valid(minigame)
 
 func start_minigame():
+    if dead:
+        return
+
     if is_in_minigame():
         return minigame
 
