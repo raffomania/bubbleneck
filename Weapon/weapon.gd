@@ -135,8 +135,9 @@ func hit_player(player: Player) -> void:
 
         # When a player kills another player with a throw, give them a new spear.
         if is_throwing and not player.is_invincible():
-            weapon_owner.get_new_weapon()
-            weapon_owner = null
+            if weapon_owner is not null:
+                weapon_owner.get_new_weapon()
+                weapon_owner = null
 
 func drop() -> void:
     for connection in on_throw.get_connections():
