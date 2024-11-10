@@ -4,6 +4,9 @@ var spawned_devices = []
 var player_scene = preload("res://Player/player.tscn")
 var bottle: Bottle
 
+@export
+var player_colors: Array[Color]
+
 # todo: this is broken
 func _ready():
     Input.joy_connection_changed.connect(self.joy_connection_changed)
@@ -46,10 +49,6 @@ func spawn_player(device: int):
 
 func random_player_color(player_index: int):
     # +2 because of 2 negative keyboard devices
-    var color_index = (player_index + 2) % 5
+    var color_index = (player_index + 2) % player_colors.size()
 
-    var hue = color_index / 5.0
-    if (player_index + 2) > 5:
-        hue += 1 / 10.0
-
-    return Color.from_hsv(hue, 0.8, 0.9, 1)
+    return player_colors[color_index]

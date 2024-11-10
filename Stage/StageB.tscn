@@ -1,12 +1,19 @@
-[gd_scene load_steps=4 format=3 uid="uid://cna3un1faxi"]
+[gd_scene load_steps=5 format=3 uid="uid://cna3un1faxi"]
 
 [ext_resource type="PackedScene" uid="uid://vya5gp3frnx5" path="res://Arena/arena.tscn" id="1_w6no2"]
 [ext_resource type="PackedScene" uid="uid://b1u5n0mlyoqu5" path="res://Bottle/bottle.tscn" id="2_ftmnx"]
 [ext_resource type="Script" path="res://Arena/arenaB.gd" id="2_oygqj"]
+[ext_resource type="PackedScene" uid="uid://c87bliyet1rcn" path="res://Stage/background.tscn" id="3_tbg03"]
 
 [node name="StageB" type="Node2D"]
 
 [node name="ArenaB" parent="." instance=ExtResource("1_w6no2")]
 script = ExtResource("2_oygqj")
+color = Color(0.1295, 0.3059, 0.35, 1)
+background_color = Color(0.027, 0.2214, 0.27, 1)
+
+[node name="Background" parent="." instance=ExtResource("3_tbg03")]
+offset_right = 1920.0
+offset_bottom = 1080.0
 
 [node name="Bottle" parent="." instance=ExtResource("2_ftmnx")]

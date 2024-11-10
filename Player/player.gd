@@ -51,7 +51,7 @@ var dash_cooldown: float = 0.0
 var dash_cooldown_seconds: float = 1.0
 
 # ----- Invincibility related variables ----- 
-var spawn_protection_duration: float = 1.5
+var spawn_protection_duration: float = 3.5
 var dash_protection_duration: float = 0.5
 var invincibility_countdown: float = 0.0
 var direction := Vector2(1, 0)
@@ -107,6 +107,8 @@ func _process(delta: float) -> void:
 
     var dash_offset = handle_dash(delta, direction)
 
+    update_weapon_visibility()
+
     # Rotate in the direction we're walking
     if direction != Vector2.ZERO:
         rotation = direction.angle()
@@ -126,6 +128,13 @@ func _process(delta: float) -> void:
     else:
         $GooglyEyes.reset_googly_position()
 
+func update_weapon_visibility():
+    if not is_instance_valid(weapon):
+        return
+    if is_dashing:
+        weapon.visible = false
+    else:
+        weapon.visible = true
 
 # Handle the player dash
 # Returns a Vector that indicates the dash direction.
@@ -193,10 +202,14 @@ func handle_invincibility(delta: float):
 func make_invincible(duration: float):
     invincibility_countdown = duration
     var tween = get_tree().create_tween()
-    tween.tween_property($BubbleSprite, "self_modulate", player_color.lightened(0.8), duration / 2)
-    tween.tween_property($BubbleSprite, "self_modulate", player_color, duration / 2)
+    var color = Color(player_color)
+    color.a = 0.2
+    var flash_duration = 0.4
+    tween.tween_property($BubbleSprite, "self_modulate", color, flash_duration / 2)
+    tween.tween_property($BubbleSprite, "self_modulate", player_color, flash_duration / 2)
     tween.set_trans(Tween.TransitionType.TRANS_SINE)
-    tween.set_loops(true)
+    var loops = floori(duration / flash_duration)
+    tween.set_loops(loops)
 
 
 func is_invincible() -> bool:
@@ -252,6 +265,8 @@ func kill():
     find_child('deathParticles').emitting = true
     $BubbleSprite.visible = false
     $GooglyEyes.kill()
+    Globals.player_killed.emit(self)
+
     await get_tree().create_timer(respawn_time).timeout
     print('respawn')
     respawn()

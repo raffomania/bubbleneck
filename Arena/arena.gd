@@ -3,18 +3,21 @@ extends Node2D
 
 var radius = 0
 var center = Vector2(0, 0)
-var viewport : Rect2
+@export var color: Color
+@export var background_color: Color
 
 func _ready() -> void:
-    viewport = get_viewport_rect()
+    var viewport = get_viewport_rect()
 
     global_position.x = viewport.size.x / 2
     global_position.y = viewport.size.y / 2
-    radius = min(viewport.size.x, viewport.size.y) / 2
+    var padding_percent = 3
+    radius = (min(viewport.size.x, viewport.size.y) / 2) * (100 - padding_percent) / 100
 
 func _draw() -> void:
-    draw_circle(Vector2(0, 0), radius, Color(58 / 256.0, 81 / 256.0, 120 / 256.0), 1)
-
+    var viewport = get_viewport_rect()
+    draw_rect(Rect2(-viewport.size / 2, viewport.size), background_color)
+    draw_circle(Vector2(0, 0), radius, color, 1, -1, true)
 
 
 func _process(_delta: float) -> void:
