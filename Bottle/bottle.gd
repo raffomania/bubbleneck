@@ -16,6 +16,11 @@ var pop_countdown_max_speed = 1.5
 
 var shake_bottle_from_hit = false
 
+# Sudden death
+var sudden_death = false
+var sudden_death_countdown = 0.0
+var sudden_death_timeout = 5.0
+
 # The current rotational speed of the bottle
 var rotation_speed: float = 0.5
 # The max speed with which the bottle can rotate.
@@ -66,6 +71,8 @@ func _ready() -> void:
     rng.seed = Time.get_unix_time_from_system()
     pop_countdown = rng.randi_range(pop_countdown_min, pop_countdown_max)
     pop_countdown_start = pop_countdown
+
+    sudden_death_countdown = sudden_death_timeout
 
     bottleneck_particles = $BottleneckParticles
     pop_particles = $PopParticles
@@ -119,6 +126,19 @@ func _process(delta: float) -> void:
             var shake_x = randf_range(-shake_intensity, shake_intensity)
             var shake_y = randf_range(-shake_intensity, shake_intensity)
             position = Vector2(shake_x, shake_y) + position
+    else:
+        sudden_death_countdown -= delta
+        if not sudden_death and sudden_death_countdown <= 0:
+            var players = get_tree().get_nodes_in_group('players')
+            var positions = []
+            var player_angle = 0
+            for node in players:
+                var player = node as Player
+                player.respawn()
+                node.position = viewpoint_center + Vector2.from_angle(player_angle) * 400
+                player_angle += (2 * PI) / players.size()
+                sudden_death = true
+                
 
     # Check if the bottle should pop.
     if not popped and pop_countdown <= 0 or Input.is_action_just_pressed("debug_pop_bottle"):

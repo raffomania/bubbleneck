@@ -308,6 +308,12 @@ func kill(muted = false):
 func respawn():
     if stage_lost:
         return
+
+    var bottle = get_tree().root.get_node("Main/PlayerSpawner").bottle
+    # Stay dead on sudden death
+    if bottle.sudden_death:
+        return
+
     dead = false
     # Spawn protection
     make_invincible(spawn_protection_duration)
@@ -319,7 +325,6 @@ func respawn():
     $GooglyEyes.respawn()
 
     # Set the respawn position based on current level.
-    var bottle = get_tree().root.get_node("Main/PlayerSpawner").bottle
     global_position = bottle.get_respawn_position()
 
     # if not is_instance_valid(weapon):

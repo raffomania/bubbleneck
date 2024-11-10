@@ -13,8 +13,6 @@ color = Color(0.105882, 0.133333, 0.180392, 1)
 background_color = Color(0.294118, 0.305882, 0.388235, 1)
 
 [node name="Background" parent="." instance=ExtResource("3_dsfel")]
-offset_right = 1920.0
-offset_bottom = 1080.0
 
 [node name="Bottle" parent="." instance=ExtResource("4_5h1o3")]
 movement_type = "spin_orbit"
