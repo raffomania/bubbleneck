@@ -17,6 +17,6 @@ func _draw():
             var offset = Vector2(randf_range(-1, 1) * 50, randf_range(-1, 1) * 50)
             var radius = randf_range(2, 26)
 
-            draw_circle(player.global_position + offset, radius, color, true)
+            draw_circle(player.global_position + offset, radius, color, true, -1, true)
 
     kill_queue = []
