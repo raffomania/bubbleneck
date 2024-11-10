@@ -21,15 +21,20 @@ func _ready() -> void:
     scores = {}
 
 func init_scores() -> void:
-    for key in childs.keys():
-        remove_child(childs[key])
+    # for key in childs.keys():
+    #     remove_child(childs[key])
+    #     childs[key].queue_free()
 
     for node in get_tree().get_nodes_in_group('players'):
         var player = node as Player
         var index = player.device + 2
         if !scores.keys().has(index):
             scores[index] = 0
-        var score = score_text.instantiate()
+        var score
+        if childs.keys().has(index):
+            score = childs[index]
+        else:
+            score = score_text.instantiate()
         var text = score as RichTextLabel
         var colorname = colors[index]
         text.text = 'Player %s:   %s \n' % [colorname, scores[index]]
