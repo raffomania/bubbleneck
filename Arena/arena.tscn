@@ -6,6 +6,7 @@
 
 [node name="Arena" type="Node2D"]
 script = ExtResource("1_ymhiu")
+color = Color(0.2006, 0.251713, 0.34, 1)
 
 [node name="Area2D" type="Area2D" parent="."]
 
