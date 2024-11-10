@@ -253,6 +253,9 @@ func set_player_color(color: Color):
 
 
 func get_new_weapon() -> void:
+    if is_instance_valid(weapon):
+        return
+
     var new_weapon = weapon_scene.instantiate()
     add_child(new_weapon)
     pick_up_weapon(new_weapon)
@@ -303,6 +306,7 @@ func respawn():
     dead = false
     # Spawn protection
     make_invincible(spawn_protection_duration)
+    get_new_weapon()
 
     set_player_color(player_color)
     find_child('deathParticles').emitting = false
