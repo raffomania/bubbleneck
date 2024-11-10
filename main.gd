@@ -16,6 +16,10 @@ func _ready() -> void:
     DebugMenu.style = DebugMenu.Style.VISIBLE_DETAILED
     next_stage()
 
+func _unhandled_input(event: InputEvent) -> void:
+    if event.is_action_pressed("debug_next_scene"):
+        next_stage()
+
 func next_stage():
     if is_instance_valid(current_stage):
         current_stage.queue_free()
