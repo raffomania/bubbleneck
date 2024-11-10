@@ -134,10 +134,12 @@ func _process(delta: float) -> void:
             var player_angle = 0
             for node in players:
                 var player = node as Player
-                player.respawn()
+                if player.dead:
+                    player.respawn()
                 node.position = viewpoint_center + Vector2.from_angle(player_angle) * 400
                 player_angle += (2 * PI) / players.size()
-                sudden_death = true
+
+            sudden_death = true
                 
 
     # Check if the bottle should pop.
