@@ -1,8 +1,9 @@
-[gd_scene load_steps=12 format=3 uid="uid://b1u5n0mlyoqu5"]
+[gd_scene load_steps=13 format=3 uid="uid://b1u5n0mlyoqu5"]
 
 [ext_resource type="Script" path="res://Bottle/bottle.gd" id="1_lxhjm"]
 [ext_resource type="PackedScene" uid="uid://cbyape3axp0qu" path="res://Bottle/inside_particles.tscn" id="2_liu18"]
 [ext_resource type="Texture2D" uid="uid://ccd6m7qoq5no5" path="res://Bottle/bottlecap.png" id="3_84vhy"]
+[ext_resource type="AudioStream" uid="uid://51ape50q0tb0" path="res://assets/drain.mp3" id="4_a7e82"]
 [ext_resource type="AudioStream" uid="uid://2w2kgqc0fkxa" path="res://assets/bottle pop.mp3" id="4_lqcv1"]
 
 [sub_resource type="Curve" id="Curve_nbcki"]
@@ -152,5 +153,9 @@ position = Vector2(-2161.03, 3286.67)
 polygon = PackedVector2Array(2163.85, -2346.67, 2170.51, -1980, 2410.52, -1900, 2420.52, -1963.33, 2420.52, -2823.33, 2160.51, -2816.67)
 
 [node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("4_a7e82")
+volume_db = 3.093
+
+[node name="AudioStreamPlayer2DBottleSound" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("4_lqcv1")
-volume_db = 16.843
+volume_db = 6.511

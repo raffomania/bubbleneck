@@ -149,6 +149,8 @@ func pop_bottle() -> void:
 func hit(impulse: float) -> void:
     add_impulse(impulse)
 
+    $AudioStreamPlayer2DBottleSound.play()
+
     pop_countdown = max(0, pop_countdown - 1)
     shake_bottle_from_hit = true
     await get_tree().create_timer(0.1).timeout

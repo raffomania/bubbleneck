@@ -359,7 +359,7 @@ func stop_minigame():
 func win():
     make_invincible(5.0)
 
-    $AudioStreamPlayer2D_Win.play()
+    # $AudioStreamPlayer2D_Win.play()
 
     if is_instance_valid(weapon):
         weapon.queue_free()
