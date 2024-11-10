@@ -21,8 +21,8 @@ func spawn_all_players() -> void:
         spawn_player(device)
 
     # Spawn keyboard players
-    # for device in [-1, -2]:
-    #     spawn_player(device)
+    for device in keyboard_devices:
+        spawn_player(device)
 
     get_tree().root.get_node('Main').get_node('ScoringSystem').init_scores()
 
