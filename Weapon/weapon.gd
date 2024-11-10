@@ -116,6 +116,10 @@ func hit_player(player: Player) -> void:
         print(player, weapon_owner)
         player.kill()
 
+func drop() -> void:
+    weapon_owner = null
+    var main_scene = get_tree().get_root().get_node("Main")
+    reparent(main_scene)
 
 func stab() -> void:
     if is_stabbing or stab_on_cooldown:

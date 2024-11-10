@@ -236,10 +236,15 @@ func kill():
 
     if is_instance_valid(weapon):
         weapon.cancel_attack_charge()
+        weapon.drop()
+
+        if weapon.on_throw.is_connected(on_throw_weapon):
+            weapon.on_throw.disconnect(on_throw_weapon)
+
+        weapon = null
 
     dead = true
     stop_minigame()
-    set_player_color(dead_color)
     find_child('deathParticles').restart()
     find_child('deathParticles').emitting = true
     $BubbleSprite.visible = false
