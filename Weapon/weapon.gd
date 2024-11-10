@@ -59,6 +59,8 @@ func _process(delta: float) -> void:
 
     if attack_button_pressed:
         attack_button_pressed_since = min(max_throwing_range_seconds, attack_button_pressed_since + delta)
+        if attack_button_pressed_since >= stab_button_press_threshold_seconds:
+            $Highlight.visible = true
         position.x = base_weapon_position.x - attack_button_pressed_since * 20
         $WeaponSprite.scale.x = base_weapon_scale.x + attack_button_pressed_since * 0.2
 
@@ -68,7 +70,6 @@ func set_attack_button_pressed(now_pressed: bool) -> void:
     var just_released = attack_button_pressed and not now_pressed
 
     if just_pressed:
-        $Highlight.visible = true
         attack_button_pressed = true
     if just_released:
         $WeaponSprite.scale.x = base_weapon_scale.x
