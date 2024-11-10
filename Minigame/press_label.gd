@@ -25,7 +25,7 @@ func set_direction(new_dir: String):
 
 func set_color(color: Color):
     self_modulate = color
-    $Background.self_modulate = color.lightened(0.8)
+    $Background.self_modulate = color.darkened(0.8)
 
 func set_pressed(new_pressed: bool):
     is_pressed = new_pressed
