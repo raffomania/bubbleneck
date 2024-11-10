@@ -35,6 +35,7 @@ var minigame = null
 @export
 var dash_curve: Curve
 var is_dashing := false
+var dash_direction: Vector2
 # The timer that tracks how far we're in a dash.
 
 var dash_timer: float = 0.0
@@ -114,9 +115,12 @@ func _process(delta: float) -> void:
         bubble_sprite.rotation = direction.angle()
 
     if is_movement_allowed():
+        # Move in the direction we're dashing
+        if is_dashing:
+            position += dash_offset
         # Move into the direction indicated by controller or keyboard
-        if (is_keyboard_player() and pressed_direction.y <= -0.5) or not is_keyboard_player():
-            position += dash_offset + direction * delta * movespeed
+        elif (is_keyboard_player() and pressed_direction.y <= -0.5) or not is_keyboard_player():
+            position += direction * delta * movespeed
     
     # fix player sprite rotation so sprite highlight doesn't rotate
     $BubbleSprite.global_rotation_degrees = 0
@@ -149,17 +153,21 @@ func handle_dash(delta: float, direction: Vector2) -> Vector2:
     # The player isn't dashing yet and the cooldown is not active.
     # Check whether we should start a new dash.
     if not is_dashing and is_movement_allowed():
+        var just_started_dashing = false
         if is_keyboard_player():
             var prefix = get_keyboard_player_prefix()
             if Input.is_action_just_pressed(prefix + "_dash"):
-                is_dashing = true
-                $'GooglyEyes'.blink(dash_duration)
-                make_invincible(dash_protection_duration)
+                just_started_dashing = true
         else:
             if Input.is_joy_button_pressed(device, JOY_BUTTON_A):
-                is_dashing = true
-                $'GooglyEyes'.blink(dash_duration)
-                make_invincible(dash_protection_duration)
+                just_started_dashing = true
+
+        # If we are now dashing, update some stuff.
+        if just_started_dashing:
+            is_dashing = true
+            dash_direction = Vector2(direction).normalized()
+            $'GooglyEyes'.blink(dash_duration)
+            make_invincible(dash_protection_duration)
 
     # Return early if no button is pressed
     if not is_dashing:
@@ -176,8 +184,8 @@ func handle_dash(delta: float, direction: Vector2) -> Vector2:
     # Based on the relative elapsed time to the total dash time.
     var relative_elapsed_time = dash_timer / dash_duration
     var curve_value = dash_curve.sample(relative_elapsed_time)
-    dash_offset.x = curve_value * direction.x
-    dash_offset.y = curve_value * direction.y
+    dash_offset.x = curve_value * dash_direction.x
+    dash_offset.y = curve_value * dash_direction.y
     dash_offset *= dash_speed
 
     # If we reached the end of the dashing duration.
