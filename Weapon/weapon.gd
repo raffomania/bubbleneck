@@ -56,10 +56,10 @@ func _process(delta: float) -> void:
     if throwing_time > throwing_range_seconds:
         $Hitbox.check_now()
         is_throwing = false
-        throwing_time = 0
-        weapon_owner = null
 
         await get_tree().create_timer(0.2).timeout
+        throwing_time = 0
+        weapon_owner = null
         is_checking_for_throw_collisions = false
 
     if attack_button_pressed:
