@@ -113,6 +113,8 @@ func hit_player(player: Player) -> void:
         player.kill()
 
 func drop() -> void:
+    for connection in on_throw.get_connections():
+        on_throw.disconnect(connection.callable)
     weapon_owner = null
     var main_scene = get_tree().get_root().get_node("Main")
     reparent(main_scene)

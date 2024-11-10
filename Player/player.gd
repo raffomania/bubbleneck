@@ -261,9 +261,6 @@ func kill():
         weapon.cancel_attack_charge()
         weapon.drop()
 
-        if weapon.on_throw.is_connected(on_throw_weapon):
-            weapon.on_throw.disconnect(on_throw_weapon)
-
         weapon = null
 
     dead = true
