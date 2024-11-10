@@ -4,9 +4,9 @@
 [ext_resource type="PackedScene" uid="uid://b1u5n0mlyoqu5" path="res://Bottle/bottle.tscn" id="2_ftmnx"]
 [ext_resource type="Script" path="res://Arena/arenaB.gd" id="2_oygqj"]
 
-[node name="StageA" type="Node2D"]
+[node name="StageB" type="Node2D"]
 
-[node name="Arena" parent="." instance=ExtResource("1_w6no2")]
+[node name="ArenaB" parent="." instance=ExtResource("1_w6no2")]
 script = ExtResource("2_oygqj")
 
 [node name="Bottle" parent="." instance=ExtResource("2_ftmnx")]

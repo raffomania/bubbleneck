@@ -1,7 +1,6 @@
 extends Node2D
 
-@onready
-var arena_offset := 5.0
+var arena_offset : float = 20.0
 
 var radius = 0
 var center = Vector2(0, 0)
@@ -16,10 +15,10 @@ func _ready() -> void:
     global_position.x = viewport.size.x / 2
     global_position.y = viewport.size.y / 2
     radius = min(viewport.size.x, viewport.size.y) / 2
-    arena_size = Vector2(Vector2(viewport.size.x - 10.0, viewport.size.y - 10.0))
+    arena_size = Vector2(Vector2(viewport.size.x - arena_offset * 2.0, viewport.size.y - arena_offset * 2.0))
 
 func _draw() -> void:
-    draw_rect(Rect2(Vector2(-viewport.size.x / 2.0 + arena_offset, -viewport.size.y / 2.0 + arena_offset), arena_size), Color(58 / 256.0, 81 / 256.0, 120 / 256.0))
+    draw_rect(Rect2(Vector2(-viewport.size.x / 2.0 + arena_offset, -viewport.size.y / 2.0 + arena_offset), arena_size), Color("#2e6c7b"))
 
 
 func is_point_outside_rect(point) -> bool:
