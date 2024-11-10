@@ -131,6 +131,16 @@ func _process(delta: float) -> void:
     else:
         $GooglyEyes.reset_googly_position()
 
+func _input(event):
+    if is_in_minigame():
+        if is_keyboard_player():
+            var prefix = get_keyboard_player_prefix()
+            if Input.is_action_just_pressed(prefix + "_dash"):
+                stop_minigame()
+        else:
+            if Input.is_joy_button_pressed(device, JOY_BUTTON_A):
+                stop_minigame()
+
 func update_weapon_visibility():
     if not is_instance_valid(weapon):
         return
