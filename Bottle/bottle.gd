@@ -148,6 +148,7 @@ func pop_bottle() -> void:
 func hit(impulse: float) -> void:
     add_impulse(impulse)
 
+    pop_countdown = max(0, pop_countdown - 1)
     shake_bottle_from_hit = true
     await get_tree().create_timer(0.1).timeout
     shake_bottle_from_hit = false
@@ -262,7 +263,7 @@ func spin(delta):
 func orbit(delta):
     rotation += rotation_speed * delta
     var radius = original_position.y
-    position = Vector2(cos(rotation + PI/2) * radius, sin(rotation + PI/2) * radius) + original_position
+    position = Vector2(cos(rotation + PI / 2) * radius, sin(rotation + PI / 2) * radius) + original_position
 
     if rotation_speed > 0:
         rotation_speed -= delta * 0.05
