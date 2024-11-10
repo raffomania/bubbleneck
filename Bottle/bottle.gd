@@ -21,6 +21,8 @@ var rotation_speed: float = 0.5
 # The max speed with which the bottle can rotate.
 # `1` equals rotation per second in radians.
 var max_rotation_speed: float = 1
+@export
+var movement_type: String = "spin"
 
 var bottleneck_particles: GPUParticles2D
 var pop_particles: GPUParticles2D
@@ -78,7 +80,12 @@ func _ready() -> void:
 
 func _process(delta: float) -> void:
     if not popped:
-        rotation += rotation_speed * delta
+        if movement_type == "spin":
+            spin(delta)
+        elif movement_type == "orbit":
+            orbit(delta)
+        elif movement_type == "spin_orbit":
+            spin_orbit(delta)
 
         # Calculate countdown and countdown speed depending on rotation speed.
         var pop_countdown_speed = (abs(rotation_speed) / max_rotation_speed) * pop_countdown_max_speed + pop_countdown_min_speed
@@ -95,12 +102,11 @@ func _process(delta: float) -> void:
         else:
             # Stop decreasing at minimum lifetime
             inside_particles.lifetime = min_inner_particle_lifetime
-
-        if rotation_speed > 0:
-            rotation_speed -= delta * 0.05
-        elif rotation_speed < 0:
-            rotation_speed += delta * 0.05
-
+    
+        # Reset position to original position if pop countdown is zero
+        if pop_countdown == 0:
+            position = Vector2(0, 0) + original_position
+    
         var shake_intensity = 0
         if pop_countdown < shake_start_time:
             shake_intensity = lerp(0.0, max_shake_intensity, 1 - (pop_countdown / shake_start_time))
@@ -112,11 +118,7 @@ func _process(delta: float) -> void:
         if shake_intensity > 0:
             var shake_x = randf_range(-shake_intensity, shake_intensity)
             var shake_y = randf_range(-shake_intensity, shake_intensity)
-            position = Vector2(shake_x, shake_y) + original_position
-    
-        # Reset position to originsl position if pop countdown is zero
-        if pop_countdown == 0:
-            position = Vector2(0, 0) + original_position
+            position = Vector2(shake_x, shake_y) + position
 
     # Check if the bottle should pop.
     if pop_countdown <= 0 or Input.is_action_just_pressed("debug_pop_bottle"):
@@ -247,3 +249,32 @@ func hit_bottle(area: Area2D, direction: String) -> void:
 func get_bottle_floor(offset: int) -> Vector2:
     var bottle_size = $Line2D.get_viewport_rect().size
     return to_global(Vector2(0, (bottle_size.y / 2) + offset))
+
+func spin(delta):
+    rotation += rotation_speed * delta
+    position = original_position
+
+    if rotation_speed > 0:
+        rotation_speed -= delta * 0.05
+    elif rotation_speed < 0:
+        rotation_speed += delta * 0.05
+
+func orbit(delta):
+    rotation += rotation_speed * delta 
+    var radius = original_position.y / 2
+    position = Vector2(cos(rotation) * radius, sin(rotation) * radius) + original_position
+
+    if rotation_speed > 0:
+        rotation_speed -= delta * 0.05
+    elif rotation_speed < 0:
+        rotation_speed += delta * 0.05
+
+func spin_orbit(delta):
+    rotation += rotation_speed * delta
+    var radius = original_position.y / 2
+    position = Vector2(sin(rotation) * radius, cos(rotation) * radius) + original_position
+
+    if rotation_speed > 0:
+        rotation_speed -= delta * 0.05
+    elif rotation_speed < 0:
+        rotation_speed += delta * 0.05

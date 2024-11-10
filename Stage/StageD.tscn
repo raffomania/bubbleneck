@@ -1,0 +1,18 @@
+[gd_scene load_steps=4 format=3 uid="uid://duvl6ee55km6g"]
+
+[ext_resource type="PackedScene" uid="uid://vya5gp3frnx5" path="res://Arena/arena.tscn" id="1_bbtwx"]
+[ext_resource type="PackedScene" uid="uid://c87bliyet1rcn" path="res://Stage/background.tscn" id="2_bw6xh"]
+[ext_resource type="PackedScene" uid="uid://b1u5n0mlyoqu5" path="res://Bottle/bottle.tscn" id="3_n665a"]
+
+[node name="StageD" type="Node2D"]
+
+[node name="Arena" parent="." instance=ExtResource("1_bbtwx")]
+color = Color(0.2108, 0.247173, 0.31, 1)
+background_color = Color(0.2925, 0.307125, 0.39, 1)
+
+[node name="Background" parent="." instance=ExtResource("2_bw6xh")]
+offset_right = 1920.0
+offset_bottom = 1080.0
+
+[node name="Bottle" parent="." instance=ExtResource("3_n665a")]
+movement_type = "orbit"
