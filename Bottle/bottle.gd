@@ -30,11 +30,12 @@ var min_lifetime_start_time = 12.0
 var inside_particles: GPUParticles2D
 
 # Parameters to adjust the shaking effect 
-var max_shake_intensity = 5.0  # Maximum shake amount in pixels
+var max_shake_intensity = 5.0 # Maximum shake amount in pixels
 var shake_start_time = 8
 var original_position: Vector2
 
 var player_has_entered := false
+var minigame_in_progress := false
 
 @onready
 var entrance_area: Area2D = $EntranceArea
@@ -163,13 +164,23 @@ func add_impulse(impulse: float) -> void:
         rotation_speed = -max_rotation_speed
 
 func _on_area_entered_entrance(area: Area2D) -> void:
-    if not is_instance_of(area, Player) or not popped or player_has_entered:
+    if not is_instance_of(area, Player) or not popped or player_has_entered or minigame_in_progress:
         return
 
     var player = area as Player
     var minigame = player.start_minigame()
+    minigame_in_progress = true
+
+    var tween = create_tween()
+    tween.tween_property(player, "global_position", entrance_area.global_position, 0.2)
+
     if is_instance_valid(minigame):
         minigame.finished.connect(func(): self.minigame_finished(player))
+        minigame.aborted.connect(self.minigame_aborted)
+
+
+func minigame_aborted():
+    minigame_in_progress = false
 
 
 func minigame_finished(player: Player):
@@ -180,6 +191,9 @@ func minigame_finished(player: Player):
 
     get_tree().root.get_node('Main').get_node('ScoringSystem').increase_score(player)
 
+    # wait for minigame to disappear
+    await get_tree().create_timer(1.0).timeout
+
     var camera = get_tree().root.get_camera_2d()
     var zoom_tween = create_tween().set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_IN)
     zoom_tween.tween_property(camera, "zoom", Vector2(10, 10), 3.0)
@@ -187,14 +201,10 @@ func minigame_finished(player: Player):
     create_tween().tween_property(player, "rotation", player.rotation + PI * 2, 2.0)
 
     var tween = create_tween()
-    tween.tween_property(player, "global_position", entrance_area.global_position, 0.4)
-    await tween.finished
-
-    tween = create_tween().parallel()
-    tween.tween_property(player, "scale", player.scale * 0.6, 1.0)
     tween.tween_property(player, "global_position", global_position, 2.0)
-
+    tween.parallel().tween_property(player, "scale", player.scale * 0.6, 1.0)
     await zoom_tween.finished
+
     get_tree().root.get_node("Main").next_stage()
 
 func _on_area_entered_body(area: Area2D) -> void:

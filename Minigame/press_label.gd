@@ -26,18 +26,18 @@ func set_direction(new_dir: String):
 func set_pressed(new_pressed: bool):
     is_pressed = new_pressed
     update_texture()
-    var tween = create_tween().parallel()
+    var tween = create_tween()
     tween.tween_property(self, "scale", Vector2(0.95, 1.3), 0.05)
-    tween.tween_property(self, "rotation", PI / 20, 0.03)
+    tween.parallel().tween_property(self, "rotation", PI / 20, 0.05)
     await tween.finished
     var reset_tween = create_tween().parallel()
     reset_tween.tween_property(self, "scale", Vector2(1, 1), 0.1)
-    reset_tween.tween_property(self, "rotation", 0, 0.05)
+    reset_tween.tween_property(self, "rotation", 0, 0.1)
 
 func vanish_animation():
-    var tween = create_tween().parallel()
-    tween.tween_property(self, "scale", Vector2(0.05, 1.5), 0.05)
-    tween.tween_property(self, "rotation", PI / 12, 0.05)
+    var tween = create_tween()
+    tween.tween_property(self, "scale", Vector2(0.05, 1.5), 0.1)
+    tween.parallel().tween_property(self, "rotation", PI / 20, 0.1)
     await tween.finished
 
 

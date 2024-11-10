@@ -329,7 +329,7 @@ func stop_minigame():
     if not is_in_minigame():
         return
     
-    minigame.queue_free()
+    minigame.abort()
 
 func win():
     make_invincible(5.0)
@@ -341,6 +341,8 @@ func win():
             player.kill()
 
 func bounce_back(direction: Vector2):
+    if is_in_minigame():
+        return
     var tween = get_tree().create_tween()
     is_in_bounce_back = true
     tween.tween_property(self, "global_position", global_position + direction, 0.05)

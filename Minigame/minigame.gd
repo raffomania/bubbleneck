@@ -14,6 +14,7 @@ var on_cooldown := false
 var is_finished := false
 
 signal finished
+signal aborted
 
 func _ready() -> void:
     create_labels()
@@ -57,6 +58,10 @@ func finish():
         await get_tree().create_timer(0.02).timeout
         await label.vanish_animation()
         label.queue_free()
+    queue_free()
+
+func abort():
+    aborted.emit()
     queue_free()
 
 func find_next_label_to_press():

@@ -51,7 +51,7 @@ hue_variation_max = 0.3
 hue_variation_curve = SubResource("CurveTexture_kwjlk")
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_5gv34"]
-radius = 130.0
+radius = 50.0
 
 [node name="Bottle" type="Node2D"]
 scale = Vector2(0.3, 0.3)
@@ -103,11 +103,10 @@ scale = Vector2(1.1, 1.1)
 texture = ExtResource("3_84vhy")
 
 [node name="EntranceArea" type="Area2D" parent="."]
-position = Vector2(-32.8166, -1113.33)
+position = Vector2(-30, -1006.67)
 monitorable = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="EntranceArea"]
-position = Vector2(3.33323, 66.6633)
 shape = SubResource("CircleShape2D_5gv34")
 
 [node name="BodyArea" type="Area2D" parent="."]
