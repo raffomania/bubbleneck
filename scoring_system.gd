@@ -13,7 +13,10 @@ var colors = {
     2: 'Purple',
     3: 'Pink',
     4: 'Green',
-    5: 'Cyan',
+    5: 'Yellow',
+    6: 'Cyan',
+    7: 'Orange',
+    8: 'Purple',
 }
 
 

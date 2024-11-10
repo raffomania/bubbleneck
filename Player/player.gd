@@ -102,7 +102,7 @@ func _process(delta: float) -> void:
             if Input.get_joy_axis(device, JOY_AXIS_TRIGGER_RIGHT) > 0.5 and not is_in_minigame():
                 $'GooglyEyes'.raise_eye()
                 weapon.set_attack_button_pressed(true)
-            elif Input.get_joy_axis(device, JOY_AXIS_TRIGGER_LEFT) > 0.5 or Input.is_joy_button_pressed(device, JOY_BUTTON_X) and not is_in_minigame():
+            elif Input.get_joy_axis(device, JOY_AXIS_TRIGGER_LEFT) > 0.5 and not is_in_minigame():
                 weapon.stab()
             else:
                 weapon.set_attack_button_pressed(false)
@@ -381,6 +381,5 @@ func is_movement_allowed():
     return !is_attacking and !is_in_minigame() and !is_in_bounce_back
 
 func play_death_sound():
-    var num : int = randi() % 3
+    var num: int = randi() % 3
     get_node("AudioStreamPlayer2D_Pop_" + str(num)).play()
-
