@@ -33,6 +33,8 @@ func reset_googly_position() -> void:
 
 func walking_animation() -> void:
     $LeftOuter.position.y -= sin(eternal_time_variable * time_factor) * 0.5
+    # $LeftOuter.scale.x += sin(eternal_time_variable * time_factor * 0.5) * 0.001
+    # $RightOuter.scale.y -= sin(eternal_time_variable * time_factor * 0.5) * 0.001
     $RightOuter.position.y += sin(eternal_time_variable * time_factor) * 0.5
     
 func raise_eye() -> void:

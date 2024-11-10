@@ -56,6 +56,7 @@ var spawn_protection_duration: float = 3.5
 var dash_protection_duration: float = 0.5
 var invincibility_countdown: float = 0.0
 var direction := Vector2(1, 0)
+var time := 0.0
 
 func _ready():
     add_to_group('players')
@@ -71,6 +72,7 @@ func _process(delta: float) -> void:
     if (dead):
         return
 
+    time += delta
     handle_invincibility(delta)
 
     # var direction: Vector2
@@ -121,15 +123,18 @@ func _process(delta: float) -> void:
         # Move into the direction indicated by controller or keyboard
         elif (is_keyboard_player() and pressed_direction.y <= -0.5) or not is_keyboard_player():
             position += direction * delta * movespeed
+            $GooglyEyes.walking_animation()
+        else:
+            $GooglyEyes.reset_googly_position()
+        
+    if (direction and not is_keyboard_player()) or (is_keyboard_player() and pressed_direction.y <= -0.5):
+        skew_sprite()
+    elif not direction:
+        $GooglyEyes.reset_googly_position()
     
     # fix player sprite rotation so sprite highlight doesn't rotate
     $BubbleSprite.global_rotation_degrees = 0
 
-    # Googly eyes
-    if direction:
-        $GooglyEyes.walking_animation()
-    else:
-        $GooglyEyes.reset_googly_position()
 
 func update_weapon_visibility():
     if not is_instance_valid(weapon):
@@ -199,6 +204,12 @@ func handle_dash(delta: float, direction: Vector2) -> Vector2:
         dash_cooldown = dash_cooldown_seconds
 
     return dash_offset
+
+
+func skew_sprite():
+    $BubbleSprite.skew = sin(time * 10.0) * 0.5
+    if is_instance_valid(weapon):
+        weapon.position.y += sin(time * 10.0) * 0.10
 
 # Handle all logic around the player's invincibility (blinking + timer)
 func handle_invincibility(delta: float):
