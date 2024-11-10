@@ -56,7 +56,6 @@ radius = 50.0
 [node name="Bottle" type="Node2D"]
 scale = Vector2(0.3, 0.3)
 script = ExtResource("1_lxhjm")
-movement_type = null
 metadata/_edit_lock_ = true
 
 [node name="Line2D" type="Line2D" parent="."]
@@ -66,10 +65,11 @@ closed = true
 antialiased = true
 
 [node name="InsideParticles" parent="Line2D" instance=ExtResource("2_liu18")]
+modulate = Color(0.35, 0.826667, 1, 1)
 
 [node name="PopParticles" type="GPUParticles2D" parent="."]
-modulate = Color(0.352941, 0.827451, 1, 0.72549)
-self_modulate = Color(0, 0.756863, 1, 1)
+modulate = Color(0.25, 0.8, 1, 1)
+self_modulate = Color(0, 0.816667, 1, 1)
 show_behind_parent = true
 position = Vector2(-29.4833, -1016.67)
 scale = Vector2(3.33333, 3.33333)
