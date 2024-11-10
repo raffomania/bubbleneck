@@ -35,6 +35,7 @@ func init_scores() -> void:
         text.modulate = player.player_color
         childs[player.device] = score
         add_child(score)
+        queue_redraw()
 
 
 func increase_score(player):
