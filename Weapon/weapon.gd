@@ -123,6 +123,8 @@ func stab() -> void:
 
     is_stabbing = true
 
+    $Hitbox.check_now()
+
     var x_before = position.x
     # Set an in-between hitbox position during the stab to prevent the hitbox missing the enemy
     await get_tree().create_timer(stab_duration_seconds / 3).timeout
