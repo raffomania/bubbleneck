@@ -128,16 +128,12 @@ func stab() -> void:
 
     $Hitbox.check_now()
 
-    var x_before = position.x
-    # Set an in-between hitbox position during the stab to prevent the hitbox missing the enemy
-    await get_tree().create_timer(stab_duration_seconds / 3).timeout
-    position.x += stab_distance / 2
-    await get_tree().create_timer(stab_duration_seconds / 3).timeout
-    position.x += stab_distance / 2
-    await get_tree().create_timer(stab_duration_seconds / 3).timeout
+    var pos_before = Vector2(position)
+    var tween = create_tween().tween_property(self, "position", position + Vector2(stab_distance, 0), stab_duration_seconds / 2)
+    await tween.finished
+    tween = create_tween().tween_property(self, "position", pos_before, stab_duration_seconds / 2)
+    await tween.finished
 
-
-    position.x = x_before
     is_stabbing = false
     stab_on_cooldown = true
     hit_bottle = false
