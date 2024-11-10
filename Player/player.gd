@@ -81,7 +81,6 @@ func _process(delta: float) -> void:
         # rotation = direction.angle()
 
             
-
         if is_instance_valid(weapon):
             if Input.is_action_pressed(prefix + "_throw") and not is_in_minigame():
                 $'GooglyEyes'.raise_eye()
@@ -162,9 +161,9 @@ func handle_dash(delta: float, direction: Vector2) -> Vector2:
                 $'GooglyEyes'.blink(dash_duration)
                 make_invincible(dash_protection_duration)
 
-        # Return early if no button is pressed
-        if not is_dashing:
-            return dash_offset
+    # Return early if no button is pressed
+    if not is_dashing:
+        return dash_offset
 
     # Dash is active, increment the timer
     dash_timer += delta
