@@ -14,6 +14,8 @@ var pop_countdown_max = 40
 var pop_countdown_min_speed = 0.5
 var pop_countdown_max_speed = 1.5
 
+var shake_bottle_from_hit = false
+
 # The current rotational speed of the bottle
 var rotation_speed: float = 0.5
 # The max speed with which the bottle can rotate.
@@ -101,6 +103,9 @@ func _process(delta: float) -> void:
         var shake_intensity = 0
         if pop_countdown < shake_start_time:
             shake_intensity = lerp(0.0, max_shake_intensity, 1 - (pop_countdown / shake_start_time))
+
+        if shake_bottle_from_hit:
+            shake_intensity = lerp(0.0, max_shake_intensity, 1)
     
         # Apply random shake to position
         if shake_intensity > 0:
@@ -139,6 +144,10 @@ func pop_bottle() -> void:
 # `impulse`: equals the added rotations per second in radian.
 func hit(impulse: float) -> void:
     add_impulse(impulse)
+
+    shake_bottle_from_hit = true
+    await get_tree().create_timer(0.1).timeout
+    shake_bottle_from_hit = false
 
 # Adds an impulse to the rotation of the bottle.
 # The impulse cannot be faster than `max_rotation_speed`.
