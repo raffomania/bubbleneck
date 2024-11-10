@@ -47,9 +47,6 @@ func _ready() -> void:
 
 # Called every frame. 'delta' is the elapsed throwing_time since the previous frame.
 func _process(delta: float) -> void:
-    if attack_button_pressed:
-        queue_redraw()
-
     if is_throwing:
         throwing_time += delta * time_factor
         var curve_value = throw_curve.sample(throwing_time)
@@ -64,7 +61,6 @@ func _process(delta: float) -> void:
         throwing_time = 0
         weapon_owner = null
         is_checking_for_throw_collisions = false
-        queue_redraw()
 
     if attack_button_pressed:
         attack_button_pressed_since = min(max_throwing_range_seconds, attack_button_pressed_since + delta)
@@ -72,14 +68,17 @@ func _process(delta: float) -> void:
             $Highlight.visible = true
         position.x = base_weapon_position.x - attack_button_pressed_since * 20
         $WeaponSprite.scale.x = base_weapon_scale.x + attack_button_pressed_since * 0.2
+        queue_redraw()
 
 
 func _draw() -> void:
-    if attack_button_pressed:
-        var start = position
-        var end = position + -(Vector2.from_angle(rotation) * (throw_distance / 100))
-        #print(start, end)
-        draw_line(start, end, weapon_owner.player_color)
+    if attack_button_pressed and weapon_owner:
+        var rotation = Vector2.from_angle(PI / 2 + 0.07)
+        var start = Vector2.ZERO
+        var direction_vector = rotation * (attack_button_pressed_since * 300 )
+        var end = position - direction_vector
+        draw_line(start, end, weapon_owner.player_color, -1.0, true)
+        print("Start %s, Owner: %s, Rotation %s, Pressed since %s, Direction %s, End %s" % [start, weapon_owner.rotation, rotation, attack_button_pressed_since , direction_vector, end])
 
 
 func set_attack_button_pressed(now_pressed: bool) -> void:
