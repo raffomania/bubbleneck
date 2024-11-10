@@ -277,7 +277,7 @@ func on_throw_weapon():
         weapon.on_throw.disconnect(on_throw_weapon)
     weapon = null
 
-func kill():
+func kill(muted = false):
     if dead:
         return
     # Don't kill invincible players.
@@ -291,7 +291,10 @@ func kill():
         weapon = null
 
     dead = true
-    play_death_sound()
+
+    if not muted:
+        play_death_sound()
+
     stop_minigame()
     find_child('deathParticles').restart()
     find_child('deathParticles').emitting = true
@@ -364,7 +367,7 @@ func win():
     for player in get_tree().get_nodes_in_group("players"):
         if player != self:
             player.stage_lost = true
-            player.kill()
+            player.kill(true)
 
 func bounce_back(direction: Vector2):
     if is_in_minigame():
