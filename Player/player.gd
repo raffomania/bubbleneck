@@ -101,6 +101,8 @@ func _process(delta: float) -> void:
 
     var dash_offset = handle_dash(delta, direction)
 
+    update_weapon_visibility()
+
     # Rotate in the direction we're walking
     if direction != Vector2.ZERO:
         if is_keyboard_player() and not is_movement_allowed():
@@ -123,6 +125,13 @@ func _process(delta: float) -> void:
     else:
         $GooglyEyes.reset_googly_position()
 
+func update_weapon_visibility():
+    if not is_instance_valid(weapon):
+        return
+    if is_dashing:
+        weapon.visible = false
+    else:
+        weapon.visible = true
 
 # Handle the player dash
 # Returns a Vector that indicates the dash direction.
