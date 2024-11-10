@@ -2,8 +2,8 @@ extends Node2D
 
 var main_scene = preload("res://main.tscn")
 var stages = [
+    preload("res://Stage/StageA.tscn"),
     preload("res://Stage/StageB.tscn"),
-    # preload("res://Stage/StageA.tscn")
 ]
 var current_stage
 

@@ -52,4 +52,4 @@ func random_player_color(player_index: int):
     if (player_index + 2) > 5:
         hue += 1 / 10.0
 
-    return Color.from_hsv(hue, 0.8, 0.9, 1)
+    return Color.from_hsv(hue, 0.6, 0.8, 1)

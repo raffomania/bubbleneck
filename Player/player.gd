@@ -249,6 +249,8 @@ func kill():
     find_child('deathParticles').emitting = true
     $BubbleSprite.visible = false
     $GooglyEyes.kill()
+    Globals.player_killed.emit(self)
+
     await get_tree().create_timer(respawn_time).timeout
     print('respawn')
     respawn()
