@@ -74,7 +74,7 @@ show_behind_parent = true
 position = Vector2(-29.4833, -1016.67)
 scale = Vector2(3.33333, 3.33333)
 emitting = false
-amount = 500
+amount = 2000
 process_material = SubResource("ParticleProcessMaterial_pwhv5")
 lifetime = 3.0
 randomness = 1.0
@@ -83,7 +83,6 @@ trail_enabled = true
 trail_lifetime = 0.05
 
 [node name="BottleneckParticles" type="GPUParticles2D" parent="."]
-visible = false
 modulate = Color(0.352941, 0.827451, 1, 0.72549)
 self_modulate = Color(0, 0.756863, 1, 1)
 show_behind_parent = true
