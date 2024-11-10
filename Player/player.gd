@@ -149,7 +149,7 @@ func handle_dash(delta: float, direction: Vector2) -> Vector2:
 
     # The player isn't dashing yet and the cooldown is not active.
     # Check whether we should start a new dash.
-    if not is_dashing:
+    if not is_dashing and is_movement_allowed():
         if is_keyboard_player():
             var prefix = get_keyboard_player_prefix()
             if Input.is_action_just_pressed(prefix + "_dash"):
