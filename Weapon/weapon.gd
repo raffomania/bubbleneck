@@ -92,6 +92,7 @@ func throw() -> void:
     reparent(main_scene)
     is_throwing = true
     throwing_range_seconds = attack_button_pressed_since
+    $Hitbox.check_now()
     on_throw.emit()
     
 func stick() -> void:
