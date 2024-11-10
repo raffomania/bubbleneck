@@ -1,7 +1,7 @@
 [gd_scene load_steps=7 format=3 uid="uid://pl2j5a30sd8w"]
 
 [ext_resource type="Script" path="res://Player/player.gd" id="1_02l3o"]
-[ext_resource type="PackedScene" path="res://Player/death_particles.tscn" id="2_7kgd1"]
+[ext_resource type="PackedScene" uid="uid://bxwvn54hlicia" path="res://Player/death_particles.tscn" id="2_7kgd1"]
 [ext_resource type="Texture2D" uid="uid://1hsp3duivf5o" path="res://Player/player.png" id="3_gh5l1"]
 [ext_resource type="PackedScene" uid="uid://bnyt1gu3wl8cg" path="res://Player/GooglyEyes/googly_eyes.tscn" id="4_vlgyh"]
 

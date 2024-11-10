@@ -21,6 +21,7 @@ shader_parameter/threshold = 0.9
 blend_mode = 1
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_hbfi2"]
+radius = 14.6373
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_6pi77"]
 size = Vector2(4.375, 53.125)
