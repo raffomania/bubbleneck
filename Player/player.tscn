@@ -6,7 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://bnyt1gu3wl8cg" path="res://Player/GooglyEyes/googly_eyes.tscn" id="4_vlgyh"]
 
 [sub_resource type="Curve" id="Curve_d2kbo"]
-_data = [Vector2(0, 0), 0.0, 2.16766, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+_data = [Vector2(0, 0), 0.0, 3.09952, 0, 0, Vector2(1, 1), 0.024502, 0.0, 0, 0]
 point_count = 2
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_8hwc6"]
@@ -17,6 +17,7 @@ z_index = 1
 script = ExtResource("1_02l3o")
 movespeed = 300
 dash_curve = SubResource("Curve_d2kbo")
+dash_speed = 17
 dash_duration = 0.2
 
 [node name="deathParticles" parent="." instance=ExtResource("2_7kgd1")]
