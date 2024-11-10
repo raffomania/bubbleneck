@@ -8,3 +8,4 @@ z_index = 1
 script = ExtResource("1_h05sx")
 
 [node name="ScoreText" parent="." instance=ExtResource("2_4mlnf")]
+modulate = Color(1, 0.0705882, 1, 1)
