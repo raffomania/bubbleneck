@@ -53,6 +53,7 @@ func _process(delta: float) -> void:
         global_position += dir * delta * throw_distance
 
     if throwing_time > throwing_range_seconds:
+        $Hitbox.check_now()
         is_throwing = false
         throwing_time = 0
         weapon_owner = null
