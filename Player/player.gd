@@ -290,6 +290,7 @@ func kill():
         weapon = null
 
     dead = true
+    play_death_sound()
     stop_minigame()
     find_child('deathParticles').restart()
     find_child('deathParticles').emitting = true
@@ -372,3 +373,8 @@ func bounce_back(direction: Vector2):
 func is_movement_allowed():
     var is_attacking = is_instance_valid(weapon) and (weapon.is_stabbing or weapon.attack_button_pressed)
     return !is_attacking and !is_in_minigame() and !is_in_bounce_back
+
+func play_death_sound():
+    var num : int = randi() % 3
+    get_node("AudioStreamPlayer2D_Pop_" + str(num)).play()
+
