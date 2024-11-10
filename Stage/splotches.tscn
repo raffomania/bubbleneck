@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://pcgm2fnr0lmx"]
+
+[ext_resource type="Script" path="res://Stage/splotches.gd" id="1_lwl3r"]
+
+[node name="Splotches" type="Node2D"]
+script = ExtResource("1_lwl3r")
+color = Color(0.676513, 0.387145, 0.0812203, 1)
