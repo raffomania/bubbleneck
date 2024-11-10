@@ -316,7 +316,9 @@ func start_minigame():
     minigame = minigame_scene.instantiate()
     minigame.color = player_color
     minigame.device = device
-    add_child(minigame)
+    var direction_to_center = ((get_viewport_rect().size / 2) - global_position).normalized()
+    get_parent().add_child(minigame)
+    minigame.global_position = global_position + direction_to_center * 100
 
     minigame.finished.connect(self.win)
 

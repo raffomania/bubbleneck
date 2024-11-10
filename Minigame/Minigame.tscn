@@ -3,4 +3,5 @@
 [ext_resource type="Script" path="res://Minigame/minigame.gd" id="1_rhjhp"]
 
 [node name="Minigame" type="Node2D"]
+z_index = 2
 script = ExtResource("1_rhjhp")

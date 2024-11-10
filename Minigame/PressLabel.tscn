@@ -4,7 +4,6 @@
 [ext_resource type="Script" path="res://Minigame/press_label.gd" id="1_h75ti"]
 
 [node name="PressLabel" type="Sprite2D"]
-z_index = 1
 texture = ExtResource("1_5yr40")
 script = ExtResource("1_h75ti")
 
