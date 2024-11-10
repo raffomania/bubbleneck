@@ -312,20 +312,15 @@ func respawn():
     find_child('deathParticles').emitting = false
     $BubbleSprite.visible = true
     $GooglyEyes.respawn()
-    global_position = get_respawn_position()
+
+    # Set the respawn position based on current level.
+    var bottle = get_tree().root.get_node("Main/PlayerSpawner").bottle
+    global_position = bottle.get_respawn_position()
+
     # if not is_instance_valid(weapon):
     #     get_new_weapon()
     queue_redraw()
 
-func get_respawn_position() -> Vector2:
-    var rand_offset = Vector2(randf() * 100 - 50, randf() * 100 - 50)
-
-    if (false):
-        return get_viewport_rect().size / 2
-    else:
-        var bottle = get_tree().root.get_node("Main/PlayerSpawner").bottle
-        return bottle.get_bottle_floor(200) + rand_offset
-    
 func is_keyboard_player():
     return device < 0
 

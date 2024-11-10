@@ -34,7 +34,7 @@ var inside_particles: GPUParticles2D
 # Parameters to adjust the shaking effect 
 var max_shake_intensity = 5.0 # Maximum shake amount in pixels
 var shake_start_time = 8
-var original_position: Vector2
+var viewpoint_center: Vector2
 
 var player_has_entered := false
 var minigame_in_progress := false
@@ -59,8 +59,8 @@ func _ready() -> void:
     # center the bottle
     var viewport = get_viewport_rect()
 
-    original_position = Vector2(viewport.size.x / 2, viewport.size.y / 2)
-    position = original_position
+    viewpoint_center = Vector2(viewport.size.x / 2, viewport.size.y / 2)
+    position = viewpoint_center
 
     var rng = RandomNumberGenerator.new()
     rng.seed = Time.get_unix_time_from_system()
@@ -105,7 +105,7 @@ func _process(delta: float) -> void:
     
         # Reset position to original position if pop countdown is zero
         if pop_countdown == 0:
-            position = Vector2(0, 0) + original_position
+            position = Vector2(0, 0) + viewpoint_center
     
         var shake_intensity = 0
         if pop_countdown < shake_start_time:
@@ -253,7 +253,7 @@ func get_bottle_floor(offset: int) -> Vector2:
 
 func spin(delta):
     rotation += rotation_speed * delta
-    position = original_position
+    position = viewpoint_center
 
     if rotation_speed > 0:
         rotation_speed -= delta * 0.05
@@ -262,8 +262,8 @@ func spin(delta):
 
 func orbit(delta):
     rotation += rotation_speed * delta
-    var radius = original_position.y
-    position = Vector2(cos(rotation + PI / 2) * radius, sin(rotation + PI / 2) * radius) + original_position
+    var radius = viewpoint_center.y
+    position = Vector2(cos(rotation + PI / 2) * radius, sin(rotation + PI / 2) * radius) + viewpoint_center
 
     if rotation_speed > 0:
         rotation_speed -= delta * 0.05
@@ -272,10 +272,22 @@ func orbit(delta):
 
 func spin_orbit(delta):
     rotation += rotation_speed * delta
-    var radius = original_position.y / 2
-    position = Vector2(sin(rotation) * radius, cos(rotation) * radius) + original_position
+    var radius = viewpoint_center.y / 2
+    position = Vector2(sin(rotation) * radius, cos(rotation) * radius) + viewpoint_center
 
     if rotation_speed > 0:
         rotation_speed -= delta * 0.05
     elif rotation_speed < 0:
         rotation_speed += delta * 0.05
+
+
+func get_respawn_position():
+    # Apply a random offset to the spawn position
+    var rand_offset = Vector2(randf() * 100 - 50, randf() * 100 - 50)
+
+    if movement_type == 'spin':
+        return get_bottle_floor(200) + rand_offset
+    elif movement_type == 'spin_orbit':
+        return viewpoint_center + -1 * (position - viewpoint_center) + rand_offset
+    elif movement_type == 'orbit':
+        return viewpoint_center + -1 * (position - viewpoint_center) + rand_offset
