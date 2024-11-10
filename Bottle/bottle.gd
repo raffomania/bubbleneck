@@ -25,6 +25,12 @@ var pop_particles: GPUParticles2D
 var max_inner_particle_lifetime = 10
 var min_inner_particle_lifetime = 0.1
 var inside_particles: GPUParticles2D
+
+# Parameters to adjust the shaking effect 
+var max_shake_intensity = 5.0  # Maximum shake amount in pixels
+var shake_start_time = 8
+var original_position: Vector2
+
 var player_has_entered := false
 
 @onready
@@ -47,8 +53,8 @@ func _ready() -> void:
     # center the bottle
     var viewport = get_viewport_rect()
 
-    position.x = viewport.size.x / 2
-    position.y = viewport.size.y / 2
+    original_position = Vector2(viewport.size.x / 2, viewport.size.y / 2)
+    position = original_position
 
     var rng = RandomNumberGenerator.new()
     rng.seed = Time.get_unix_time_from_system()
@@ -83,6 +89,20 @@ func _process(delta: float) -> void:
             rotation_speed -= delta * 0.05
         elif rotation_speed < 0:
             rotation_speed += delta * 0.05
+
+        var shake_intensity = 0
+        if pop_countdown < shake_start_time:
+            shake_intensity = lerp(0.0, max_shake_intensity, 1 - (pop_countdown / shake_start_time))
+    
+        # Apply random shake to position
+        if shake_intensity > 0:
+            var shake_x = randf_range(-shake_intensity, shake_intensity)
+            var shake_y = randf_range(-shake_intensity, shake_intensity)
+            position = Vector2(shake_x, shake_y) + original_position
+    
+        # Reset position to originsl position if pop countdown is zero
+        if pop_countdown == 0:
+            position = Vector2(0, 0) + original_position
 
     # Check if the bottle should pop.
     if pop_countdown <= 0 or Input.is_action_just_pressed("debug_pop_bottle"):
