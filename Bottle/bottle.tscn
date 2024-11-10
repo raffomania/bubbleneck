@@ -82,6 +82,7 @@ trail_enabled = true
 trail_lifetime = 0.05
 
 [node name="BottleneckParticles" type="GPUParticles2D" parent="."]
+visible = false
 modulate = Color(0.352941, 0.827451, 1, 0.72549)
 self_modulate = Color(0, 0.756863, 1, 1)
 show_behind_parent = true
