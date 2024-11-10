@@ -5,7 +5,7 @@
 
 [node name="Node2D" type="Node2D"]
 z_index = 1
+position = Vector2(50, 50)
 script = ExtResource("1_h05sx")
 
 [node name="ScoreText" parent="." instance=ExtResource("2_4mlnf")]
-modulate = Color(1, 0.0705882, 1, 1)

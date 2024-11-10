@@ -31,7 +31,7 @@ func init_scores() -> void:
         var text = score as RichTextLabel
         var colorname = colors[player.device]
         text.text = 'Player %s:   %s \n' % [colorname, scores[player.device]]
-        text.global_position = Vector2(50, 50 * (player.device + 3))
+        text.global_position = Vector2(0, 50 * (player.device + 3))
         text.modulate = player.player_color
         childs[player.device] = score
         add_child(score)
