@@ -43,5 +43,4 @@ func increase_score(player):
         scores[player.device] += 1
     else:
         scores[player.device] = 1
-    print(scores)
     init_scores()

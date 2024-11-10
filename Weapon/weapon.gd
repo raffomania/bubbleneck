@@ -78,7 +78,6 @@ func _draw() -> void:
         var direction_vector = rotation * (attack_button_pressed_since * 300 )
         var end = position - direction_vector
         draw_line(start, end, weapon_owner.player_color, -1.0, true)
-        print("Start %s, Owner: %s, Rotation %s, Pressed since %s, Direction %s, End %s" % [start, weapon_owner.rotation, rotation, attack_button_pressed_since , direction_vector, end])
 
 
 func set_attack_button_pressed(now_pressed: bool) -> void:
@@ -129,7 +128,6 @@ func attach_to_player(area) -> void:
 func hit_player(player: Player) -> void:
     # Weapon cannot kill owner and only while throwing or stabbing
     if not player == weapon_owner and (is_checking_for_throw_collisions or is_stabbing):
-        print(player, weapon_owner)
         player.kill()
 
         # When a player kills another player with a throw, give them a new spear.

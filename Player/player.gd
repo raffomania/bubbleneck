@@ -303,7 +303,6 @@ func kill(muted = false):
     Globals.player_killed.emit(self)
 
     await get_tree().create_timer(respawn_time).timeout
-    print('respawn')
     respawn()
 
 func respawn():

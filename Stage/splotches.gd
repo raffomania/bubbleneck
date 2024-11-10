@@ -7,7 +7,6 @@ func _ready() -> void:
     queue_redraw()
 
 func _draw():
-    print("draw")
     for i in range(0, 20):
         var offset = Vector2(randf_range(-1, 1) * 50, randf_range(-1, 1) * 50)
         var radius = randf_range(2, 26)
