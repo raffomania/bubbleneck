@@ -261,8 +261,8 @@ func spin(delta):
 
 func orbit(delta):
     rotation += rotation_speed * delta
-    var radius = original_position.y / 2
-    position = Vector2(cos(rotation) * radius, sin(rotation) * radius) + original_position
+    var radius = original_position.y
+    position = Vector2(cos(rotation + PI/2) * radius, sin(rotation + PI/2) * radius) + original_position
 
     if rotation_speed > 0:
         rotation_speed -= delta * 0.05
