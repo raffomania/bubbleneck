@@ -19,7 +19,7 @@ script = ExtResource("1_m3pie")
 [node name="PlayerSpawner" type="Node2D" parent="."]
 position = Vector2(558, 308)
 script = ExtResource("4_h0alh")
-player_colors = Array[Color]([Color(0.109804, 0.964706, 0.937255, 1), Color(0.980392, 0.65098, 0.270588, 1), Color(0.0941176, 0.294118, 0.784314, 1), Color(0.968627, 0.145098, 0.572549, 1)])
+player_colors = Array[Color]([Color(0.109804, 0.964706, 0.937255, 1), Color(0.980392, 0.65098, 0.270588, 1), Color(0.082, 0.3895, 0.82, 1), Color(0.968627, 0.145098, 0.572549, 1)])
 
 [node name="Camera2D" type="Camera2D" parent="."]
 offset = Vector2(960, 540)
