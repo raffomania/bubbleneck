@@ -52,6 +52,7 @@ func _process(delta: float) -> void:
         var curve_value = throw_curve.sample(throwing_time)
         throw_distance = curve_value * throw_range_factor
         global_position += dir * delta * throw_distance
+        queue_redraw()
 
     if throwing_time > throwing_range_seconds:
         $Hitbox.check_now()
@@ -61,6 +62,7 @@ func _process(delta: float) -> void:
         throwing_time = 0
         weapon_owner = null
         is_checking_for_throw_collisions = false
+        queue_redraw()
 
     if attack_button_pressed:
         attack_button_pressed_since = min(max_throwing_range_seconds, attack_button_pressed_since + delta)
@@ -68,6 +70,12 @@ func _process(delta: float) -> void:
             $Highlight.visible = true
         position.x = base_weapon_position.x - attack_button_pressed_since * 20
         $WeaponSprite.scale.x = base_weapon_scale.x + attack_button_pressed_since * 0.2
+
+
+func _draw() -> void:
+    if weapon_owner:
+        print(position, Vector2.from_angle(rotation), throw_distance, position + Vector2.from_angle(rotation) * throw_distance)
+        draw_line(position,-(position + Vector2.from_angle(rotation) * throw_distance / 100), weapon_owner.player_color)
 
 
 func set_attack_button_pressed(now_pressed: bool) -> void:
