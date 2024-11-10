@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://cvcdb4wd2wp6s"]
+[gd_scene load_steps=5 format=3 uid="uid://c24vmja0hcddd"]
 
 [ext_resource type="PackedScene" uid="uid://vya5gp3frnx5" path="res://Arena/arena.tscn" id="1_dx7tj"]
 [ext_resource type="Script" path="res://Arena/arenaB.gd" id="2_s1c3c"]
@@ -9,7 +9,7 @@
 
 [node name="ArenaB" parent="." instance=ExtResource("1_dx7tj")]
 script = ExtResource("2_s1c3c")
-color = Color(0.2, 0.25098, 0.341176, 1)
+color = Color(0.105882, 0.133333, 0.180392, 1)
 background_color = Color(0.294118, 0.305882, 0.388235, 1)
 
 [node name="Background" parent="." instance=ExtResource("3_dsfel")]
@@ -17,4 +17,4 @@ offset_right = 1920.0
 offset_bottom = 1080.0
 
 [node name="Bottle" parent="." instance=ExtResource("4_5h1o3")]
-movement_type = "spin_orbit"
+movement_type = "spin"
