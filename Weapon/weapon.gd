@@ -27,6 +27,7 @@ var throwing_time := 0.0
 var throwing_range_seconds := 0.0
 @export
 var is_throwing := false
+var is_checking_for_throw_collisions := false
 var is_stabbing := false
 var stab_on_cooldown := false
 var dir
@@ -57,6 +58,9 @@ func _process(delta: float) -> void:
         is_throwing = false
         throwing_time = 0
         weapon_owner = null
+
+        await get_tree().create_timer(0.2).timeout
+        is_checking_for_throw_collisions = false
 
     if attack_button_pressed:
         attack_button_pressed_since = min(max_throwing_range_seconds, attack_button_pressed_since + delta)
@@ -92,12 +96,14 @@ func throw() -> void:
     var main_scene = get_tree().get_root().get_node("Main")
     reparent(main_scene)
     is_throwing = true
+    is_checking_for_throw_collisions = true
     throwing_range_seconds = attack_button_pressed_since
     $Hitbox.check_now()
     on_throw.emit()
     
 func stick() -> void:
     is_throwing = false
+    is_checking_for_throw_collisions = false
     throwing_time = 0
     weapon_owner = null
 
@@ -111,7 +117,7 @@ func attach_to_player(area) -> void:
 
 func hit_player(player: Player) -> void:
     # Weapon cannot kill owner and only while throwing or stabbing
-    if not player == weapon_owner and (is_throwing or is_stabbing):
+    if not player == weapon_owner and (is_checking_for_throw_collisions or is_stabbing):
         print(player, weapon_owner)
         player.kill()
 
