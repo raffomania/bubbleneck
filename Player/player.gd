@@ -54,6 +54,7 @@ var dash_cooldown_seconds: float = 1.0
 var spawn_protection_duration: float = 1.5
 var dash_protection_duration: float = 0.5
 var invincibility_countdown: float = 0.0
+var direction := Vector2(1, 0)
 
 func _ready():
     add_to_group('players')
@@ -71,10 +72,15 @@ func _process(delta: float) -> void:
 
     handle_invincibility(delta)
 
-    var direction: Vector2
+    # var direction: Vector2
+    var pressed_direction
     if is_keyboard_player():
         var prefix = get_keyboard_player_prefix()
-        direction = Input.get_vector(prefix + "_left", prefix + "_right", prefix + "_up", prefix + "_down")
+        pressed_direction = Input.get_vector(prefix + "_left", prefix + "_right", prefix + "_up", prefix + "_down")
+        direction = direction.rotated(5 * delta * pressed_direction.x)
+        # rotation = direction.angle()
+
+            
 
         if is_instance_valid(weapon):
             if Input.is_action_pressed(prefix + "_throw") and not is_in_minigame():
@@ -103,16 +109,13 @@ func _process(delta: float) -> void:
 
     # Rotate in the direction we're walking
     if direction != Vector2.ZERO:
-        if is_keyboard_player() and not is_movement_allowed():
-            # For keyboard players, while aiming, only rotate a little
-            rotation += direction.x * delta * 4
-        else:
-            rotation = direction.angle()
+        rotation = direction.angle()
         bubble_sprite.rotation = direction.angle()
 
     if is_movement_allowed():
         # Move into the direction indicated by controller or keyboard
-        position += dash_offset + direction * delta * movespeed
+        if (is_keyboard_player() and pressed_direction.y <= -0.5) or not is_keyboard_player():
+            position += dash_offset + direction * delta * movespeed
     
     # fix player sprite rotation so sprite highlight doesn't rotate
     $BubbleSprite.global_rotation_degrees = 0
