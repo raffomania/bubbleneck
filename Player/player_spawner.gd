@@ -47,8 +47,6 @@ func _unhandled_input(event: InputEvent) -> void:
                     print("keyboard device added: ", device)
 
                     
-
-
 func get_keyboard_actions():
     var kb_prefixes = ["kb1", "kb2"]
     var actions = InputMap.get_actions()
@@ -68,9 +66,9 @@ func spawn_player(device: int):
 
     print("spawning player with device ", device)
        
-    var player = player_scene.instantiate()
+    var player: Player = player_scene.instantiate()
     player.name = "Player" + str(device)
-    player.device = device
+    player.controller_device_index = device
     player.player_color = random_player_color(device)
     
     player.global_position = bottle.get_respawn_position()

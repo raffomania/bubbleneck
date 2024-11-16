@@ -21,13 +21,12 @@ shader_parameter/threshold = 0.9
 blend_mode = 1
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_hbfi2"]
-radius = 14.6373
+radius = 30.0
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_6pi77"]
-size = Vector2(4.375, 53.125)
+size = Vector2(9, 53.125)
 
 [node name="Weapon" type="Node2D"]
-scale = Vector2(2, 1)
 script = ExtResource("1_o8dmo")
 throw_curve = SubResource("Curve_ne7yh")
 time_factor = 4.0
@@ -35,23 +34,26 @@ throw_range_factor = 5000.0
 stab_duration_seconds = 0.1
 stab_button_press_threshold_seconds = 0.2
 stab_distance = 70.0
+base_weapon_position = Vector2(0, 20)
 max_throwing_range_seconds = 1.0
 
 [node name="WeaponSprite" type="Sprite2D" parent="."]
 material = SubResource("ShaderMaterial_7ml6n")
-scale = Vector2(0.1, 0.1)
+rotation = 1.5708
+scale = Vector2(0.2, 0.1)
 texture = ExtResource("2_pf2np")
 
 [node name="Highlight" type="Sprite2D" parent="."]
 visible = false
 material = SubResource("CanvasItemMaterial_j0e5j")
-position = Vector2(2.5, -14)
+position = Vector2(14, -6)
 scale = Vector2(0.0132567, 0.0250441)
 texture = ExtResource("4_olwv6")
 
 [node name="Node2D" type="Node2D" parent="."]
 
 [node name="Hitbox" type="Area2D" parent="."]
+rotation = 1.5708
 script = ExtResource("5_mpj1i")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
@@ -59,6 +61,7 @@ position = Vector2(0, -23)
 shape = SubResource("CircleShape2D_hbfi2")
 
 [node name="Collectbox" type="Area2D" parent="."]
+rotation = 1.5708
 script = ExtResource("6_hdvvb")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Collectbox"]

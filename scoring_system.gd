@@ -30,7 +30,7 @@ func init_scores() -> void:
 
     for node in get_tree().get_nodes_in_group('players'):
         var player = node as Player
-        var index = player.device + 2
+        var index = player.controller_device_index + 2
         if !scores.keys().has(index):
             scores[index] = 0
         var score
@@ -49,8 +49,8 @@ func init_scores() -> void:
         queue_redraw()
 
 
-func increase_score(player):
-    var index = player.device + 2
+func increase_score(player: Player):
+    var index = player.controller_device_index + 2
     if scores.keys().has(index):
         scores[index] += 1
     else:

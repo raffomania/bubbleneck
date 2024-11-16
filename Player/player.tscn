@@ -50,3 +50,6 @@ volume_db = 9.519
 [node name="AudioStreamPlayer2D_Dash" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("8_fubs7")
 volume_db = 9.519
+
+[node name="WeaponPosition" type="Node2D" parent="."]
+position = Vector2(8, 25)

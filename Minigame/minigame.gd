@@ -6,7 +6,7 @@ var label_scene = preload("res://Minigame/PressLabel.tscn")
 
 var available_directions = ["up", "down", "left", "right"]
 var label_children: Array[PressLabel] = []
-var device: int = -1
+var controller_device_index: int = -1
 var axis_threshold = 0.5
 var color := Color.HOT_PINK
 var on_cooldown := false
@@ -103,8 +103,8 @@ func get_pressed_direction() -> String:
         dir = Input.get_vector(prefix + "_left", prefix + "_right", prefix + "_up", prefix + "_down")
     else:
         # Player is using a controller
-        dir = Vector2(1, 0) * Input.get_joy_axis(device, JOY_AXIS_LEFT_X)
-        dir.y = Input.get_joy_axis(device, JOY_AXIS_LEFT_Y)
+        dir = Vector2(1, 0) * Input.get_joy_axis(controller_device_index, JOY_AXIS_LEFT_X)
+        dir.y = Input.get_joy_axis(controller_device_index, JOY_AXIS_LEFT_Y)
 
     if dir.x > axis_threshold:
         return "right"
@@ -118,7 +118,7 @@ func get_pressed_direction() -> String:
     return ""
 
 func is_keyboard_player():
-    return device < 0
+    return controller_device_index < 0
 
 func get_keyboard_player_prefix():
-    return "kb" + str(abs(device))
+    return "kb" + str(abs(controller_device_index))

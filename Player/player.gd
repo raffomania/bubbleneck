@@ -6,7 +6,7 @@ var weapon_scene = preload("res://Weapon/weapon.tscn")
 var minigame_scene = preload("res://Minigame/Minigame.tscn")
 
 @export
-var device := 0
+var controller_device_index := 0
 @export
 var movespeed := 400
 @export
@@ -21,13 +21,15 @@ var respawn_time := 3.0
 @onready
 var bubble_sprite := $BubbleSprite
 
-var is_in_bounce_back := false
+# When bouncing off the wall or bottle, disable movement
+var stun_countdown := 0.0
 
+# This is null when player is not carrying a weapon
 var weapon
-var dead_color := Color.BLACK
 var stage_lost := false
 
 # ----- Minigame ----- 
+# This is set if the player is currently in a minigame
 var minigame = null
 
 # ----- Dash related variables ----- 
@@ -56,7 +58,6 @@ var spawn_protection_duration: float = 3.5
 var dash_protection_duration: float = 0.5
 var invincibility_countdown: float = 0.0
 var direction := Vector2(1, 0)
-var time := 0.0
 
 func _ready():
     add_to_group('players')
@@ -72,7 +73,7 @@ func _process(delta: float) -> void:
     if (dead):
         return
 
-    time += delta
+    stun_countdown = max(0, stun_countdown - delta)
     handle_invincibility(delta)
 
     # var direction: Vector2
@@ -95,14 +96,14 @@ func _process(delta: float) -> void:
 
     else:
         # Player is using a controller
-        direction = Vector2(1, 0) * Input.get_joy_axis(device, JOY_AXIS_LEFT_X)
-        direction.y = Input.get_joy_axis(device, JOY_AXIS_LEFT_Y)
+        direction = Vector2(1, 0) * Input.get_joy_axis(controller_device_index, JOY_AXIS_LEFT_X)
+        direction.y = Input.get_joy_axis(controller_device_index, JOY_AXIS_LEFT_Y)
         
         if is_instance_valid(weapon):
-            if Input.get_joy_axis(device, JOY_AXIS_TRIGGER_RIGHT) > 0.5 and not is_in_minigame():
+            if Input.get_joy_axis(controller_device_index, JOY_AXIS_TRIGGER_RIGHT) > 0.5 and not is_in_minigame():
                 $'GooglyEyes'.raise_eye()
                 weapon.set_attack_button_pressed(true)
-            elif Input.get_joy_axis(device, JOY_AXIS_TRIGGER_LEFT) > 0.5 and not is_in_minigame():
+            elif Input.get_joy_axis(controller_device_index, JOY_AXIS_TRIGGER_LEFT) > 0.5 and not is_in_minigame():
                 weapon.stab()
             else:
                 weapon.set_attack_button_pressed(false)
@@ -143,7 +144,7 @@ func _input(_event):
             if Input.is_action_just_pressed(prefix + "_dash"):
                 stop_minigame()
         else:
-            if Input.is_joy_button_pressed(device, JOY_BUTTON_A):
+            if Input.is_joy_button_pressed(controller_device_index, JOY_BUTTON_A):
                 stop_minigame()
 
 func update_weapon_visibility():
@@ -174,7 +175,7 @@ func handle_dash(delta: float, current_player_direction: Vector2) -> Vector2:
             if Input.is_action_just_pressed(prefix + "_dash"):
                 just_started_dashing = true
         else:
-            if Input.is_joy_button_pressed(device, JOY_BUTTON_A):
+            if Input.is_joy_button_pressed(controller_device_index, JOY_BUTTON_A):
                 just_started_dashing = true
 
         # If we are now dashing, update some stuff.
@@ -218,9 +219,7 @@ func handle_dash(delta: float, current_player_direction: Vector2) -> Vector2:
 
 
 func skew_sprite():
-    $BubbleSprite.skew = sin(time * 10.0) * 0.5
-    if is_instance_valid(weapon):
-        weapon.position.y += sin(time * 10.0) * 0.10
+    $BubbleSprite.skew = sin(Time.get_ticks_msec() * 0.01) * 0.5
 
 # Handle all logic around the player's invincibility (blinking + timer)
 func handle_invincibility(delta: float):
@@ -257,7 +256,7 @@ func get_new_weapon() -> void:
     if is_instance_valid(weapon):
         return
 
-    var new_weapon = weapon_scene.instantiate()
+    var new_weapon: Weapon = weapon_scene.instantiate()
     add_child.call_deferred(new_weapon)
     pick_up_weapon.call_deferred(new_weapon)
 
@@ -267,9 +266,9 @@ func pick_up_weapon(new_weapon) -> void:
     sprite.material.set("shader_parameter/color", player_color)
     if weapon.get_parent() != null:
         weapon.reparent(self)
-    weapon.rotation = PI / 2.0
+    weapon.rotation = 0
     weapon.weapon_owner = self
-    weapon.position = Vector2(8, 25)
+    weapon.base_weapon_position = Vector2($WeaponPosition.position)
     weapon.on_throw.connect(on_throw_weapon)
 
 func on_throw_weapon():
@@ -285,7 +284,6 @@ func kill(muted = false):
         return
 
     if is_instance_valid(weapon):
-        weapon.cancel_attack_charge()
         weapon.drop()
 
         weapon = null
@@ -332,31 +330,33 @@ func respawn():
     queue_redraw()
 
 func is_keyboard_player():
-    return device < 0
+    return controller_device_index < 0
 
 func get_keyboard_player_prefix():
-    return "kb" + str(abs(device))
+    return "kb" + str(abs(controller_device_index))
 
-func is_in_minigame():
+func is_in_minigame() -> bool:
     return is_instance_valid(minigame)
 
-func start_minigame():
+func start_minigame() -> Minigame:
     if dead:
         return
 
     if is_in_minigame():
         return minigame
 
-    minigame = minigame_scene.instantiate()
-    minigame.color = player_color
-    minigame.device = device
+    var new_minigame: Minigame = minigame_scene.instantiate()
+    new_minigame.color = player_color
+    new_minigame.controller_device_index = controller_device_index
     var direction_to_center = ((get_viewport_rect().size / 2) - global_position).normalized()
-    get_parent().add_child(minigame)
-    minigame.global_position = global_position + direction_to_center * 200
+    get_parent().add_child(new_minigame)
+    new_minigame.global_position = global_position + direction_to_center * 200
 
-    minigame.finished.connect(self.win)
+    new_minigame.finished.connect(self.win)
 
-    return minigame
+    minigame = new_minigame
+
+    return new_minigame
 
 func stop_minigame():
     if not is_in_minigame():
@@ -380,13 +380,14 @@ func bounce_back(bounce_direction: Vector2):
     if is_in_minigame():
         return
     var tween = get_tree().create_tween()
-    is_in_bounce_back = true
-    tween.tween_property(self, "global_position", global_position + bounce_direction, 0.05)
-    tween.tween_callback(func(): is_in_bounce_back = false)
+    var bounce_duration = 0.05
+    stun_countdown = bounce_duration
+    tween.tween_property(self, "global_position", global_position + bounce_direction, bounce_duration)
 
 func is_movement_allowed():
-    var is_attacking = is_instance_valid(weapon) and (weapon.is_stabbing or weapon.attack_button_pressed)
-    return !is_attacking and !is_in_minigame() and !is_in_bounce_back
+    var is_attacking = is_instance_valid(weapon) and (weapon.is_stabbing or weapon.is_charging_throw)
+    var is_stunned = stun_countdown > 0
+    return !is_attacking and !is_in_minigame() and !is_stunned
 
 func play_death_sound():
     var num: int = randi() % 3
