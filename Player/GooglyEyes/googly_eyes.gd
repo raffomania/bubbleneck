@@ -4,9 +4,7 @@ class_name GogglyEyes
 
 # the time factor variable speeds up the googleronies movement, if increased
 @export
-var time_factor := 1
-# this variable always grows
-var eternal_time_variable := 0.0
+var time_factor := 1000
 
 var raising = false
 var blinking = false
@@ -19,9 +17,6 @@ func _ready() -> void:
     base_right_eye_position = $LeftOuter.position
     base_left_eye_position = $RightOuter.position
 
-func _process(delta: float) -> void:
-    eternal_time_variable += delta
-
 func set_player_direction(dir: Vector2, delta: float) -> void:
     var strength = dir.length()
     $LeftOuter/LeftInner.position.y = strength * delta * 5000
@@ -32,10 +27,8 @@ func reset_googly_position() -> void:
     $RightOuter.position = base_left_eye_position
 
 func walking_animation() -> void:
-    $LeftOuter.position.y -= sin(eternal_time_variable * time_factor) * 0.5
-    # $LeftOuter.scale.x += sin(eternal_time_variable * time_factor * 0.5) * 0.001
-    # $RightOuter.scale.y -= sin(eternal_time_variable * time_factor * 0.5) * 0.001
-    $RightOuter.position.y += sin(eternal_time_variable * time_factor) * 0.5
+    $LeftOuter.position.y = sin(Time.get_ticks_msec() * time_factor) 
+    $RightOuter.position.y = -sin(Time.get_ticks_msec() * time_factor) 
     
 func raise_eye() -> void:
     if raising:
