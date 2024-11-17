@@ -18,6 +18,9 @@ var base_left_eye_scale  = Vector2($LeftOuter.scale)
 @onready
 var base_right_eye_scale  = Vector2($RightOuter.scale)
 
+var left_eye_tween 
+var right_eye_tween 
+
 func set_player_direction(dir: Vector2, delta: float) -> void:
     var strength = dir.length()
     $LeftOuter/LeftInner.position.y = strength * delta * 5000
@@ -28,8 +31,14 @@ func reset() -> void:
     $RightOuter.position = base_left_eye_position
     $LeftOuter.scale = base_left_eye_scale
     $RightOuter.scale = base_right_eye_scale
-    # can we abort the tweens?
-    # otherwise it feels a bit less snappy but it looks okay for me
+
+    if is_instance_valid(left_eye_tween):
+        left_eye_tween.stop()
+        left_eye_tween = null
+
+    if is_instance_valid(right_eye_tween):
+        right_eye_tween.stop()
+        right_eye_tween = null
 
 
 func walking_animation() -> void:
@@ -39,10 +48,14 @@ func walking_animation() -> void:
 func raise_eye() -> void:
     var stretch = 2
     var dur = 0.2
-    var right_eye_tween = get_tree().create_tween()
-    var left_eye_tween = get_tree().create_tween()
-    right_eye_tween.tween_property($RightOuter, "scale:y", base_right_eye_scale.y * stretch, dur)
-    left_eye_tween.tween_property($LeftOuter, "scale:y", base_left_eye_scale.y * stretch, dur)
+
+    if not is_instance_valid(right_eye_tween):
+        right_eye_tween = get_tree().create_tween()
+        right_eye_tween.tween_property($RightOuter, "scale:y", base_right_eye_scale.y * stretch, dur)
+
+    if not is_instance_valid(left_eye_tween):
+        left_eye_tween = get_tree().create_tween()
+        left_eye_tween.tween_property($LeftOuter, "scale:y", base_left_eye_scale.y * stretch, dur)
 
     
 func blink(duration: float) -> void:
