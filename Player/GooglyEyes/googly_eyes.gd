@@ -9,39 +9,41 @@ var time_factor := 1000
 var raising = false
 var blinking = false
 
-var base_right_eye_position
-
-var base_left_eye_position
-
-func _ready() -> void:
-    base_right_eye_position = $LeftOuter.position
-    base_left_eye_position = $RightOuter.position
+@onready
+var base_right_eye_position = Vector2($RightOuter.position)
+@onready
+var base_left_eye_position = Vector2($LeftOuter.position)
+@onready
+var base_left_eye_scale  = Vector2($LeftOuter.scale)
+@onready
+var base_right_eye_scale  = Vector2($RightOuter.scale)
 
 func set_player_direction(dir: Vector2, delta: float) -> void:
     var strength = dir.length()
     $LeftOuter/LeftInner.position.y = strength * delta * 5000
     $RightOuter/RightInner.position.y = strength * delta * 5000
 
-func reset_googly_position() -> void:
+func reset() -> void:
     $LeftOuter.position = base_right_eye_position
     $RightOuter.position = base_left_eye_position
+    $LeftOuter.scale = base_left_eye_scale
+    $RightOuter.scale = base_right_eye_scale
+    # can we abort the tweens?
+    # otherwise it feels a bit less snappy but it looks okay for me
+
 
 func walking_animation() -> void:
     $LeftOuter.position.y = sin(Time.get_ticks_msec() * time_factor) 
     $RightOuter.position.y = -sin(Time.get_ticks_msec() * time_factor) 
     
 func raise_eye() -> void:
-    if raising:
-        return
-    raising = true
-    var prevL = ($LeftOuter as Node2D).scale.y
-    var prevR = ($RightOuter as Node2D).scale.y
-    ($RightOuter as Node2D).scale.y *= 2.0
-    ($LeftOuter as Node2D).scale.y *= 2.0
-    await get_tree().create_timer(0.2).timeout
-    ($RightOuter as Node2D).scale.y = prevL
-    ($LeftOuter as Node2D).scale.y = prevR
-    raising = false
+    var stretch = 2
+    var dur = 0.2
+    var right_eye_tween = get_tree().create_tween()
+    var left_eye_tween = get_tree().create_tween()
+    right_eye_tween.tween_property($RightOuter, "scale:y", base_right_eye_scale.y * stretch, dur)
+    left_eye_tween.tween_property($LeftOuter, "scale:y", base_left_eye_scale.y * stretch, dur)
+
     
 func blink(duration: float) -> void:
     if blinking:

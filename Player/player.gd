@@ -126,12 +126,12 @@ func _process(delta: float) -> void:
             position += direction * delta * movespeed
             $GooglyEyes.walking_animation()
         else:
-            $GooglyEyes.reset_googly_position()
+            $GooglyEyes.reset()
         
     if (direction and not is_keyboard_player()) or (is_keyboard_player() and pressed_direction.y <= -0.5):
         skew_sprite()
     elif not direction:
-        $GooglyEyes.reset_googly_position()
+        $GooglyEyes.reset()
     
     # fix player sprite rotation so sprite highlight doesn't rotate
     $BubbleSprite.global_rotation_degrees = 0
