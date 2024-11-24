@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://bnyt1gu3wl8cg"]
+[gd_scene load_steps=5 format=3 uid="uid://bnyt1gu3wl8cg"]
 
 [ext_resource type="Script" path="res://Player/GooglyEyes/googly_eyes.gd" id="1_aatq6"]
 [ext_resource type="Texture2D" uid="uid://bu7qq7bccnk45" path="res://Player/GooglyEyes/googly_eye_outer.png" id="2_ny87f"]
 [ext_resource type="Texture2D" uid="uid://v7qc8f5t1y2s" path="res://Player/GooglyEyes/googly_eye_inner.png" id="3_360ca"]
+[ext_resource type="Script" path="res://Player/GooglyEyes/googly_eye.gd" id="3_n3usc"]
 
 [node name="GooglyEyes" type="Node2D"]
 position = Vector2(8, 0)
@@ -14,6 +15,7 @@ time_factor = 20
 position = Vector2(-14, 5.06997e-05)
 scale = Vector2(0.085997, 0.0598316)
 texture = ExtResource("2_ny87f")
+script = ExtResource("3_n3usc")
 
 [node name="LeftInner" type="Sprite2D" parent="LeftOuter"]
 position = Vector2(11.6283, -16.7136)
@@ -23,6 +25,7 @@ texture = ExtResource("3_360ca")
 position = Vector2(14, -1.00005)
 scale = Vector2(0.0911371, 0.0530785)
 texture = ExtResource("2_ny87f")
+script = ExtResource("3_n3usc")
 
 [node name="RightInner" type="Sprite2D" parent="RightOuter"]
 position = Vector2(-8.2016e-05, -18.84)
