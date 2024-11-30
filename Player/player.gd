@@ -7,8 +7,7 @@ var minigame_scene = preload("res://Minigame/Minigame.tscn")
 
 @export
 var controller_device_index := 0
-@export
-var movespeed := 400
+
 @export
 var player_color := Color.VIOLET
 @export
@@ -32,6 +31,11 @@ var stage_lost := false
 # This is set if the player is currently in a minigame
 var minigame = null
 
+# ----- Movement ------
+@export
+var max_movespeed := 400
+var look_direction := Vector2(1, 0)
+
 # ----- Dash related variables ----- 
 # The curve that represents the the player dash movement.
 @export
@@ -48,7 +52,7 @@ var dash_speed := 6
 @export
 var dash_duration: float = 0.10
 # The timer that tracks how long the dash is on cooldown.
-var dash_cooldown: float = 0.0
+var dash_disabled_countdown: float = 0.0
 @export
 # How long a player needs to wait until they can dash again
 var dash_cooldown_seconds: float = 1.0
@@ -57,7 +61,6 @@ var dash_cooldown_seconds: float = 1.0
 var spawn_protection_duration: float = 3.5
 var dash_protection_duration: float = 0.5
 var invincibility_countdown: float = 0.0
-var direction := Vector2(1, 0)
 
 func _ready():
     add_to_group('players')
@@ -76,14 +79,15 @@ func _process(delta: float) -> void:
     stun_countdown = max(0, stun_countdown - delta)
     handle_invincibility(delta)
 
-    # var direction: Vector2
+    # var look_direction: Vector2
     var pressed_direction
+    var move_strength := 0.0
     if is_keyboard_player():
         var prefix = get_keyboard_player_prefix()
         pressed_direction = Input.get_vector(prefix + "_left", prefix + "_right", prefix + "_up", prefix + "_down")
-        direction = direction.rotated(5 * delta * pressed_direction.x)
-        # rotation = direction.angle()
-
+        look_direction = look_direction.rotated(5 * delta * pressed_direction.x)
+        if pressed_direction.y <= -0.5:
+            move_strength = 1.0
             
         if is_instance_valid(weapon):
             if Input.is_action_pressed(prefix + "_throw") and not is_in_minigame():
@@ -96,8 +100,10 @@ func _process(delta: float) -> void:
 
     else:
         # Player is using a controller
-        direction = Vector2(1, 0) * Input.get_joy_axis(controller_device_index, JOY_AXIS_LEFT_X)
-        direction.y = Input.get_joy_axis(controller_device_index, JOY_AXIS_LEFT_Y)
+        var controller_vector = Vector2(1, 0) * Input.get_joy_axis(controller_device_index, JOY_AXIS_LEFT_X)
+        controller_vector.y = Input.get_joy_axis(controller_device_index, JOY_AXIS_LEFT_Y)
+        look_direction = controller_vector.normalized()
+        move_strength = controller_vector.length()
         
         if is_instance_valid(weapon):
             if Input.get_joy_axis(controller_device_index, JOY_AXIS_TRIGGER_RIGHT) > 0.5 and not is_in_minigame():
@@ -108,29 +114,27 @@ func _process(delta: float) -> void:
             else:
                 weapon.set_attack_button_pressed(false)
 
-    var dash_offset = handle_dash(delta, direction)
+    var dash_offset = handle_dash(delta, look_direction)
 
     update_weapon_visibility()
 
-    # Rotate in the direction we're walking
-    if direction != Vector2.ZERO:
-        rotation = direction.angle()
-        bubble_sprite.rotation = direction.angle()
+    # Rotate in the look_direction we're walking
+    if look_direction != Vector2.ZERO:
+        rotation = look_direction.angle()
+        bubble_sprite.rotation = look_direction.angle()
 
     if is_movement_allowed():
-        # Move in the direction we're dashing
+        # Move in the look_direction we're dashing
         if is_dashing:
             position += dash_offset
-        # Move into the direction indicated by controller or keyboard
-        elif (is_keyboard_player() and pressed_direction.y <= -0.5) or not is_keyboard_player():
-            position += direction * delta * movespeed
-            $GooglyEyes.walking_animation()
+        # Move into the look_direction indicated by controller or keyboard
         else:
-            $GooglyEyes.reset()
+            position += look_direction * delta * move_strength * max_movespeed
         
-    if (direction and not is_keyboard_player()) or (is_keyboard_player() and pressed_direction.y <= -0.5):
+    if move_strength > 0.0 and is_movement_allowed():
         skew_sprite()
-    elif not direction:
+        $GooglyEyes.walking_animation()
+    else:
         $GooglyEyes.reset()
     
     # fix player sprite rotation so sprite highlight doesn't rotate
@@ -156,14 +160,14 @@ func update_weapon_visibility():
         weapon.visible = true
 
 # Handle the player dash
-# Returns a Vector that indicates the dash direction.
+# Returns a Vector that indicates the dash look_direction.
 # The vector is empty if no dash is active.
 func handle_dash(delta: float, current_player_direction: Vector2) -> Vector2:
     var dash_offset = Vector2()
 
     # The dash is still on cooldown, reduce the cooldown.
-    if dash_cooldown > 0:
-        dash_cooldown -= delta
+    if dash_disabled_countdown > 0:
+        dash_disabled_countdown -= delta
         return dash_offset
 
     # The player isn't dashing yet and the cooldown is not active.
@@ -213,7 +217,7 @@ func handle_dash(delta: float, current_player_direction: Vector2) -> Vector2:
         is_dashing = false
         bubble_sprite.skew = 0
         # Start the cooldown
-        dash_cooldown = dash_cooldown_seconds
+        dash_disabled_countdown = dash_cooldown_seconds
 
     return dash_offset
 
