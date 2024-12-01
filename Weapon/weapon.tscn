@@ -34,7 +34,6 @@ throw_range_factor = 5000.0
 stab_duration_seconds = 0.1
 stab_button_press_threshold_seconds = 0.2
 stab_distance = 70.0
-base_weapon_position = Vector2(0, 20)
 max_throwing_range_seconds = 1.0
 
 [node name="WeaponSprite" type="Sprite2D" parent="."]

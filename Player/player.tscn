@@ -19,7 +19,6 @@ radius = 16.0312
 [node name="Player" type="Area2D"]
 z_index = 1
 script = ExtResource("1_02l3o")
-movespeed = 300
 dash_curve = SubResource("Curve_d2kbo")
 dash_speed = 17
 dash_duration = 0.2
