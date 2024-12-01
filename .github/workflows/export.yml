@@ -9,6 +9,9 @@ on:
         tags:
             - "*"
 
+permissions:
+    contents: write
+
 jobs:
     release:
         name: Export and publish game
@@ -42,16 +45,16 @@ jobs:
             - name: Upload macOs build to release
               uses: svenstaro/upload-release-action@v2
               with:
-                  file: "export/osx/OSX.zip"
-                  asset_name: knakk-osx.zip
+                  file: "export/osx/macOS.zip"
+                  asset_name: bubbleneck-osx.zip
                   overwrite: true
               if: github.ref_type == 'tag'
 
             - name: Upload linux build to release
               uses: svenstaro/upload-release-action@v2
               with:
-                  file: export/linux/LinuxX11.zip
-                  asset_name: knakk-linux.zip
+                  file: export/linux/Linux.zip
+                  asset_name: bubbleneck-linux.zip
                   overwrite: true
               if: github.ref_type == 'tag'
 
@@ -59,6 +62,6 @@ jobs:
               uses: svenstaro/upload-release-action@v2
               with:
                   file: "export/windows/Windows Desktop.zip"
-                  asset_name: knakk-windows.zip
+                  asset_name: bubbleneck-windows.zip
                   overwrite: true
               if: github.ref_type == 'tag'
