@@ -41,7 +41,7 @@ func init_scores() -> void:
         var text = score as RichTextLabel
         var colorname = colors[index]
         text.text = 'Player %s:   %s \n' % [colorname, scores[index]]
-        text.global_position = Vector2(0, 50 * (index + 3))
+        text.position = Vector2(0, 50 * (index + 3))
         text.modulate = player.player_color
         childs[index] = score
         if score.get_parent() == null:
