@@ -22,30 +22,34 @@ var colors = {
 
 func _ready() -> void:
     scores = {}
+    
+func update_player_score_label(text: RichTextLabel, player: Player, index: int) -> void:
+    text.text = 'Player %s:   %s \n' % [colors[index], scores[index]]
+    text.position = Vector2(0, 50 * (index + 3))
+    text.modulate = player.player_color
 
 func init_scores() -> void:
-    # for key in childs.keys():
-    #     remove_child(childs[key])
-    #     childs[key].queue_free()
-
     for node in get_tree().get_nodes_in_group('players'):
         var player = node as Player
+        # Offset index by 2 to prevent negative numbers
         var index = player.controller_device_index + 2
+
         if !scores.keys().has(index):
             scores[index] = 0
-        var score
-        if childs.keys().has(index):
-            score = childs[index]
-        else:
-            score = score_text.instantiate()
-        var text = score as RichTextLabel
-        var colorname = colors[index]
-        text.text = 'Player %s:   %s \n' % [colorname, scores[index]]
-        text.position = Vector2(0, 50 * (index + 3))
-        text.modulate = player.player_color
-        childs[index] = score
-        if score.get_parent() == null:
-            add_child(score)
+
+        var label
+        # Create score label if none exists for the player
+        if not childs.keys().has(index):
+            label = score_text.instantiate()
+            childs[index] = label
+
+        label = childs[index]
+        update_player_score_label(label as RichTextLabel, player, index)
+
+        # Add score label to scoring system if not done already
+        if label.get_parent() == null:
+            add_child(label)
+
         queue_redraw()
 
 
