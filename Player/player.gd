@@ -396,3 +396,7 @@ func is_movement_allowed():
 func play_death_sound():
     var num: int = randi() % 3
     get_node("AudioStreamPlayer2D_Pop_" + str(num)).play()
+    
+# Returns an id that is offset by 2, as the controller_device_index starts at -2 for keyboards.
+func get_id() -> int: 
+    return controller_device_index + 2

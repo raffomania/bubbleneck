@@ -31,8 +31,7 @@ func update_player_score_label(text: RichTextLabel, player: Player, index: int) 
 func init_scores() -> void:
     for node in get_tree().get_nodes_in_group('players'):
         var player = node as Player
-        # Offset index by 2 to prevent negative numbers
-        var index = player.controller_device_index + 2
+        var index = player.get_id()
 
         if !scores.keys().has(index):
             scores[index] = 0
@@ -54,7 +53,7 @@ func init_scores() -> void:
 
 
 func increase_score(player: Player):
-    var index = player.controller_device_index + 2
+    var index = player.get_id()
     if scores.keys().has(index):
         scores[index] += 1
     else:
