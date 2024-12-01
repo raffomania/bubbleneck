@@ -2,6 +2,18 @@ extends Area2D
 
 class_name Player
 
+var colors = {
+    0: 'Cyan',
+    1: 'Orange',
+    2: 'Purple',
+    3: 'Pink',
+    4: 'Green',
+    5: 'Yellow',
+    6: 'Cyan',
+    7: 'Orange',
+    8: 'Purple',
+}
+
 var weapon_scene = preload("res://Weapon/weapon.tscn")
 var minigame_scene = preload("res://Minigame/Minigame.tscn")
 
@@ -400,3 +412,7 @@ func play_death_sound():
 # Returns an id that is offset by 2, as the controller_device_index starts at -2 for keyboards.
 func get_id() -> int: 
     return controller_device_index + 2
+
+# Returns the name of a player.
+func get_player_name() -> String:
+    return 'Player %s' % colors[get_id()]

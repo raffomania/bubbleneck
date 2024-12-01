@@ -7,24 +7,11 @@ var score_text = preload("res://Scoring/score_text.tscn")
 
 var childs = {}
 
-var colors = {
-    0: 'Cyan',
-    1: 'Orange',
-    2: 'Purple',
-    3: 'Pink',
-    4: 'Green',
-    5: 'Yellow',
-    6: 'Cyan',
-    7: 'Orange',
-    8: 'Purple',
-}
-
-
 func _ready() -> void:
     scores = {}
     
 func update_player_score_label(text: RichTextLabel, player: Player, index: int) -> void:
-    text.text = 'Player %s:   %s \n' % [colors[index], scores[index]]
+    text.text = '%s:   %s \n' % [player.get_player_name(), scores[index]]
     text.position = Vector2(0, 50 * (index + 3))
     text.modulate = player.player_color
 
