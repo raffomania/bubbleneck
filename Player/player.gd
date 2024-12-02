@@ -112,8 +112,8 @@ func _process(delta: float) -> void:
 
     else:
         # Player is using a controller
-        var controller_vector = Vector2(1, 0) * Input.get_joy_axis(controller_device_index, JOY_AXIS_LEFT_X)
-        controller_vector.y = Input.get_joy_axis(controller_device_index, JOY_AXIS_LEFT_Y)
+        var controller_vector = Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down", 0.4)
+
         look_direction = controller_vector.normalized()
         move_strength = controller_vector.length()
         
