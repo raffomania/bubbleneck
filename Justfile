@@ -8,3 +8,8 @@ commit-version version:
     #!/usr/bin/env sh
     git commit -m "Release {{version}}"
     git tag "v{{version}}"
+
+build-flatpak:
+    flatpak-builder --force-clean --user --install-deps-from=flathub flatpak/build flatpak/manifest.yml
+    flatpak build-export flatpak/export flatpak/build
+    flatpak build-bundle flatpak/export flatpak/bubbleneck.flatpak org.somedomain.bubbleneck --runtime-repo=https://flathub.org/repo/flathub.flatpakrepo

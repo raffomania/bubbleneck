@@ -3,3 +3,9 @@
 /android/
 
 /export/
+
+# flatpak
+/flatpak/export
+/flatpak/build
+/flatpak/*.flatpack
+.flatpak-builder

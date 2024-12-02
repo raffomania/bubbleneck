@@ -1,0 +1,25 @@
+app-id: org.somedomain.bubbleneck
+base: org.godotengine.godot.BaseApp
+base-version: "4.3"
+runtime: org.freedesktop.Platform
+runtime-version: "23.08"
+sdk: org.freedesktop.Sdk
+command: godot-runner
+
+finish-args:
+    - --share=ipc
+    - --socket=x11
+    - --device=dri
+    - --socket=pulseaudio
+
+modules:
+    - name: bubbleneck
+      buildsystem: simple
+
+      build-commands:
+          - install -Dm644 bubbleneck.pck /app/bin/godot-runner.pck
+
+      sources:
+          - type: archive
+            url: https://github.com/raffomania/bubbleneck/releases/download/v1.0.1/bubbleneck-linux.zip
+            sha256: 9d01be52fda752d36defafa7f300dec3849614dbd1d68c115912fc7ac7af16db
