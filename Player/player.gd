@@ -47,6 +47,7 @@ var minigame = null
 @export
 var max_movespeed := 400
 var look_direction := Vector2(1, 0)
+@export var deadzone := 0.4
 
 # ----- Dash related variables ----- 
 # The curve that represents the the player dash movement.
@@ -112,7 +113,11 @@ func _process(delta: float) -> void:
 
     else:
         # Player is using a controller
-        var controller_vector = Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down", 0.4)
+        var controller_vector = Vector2()
+        controller_vector.x = Input.get_joy_axis(controller_device_index, JOY_AXIS_LEFT_X)
+        controller_vector.y = Input.get_joy_axis(controller_device_index, JOY_AXIS_LEFT_Y)
+        if (controller_vector.length() < deadzone):
+            controller_vector = Vector2.ZERO
 
         look_direction = controller_vector.normalized()
         move_strength = controller_vector.length()
