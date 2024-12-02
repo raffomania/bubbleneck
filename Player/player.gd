@@ -322,7 +322,7 @@ func kill(muted = false):
 
     stop_minigame()
     find_child('deathParticles').restart()
-    find_child('deathParticles').emitting = true
+
     $BubbleSprite.visible = false
     $GooglyEyes.kill()
     Globals.player_killed.emit(self)

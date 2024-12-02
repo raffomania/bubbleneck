@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://bxwvn54hlicia"]
+[gd_scene load_steps=5 format=3 uid="uid://d4ibq4ldajc7f"]
 
 [ext_resource type="Shader" path="res://Player/deathparticles.gdshader" id="1_wii0q"]
 [ext_resource type="Texture2D" uid="uid://ekewl83mripo" path="res://assets/bubble_texture.png" id="2_1v07j"]
@@ -23,10 +23,6 @@ damping_max = 19.915
 scale_min = 0.1
 scale_max = 0.5
 turbulence_enabled = true
-collision_mode = 1
-collision_friction = 0.0
-collision_bounce = 1.0
-collision_use_scale = true
 sub_emitter_mode = 2
 sub_emitter_amount_at_end = 8
 sub_emitter_keep_velocity = true
