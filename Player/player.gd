@@ -46,6 +46,7 @@ var minigame = null
 # ----- Movement ------
 @export
 var max_movespeed := 400
+var rotation_speed := 5
 var look_direction := Vector2(1, 0)
 @export var deadzone := 0.4
 
@@ -98,7 +99,7 @@ func _process(delta: float) -> void:
     if is_keyboard_player():
         var prefix = get_keyboard_player_prefix()
         pressed_direction = Input.get_vector(prefix + "_left", prefix + "_right", prefix + "_up", prefix + "_down")
-        look_direction = look_direction.rotated(5 * delta * pressed_direction.x)
+        look_direction = look_direction.rotated(rotation_speed * delta * pressed_direction.x)
         if pressed_direction.y <= -0.5:
             move_strength = 1.0
             
