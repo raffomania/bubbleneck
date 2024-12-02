@@ -150,9 +150,10 @@ func _process(delta: float) -> void:
             position += look_direction * delta * move_strength * max_movespeed
         
     if move_strength > 0.0 and is_movement_allowed():
-        skew_sprite()
+        animate_wobble(2.0)
         $GooglyEyes.walking_animation()
     else:
+        animate_wobble(1.0)
         $GooglyEyes.reset()
     
     # fix player sprite rotation so sprite highlight doesn't rotate
@@ -242,8 +243,10 @@ func handle_dash(delta: float, current_player_direction: Vector2) -> Vector2:
     return dash_offset
 
 
-func skew_sprite():
-    $BubbleSprite.skew = sin(Time.get_ticks_msec() * 0.01) * 0.5
+func animate_wobble(multiplier: float):
+    var skew_intensity = 0.25
+    var skew_speed = 0.005 * multiplier
+    $BubbleSprite.skew = sin(Time.get_ticks_msec() * skew_speed) * skew_intensity
 
 # Handle all logic around the player's invincibility (blinking + timer)
 func handle_invincibility(delta: float):
