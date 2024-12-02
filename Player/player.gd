@@ -220,8 +220,10 @@ func handle_dash(delta: float, current_player_direction: Vector2) -> Vector2:
     # The dash curve expects values from `0-1`
     # To get the correct position on the curve, we simply calculate the curve position
     # Based on the relative elapsed time to the total dash time.
-    var relative_elapsed_time = dash_timer / dash_duration
-    var curve_value = dash_curve.sample(relative_elapsed_time)
+    # var relative_elapsed_time = dash_timer / dash_duration
+    # var curve_value = dash_curve.sample(relative_elapsed_time)
+    # TODO fix this
+    var curve_value = 50 * delta
     dash_offset.x = curve_value * dash_direction.x
     dash_offset.y = curve_value * dash_direction.y
     dash_offset *= dash_speed
@@ -415,7 +417,7 @@ func play_death_sound():
     get_node("AudioStreamPlayer2D_Pop_" + str(num)).play()
     
 # Returns an id that is offset by 2, as the controller_device_index starts at -2 for keyboards.
-func get_id() -> int: 
+func get_id() -> int:
     return controller_device_index + 2
 
 # Returns the name of a player.
