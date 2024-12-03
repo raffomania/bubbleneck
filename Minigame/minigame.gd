@@ -9,8 +9,10 @@ var label_children: Array[PressLabel] = []
 var player: Player
 var axis_threshold = 0.5
 var color := Color.HOT_PINK
-@export
-var base_amount := 7
+
+static var max_labels := 7
+static var min_labels := 2
+
 var on_cooldown := false
 
 var is_finished := false
@@ -127,4 +129,4 @@ func get_amount_labels():
     var spawner : PlayerSpawner = get_node("/root/Main/PlayerSpawner")
     var total_players  = spawner.get_total_players()
 
-    return  max(2, base_amount - player.kill_streak - (total_players / 2))
+    return  max(2, max_labels - player.kill_streak - (total_players / 2))

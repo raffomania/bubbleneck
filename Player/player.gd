@@ -205,7 +205,6 @@ func _input(_event):
                 stop_minigame()
         else:
             if Input.is_joy_button_pressed(controller_device_index, JOY_BUTTON_A):
-                print("stop minigame")
                 stop_minigame()
 
 func update_weapon_visibility():
@@ -478,7 +477,7 @@ func get_player_name() -> String:
     return 'Player %s' % colors[get_id()]
 
 func increment_kill_streak():
-    kill_streak += 1
+    kill_streak = min(get_max_kill_streak(), kill_streak + 1)
 
     var label: KillStreakLabel = kill_streak_label_scene.instantiate()
     label.set_color(player_color)
@@ -490,3 +489,12 @@ func increment_kill_streak():
 func get_label_offset() -> Vector2:
     var padding = 30
     return Vector2(0, $BubbleSprite.texture.get_height() * $BubbleSprite.scale.y * radius / 2 + padding)
+
+func get_max_kill_streak() -> int:
+    var spawner : PlayerSpawner = get_node("/root/Main/PlayerSpawner")
+    var total_players  = spawner.get_total_players()
+    var min_minigame_labels = Minigame.min_labels
+    var max_minigame_labels = Minigame.max_labels
+
+    return abs(min_minigame_labels - max_minigame_labels) - floor(total_players / 2)
+
