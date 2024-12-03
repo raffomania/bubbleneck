@@ -99,6 +99,7 @@ func set_attack_button_pressed(now_pressed: bool) -> void:
             throw()
         is_charging_throw = false
         charging_throw_since = 0.0
+        queue_redraw()
 
 func cancel_attack_charge():
     is_charging_throw = false
