@@ -45,6 +45,8 @@ class ActionInput:
     var dash_pressed: bool
     var stab_pressed: bool
     var charge_pressed: bool
+    var look_direction: Vector2
+    var drive: float
 
 
 var state: State = Idle.new()
@@ -134,18 +136,31 @@ func can_attack() -> bool:
 func can_dash() -> bool:
     return state is Moving or state is Idle and dash_disabled_countdown > 0.0
 
-# Returns a tuple of (stab_button_pressed, charge_button_pressed, dash_button_pressed).
-func get_action_inputs() -> ActionInput:
+# Returns the player inputs.
+func get_action_inputs(delta: float) -> ActionInput:
     var inputs = ActionInput.new()
     if is_keyboard_player():
         var prefix = get_keyboard_player_prefix()
         inputs.stab_pressed = Input.is_action_pressed(prefix + "_stab")
         inputs.charge_pressed = Input.is_action_pressed(prefix + "_throw")
         inputs.dash_pressed = Input.is_action_just_pressed(prefix + "_dash")
+
+        var rotation_direction = Input.get_axis(prefix + "_left", prefix + "_right")
+        inputs.look_direction = look_direction.rotated(rotation_speed * delta * rotation_direction)
+        inputs.drive = max(0, Input.get_axis(prefix + "_up", prefix + "_down") * -1)
     else:
         inputs.stab_pressed = Input.get_joy_axis(controller_device_index, JOY_AXIS_TRIGGER_RIGHT) > 0.5
         inputs.charge_pressed = Input.get_joy_axis(controller_device_index, JOY_AXIS_TRIGGER_LEFT) > 0.5
         inputs.dash_pressed = Input.is_joy_button_pressed(controller_device_index, JOY_BUTTON_A)
+
+        var controller_vector = Vector2()
+        controller_vector.x = Input.get_joy_axis(controller_device_index, JOY_AXIS_LEFT_X)
+        controller_vector.y = Input.get_joy_axis(controller_device_index, JOY_AXIS_LEFT_Y)
+        if (controller_vector.length() < deadzone):
+            controller_vector = Vector2.ZERO
+
+        inputs.look_direction = controller_vector.normalized()
+        inputs.drive = controller_vector.length()
     return inputs
 
 
@@ -153,27 +168,7 @@ func _process(delta: float) -> void:
     if (state is Dead):
         return
 
-    var actions = get_action_inputs()
-    var move_strength := 0.0
-    var prefix = get_keyboard_player_prefix()
-
-    handle_invincibility(delta)
-
-    if can_rotate():
-        if is_keyboard_player():
-            var rotation_direction = Input.get_axis(prefix + "_left", prefix + "_right")
-            look_direction = look_direction.rotated(rotation_speed * delta * rotation_direction)
-            move_strength = max(0, Input.get_axis(prefix + "_up", prefix + "_down") * -1)
-        else:
-            # Player is using a controller
-            var controller_vector = Vector2()
-            controller_vector.x = Input.get_joy_axis(controller_device_index, JOY_AXIS_LEFT_X)
-            controller_vector.y = Input.get_joy_axis(controller_device_index, JOY_AXIS_LEFT_Y)
-            if (controller_vector.length() < deadzone):
-                controller_vector = Vector2.ZERO
-
-            look_direction = controller_vector.normalized()
-            move_strength = controller_vector.length()
+    var actions = get_action_inputs(delta)
 
     if can_attack():
         if actions.charge_pressed:
@@ -185,11 +180,12 @@ func _process(delta: float) -> void:
             state = Stabbing.new()
 
     handle_dash(delta, look_direction)
-
+    handle_invincibility_countdown(delta)
     update_weapon_visibility()
 
     # Rotate in the look_direction we're walking
     if can_rotate() and look_direction != Vector2.ZERO:
+        look_direction = actions.look_direction
         rotation = look_direction.angle()
         bubble_sprite.rotation = look_direction.angle()
 
@@ -197,10 +193,10 @@ func _process(delta: float) -> void:
         $BubbleSprite.global_rotation_degrees = 0
 
     if state is Moving:
-        if move_strength <= 0.0:
+        if actions.drive <= 0.0:
             state = Idle.new()
         # Move into the look_direction indicated by controller or keyboard
-        position += look_direction * delta * move_strength * max_movespeed
+        position += look_direction * delta * actions.drive * max_movespeed
         animate_wobble(2.0)
         $GooglyEyes.walking_animation()
     elif state is Stabbing:
@@ -212,7 +208,7 @@ func _process(delta: float) -> void:
             weapon.set_attack_button_pressed(false)
             state = Idle.new()
     elif state is Idle:
-        if move_strength > 0.0:
+        if actions.drive > 0.0:
             state = Moving.new()
         animate_wobble(1.0)
         $GooglyEyes.reset()
@@ -249,7 +245,7 @@ func handle_dash(delta: float, current_player_direction: Vector2) -> void:
     # Check whether we should start a new dash.
     if can_dash():
         # If we are now dashing, update some stuff.
-        if get_action_inputs().dash_pressed:
+        if get_action_inputs(delta).dash_pressed:
             state = Dashing.new()
             state.dash_direction = Vector2(current_player_direction).normalized()
             $'GooglyEyes'.blink(dash_duration)
@@ -297,8 +293,7 @@ func animate_wobble(multiplier: float):
     var skew_speed = 0.005 * multiplier
     $BubbleSprite.skew = sin(Time.get_ticks_msec() * skew_speed) * skew_intensity
 
-# Handle all logic around the player's invincibility (blinking + timer)
-func handle_invincibility(delta: float):
+func handle_invincibility_countdown(delta: float):
     if is_invincible():
         invincibility_countdown -= delta
 
