@@ -131,19 +131,21 @@ func attach_to_player(area) -> void:
         weapon_owner = player
         player.pick_up_weapon.call_deferred(self)
 
-func hit_player(player: Player) -> void:
+func hit_player(target: Player) -> void:
     # Weapon cannot kill owner and only while throwing or stabbing
-    if not player == weapon_owner and (is_checking_for_throw_collisions or is_stabbing):
-        if weapon_owner and not player.dead:
-            if not player.is_invincible():
-                weapon_owner.increment_kill_streak()
-            # When a player kills another player with a throw, give them a new spear.
-            if is_throwing:
-                weapon_owner.get_new_weapon()
-                weapon_owner.increment_kill_streak()
-                weapon_owner = null
+    var is_attacking = is_checking_for_throw_collisions or is_stabbing
+    var is_target_killable = not target.dead and not target.is_invincible() and target != weapon_owner
+    if not is_attacking or not is_target_killable:
+        return
 
-        player.kill()
+    if weapon_owner:
+        weapon_owner.increment_kill_streak()
+        # When a player kills another player with a throw, give them a new spear.
+        if is_throwing:
+            weapon_owner.get_new_weapon()
+            weapon_owner = null
+
+    target.kill()
 
 func drop() -> void:
     cancel_attack_charge()

@@ -38,11 +38,11 @@ var stun_countdown := 0.0
 # This is null when player is not carrying a weapon
 var weapon
 var stage_lost := false
+var kill_streak := 0
 
 # ----- Minigame ----- 
 # This is set if the player is currently in a minigame
 var minigame = null
-var kill_streak := 0
 
 # ----- Movement ------
 @export
@@ -434,4 +434,3 @@ func get_player_name() -> String:
 
 func increment_kill_streak():
     kill_streak += 1
-
