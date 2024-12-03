@@ -444,7 +444,6 @@ func win():
         weapon.queue_free()
     for player in get_tree().get_nodes_in_group("players"):
         if player != self:
-            player.stage_lost = true
             player.kill()
 
 func bounce_back(bounce_direction: Vector2):
