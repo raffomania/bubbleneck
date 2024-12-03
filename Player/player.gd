@@ -153,11 +153,12 @@ func _process(delta: float) -> void:
     if (state is Dead):
         return
 
-    handle_invincibility(delta)
-
-    # var look_direction: Vector2
+    var actions = get_action_inputs()
     var move_strength := 0.0
     var prefix = get_keyboard_player_prefix()
+
+    handle_invincibility(delta)
+
     if can_rotate():
         if is_keyboard_player():
             var rotation_direction = Input.get_axis(prefix + "_left", prefix + "_right")
@@ -174,10 +175,6 @@ func _process(delta: float) -> void:
             look_direction = controller_vector.normalized()
             move_strength = controller_vector.length()
 
-        if can_move() and move_strength > 0.0:
-            state = Moving.new()
-
-    var actions = get_action_inputs()
     if can_attack():
         if actions.charge_pressed:
             $'GooglyEyes'.raise_eye()
@@ -186,13 +183,6 @@ func _process(delta: float) -> void:
         elif actions.stab_pressed:
             weapon.stab()
             state = Stabbing.new()
-
-    # Reset state after charging or stabbing.
-    var stop_charging = state is ChargingThrow and not actions.stab_pressed and not actions.charge_pressed 
-    var stop_stabbing = state is Stabbing and not weapon.is_stabbing
-    if stop_charging or stop_stabbing:
-        weapon.set_attack_button_pressed(false)
-        state = Idle.new()
 
     handle_dash(delta, look_direction)
 
@@ -207,11 +197,23 @@ func _process(delta: float) -> void:
         $BubbleSprite.global_rotation_degrees = 0
 
     if state is Moving:
+        if move_strength <= 0.0:
+            state = Idle.new()
         # Move into the look_direction indicated by controller or keyboard
         position += look_direction * delta * move_strength * max_movespeed
         animate_wobble(2.0)
         $GooglyEyes.walking_animation()
+    elif state is Stabbing:
+        if not actions.stab_pressed and not weapon.is_stabbing:
+            weapon.set_attack_button_pressed(false)
+            state = Idle.new()
+    elif state is ChargingThrow:
+         if not actions.charge_pressed:
+            weapon.set_attack_button_pressed(false)
+            state = Idle.new()
     elif state is Idle:
+        if move_strength > 0.0:
+            state = Moving.new()
         animate_wobble(1.0)
         $GooglyEyes.reset()
 
