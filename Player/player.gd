@@ -204,7 +204,7 @@ func _process(delta: float) -> void:
             weapon.set_attack_button_pressed(false)
             state = Idle.new()
     elif state is ChargingThrow:
-         if not actions.charge_pressed:
+        if not actions.charge_pressed:
             weapon.set_attack_button_pressed(false)
             state = Idle.new()
     elif state is Idle:
