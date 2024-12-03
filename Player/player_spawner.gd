@@ -1,5 +1,7 @@
 extends Node2D
 
+class_name PlayerSpawner
+
 var spawned_devices = []
 var player_scene = preload("res://Player/player.tscn")
 var bottle: Bottle
@@ -81,3 +83,6 @@ func random_player_color(player_index: int):
     var color_index = (player_index + 2) % player_colors.size()
 
     return player_colors[color_index]
+
+func get_total_players():
+    return spawned_devices.size()

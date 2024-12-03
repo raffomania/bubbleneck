@@ -6,9 +6,11 @@ var label_scene = preload("res://Minigame/PressLabel.tscn")
 
 var available_directions = ["up", "down", "left", "right"]
 var label_children: Array[PressLabel] = []
-var controller_device_index: int = -1
+var player: Player
 var axis_threshold = 0.5
 var color := Color.HOT_PINK
+@export
+var base_amount := 7
 var on_cooldown := false
 
 var is_finished := false
@@ -16,12 +18,9 @@ var is_finished := false
 signal finished
 signal aborted
 
-func _ready() -> void:
-    create_labels()
-
 func create_labels():
     var label_position = Vector2.ZERO
-    for _i in range(0, 5):
+    for _i in range(0, get_amount_labels()):
         var dir = available_directions[randi() % available_directions.size()]
         var label: PressLabel = label_scene.instantiate()
         label.set_color(color)
@@ -103,8 +102,9 @@ func get_pressed_direction() -> String:
         dir = Input.get_vector(prefix + "_left", prefix + "_right", prefix + "_up", prefix + "_down")
     else:
         # Player is using a controller
-        dir = Vector2(1, 0) * Input.get_joy_axis(controller_device_index, JOY_AXIS_LEFT_X)
-        dir.y = Input.get_joy_axis(controller_device_index, JOY_AXIS_LEFT_Y)
+        dir = Vector2(1, 0) * Input.get_joy_axis(player.controller_device_index, JOY_AXIS_LEFT_X)
+        dir.y = Input.get_joy_axis(player.controller_device_index, JOY_AXIS_LEFT_Y)
+        # TODO: directional pads
 
     if dir.x > axis_threshold:
         return "right"
@@ -118,7 +118,13 @@ func get_pressed_direction() -> String:
     return ""
 
 func is_keyboard_player():
-    return controller_device_index < 0
+    return player.controller_device_index < 0
 
 func get_keyboard_player_prefix():
-    return "kb" + str(abs(controller_device_index))
+    return "kb" + str(abs(player.controller_device_index))
+
+func get_amount_labels():
+    var spawner : PlayerSpawner = get_node("/root/Main/PlayerSpawner")
+    var total_players  = spawner.get_total_players()
+
+    return  max(2, base_amount - player.kill_streak - (total_players / 2))

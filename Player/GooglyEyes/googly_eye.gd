@@ -24,7 +24,6 @@ func reset() -> void:
     if is_instance_valid(eye_tween):
         eye_tween.stop()
         eye_tween = null
-        print("tween stopped")
 
 func walking_animation() -> void:
     $LeftOuter.position.y = sin(Time.get_ticks_msec() * time_factor) 

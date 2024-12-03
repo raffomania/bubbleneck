@@ -42,6 +42,7 @@ var stage_lost := false
 # ----- Minigame ----- 
 # This is set if the player is currently in a minigame
 var minigame = null
+var kill_streak := 0
 
 # ----- Movement ------
 @export
@@ -62,7 +63,7 @@ var dash_timer: float = 0.0
 # How far the player should be able to dash.
 @export
 var dash_speed := 6
-# The time how long a dash should last.
+# The time how long a dash should last
 @export
 var dash_duration: float = 0.10
 # The timer that tracks how long the dash is on cooldown.
@@ -316,6 +317,7 @@ func kill(muted = false):
         weapon = null
 
     dead = true
+    kill_streak = 0
 
     if not muted:
         play_death_sound()
@@ -374,9 +376,10 @@ func start_minigame() -> Minigame:
 
     var new_minigame: Minigame = minigame_scene.instantiate()
     new_minigame.color = player_color
-    new_minigame.controller_device_index = controller_device_index
+    new_minigame.player = self
     var direction_to_center = ((get_viewport_rect().size / 2) - global_position).normalized()
     get_parent().add_child(new_minigame)
+    new_minigame.create_labels()
     new_minigame.global_position = global_position + direction_to_center * 200
 
     new_minigame.finished.connect(self.win)
@@ -427,3 +430,8 @@ func get_id() -> int:
 # Returns the name of a player.
 func get_player_name() -> String:
     return 'Player %s' % colors[get_id()]
+
+
+func increment_kill_streak():
+    kill_streak += 1
+
