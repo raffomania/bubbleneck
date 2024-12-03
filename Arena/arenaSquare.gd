@@ -34,8 +34,8 @@ func _process(_delta: float) -> void:
 
     center.x = viewport.size.x / 2
     center.y = viewport.size.y / 2
-    for player: Node2D in get_tree().get_nodes_in_group('players'):
-       if (!player.dead and is_point_outside_rect(player.global_position)):
+    for player: Player in get_tree().get_nodes_in_group('players'):
+       if (player.state is not Player.Dead and is_point_outside_rect(player.global_position)):
            player.global_position -= 0.01 * (player.global_position - center)
 
     for node: Node2D in get_tree().get_nodes_in_group('weapons'):

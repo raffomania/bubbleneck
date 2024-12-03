@@ -26,6 +26,8 @@ func _unhandled_input(event: InputEvent) -> void:
 func next_stage():
     if is_instance_valid(current_stage):
         current_stage.queue_free()
+
+    Globals.state = Globals.RoundRunning.new()
         
     spawner.remove_all_players()
     get_tree().call_group("weapons", "queue_free")

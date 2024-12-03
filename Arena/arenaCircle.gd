@@ -25,9 +25,9 @@ func _process(_delta: float) -> void:
 
     center.x = viewport.size.x / 2
     center.y = viewport.size.y / 2
-    for player: Node2D in get_tree().get_nodes_in_group('players'):
+    for player: Player in get_tree().get_nodes_in_group('players'):
        var dist = player.global_position.distance_to(center)
-       if (!player.dead and dist > radius - player.radius):
+       if (!(player.state is Player.Dead) and dist > radius - player.radius):
            player.position -= 0.01 * (player.position - center)
 
     for node: Node2D in get_tree().get_nodes_in_group('weapons'):
@@ -36,7 +36,7 @@ func _process(_delta: float) -> void:
        if (weapon.is_throwing and dist > radius - 10):
            # This is to prevent the weapon being stuck on throw when the player is on the edge of the arena.
            # Stick only if arena center is below line orthogonal to weapon throwing direction.
-           var a = weapon.position - (100 * Vector2.RIGHT.rotated(weapon.rotation).rotated(PI/2))
-           var b = weapon.position + (100 * Vector2.RIGHT.rotated(weapon.rotation).rotated(PI/2))
-           if (b-a).cross(position-a) > 0:
+           var a = weapon.position - (100 * Vector2.RIGHT.rotated(weapon.rotation).rotated(PI / 2))
+           var b = weapon.position + (100 * Vector2.RIGHT.rotated(weapon.rotation).rotated(PI / 2))
+           if (b - a).cross(position - a) > 0:
                weapon.stick()

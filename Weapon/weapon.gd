@@ -135,7 +135,7 @@ func attach_to_player(area) -> void:
 func hit_player(target: Player) -> void:
     # Weapon cannot kill owner and only while throwing or stabbing
     var is_attacking = is_checking_for_throw_collisions or is_stabbing
-    var is_target_killable = not target.dead and not target.is_invincible() and target != weapon_owner
+    var is_target_killable = target.state is not Player.Dead and not target.is_invincible() and target != weapon_owner
     if not is_attacking or not is_target_killable:
         return
 

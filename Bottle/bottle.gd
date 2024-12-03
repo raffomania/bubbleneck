@@ -17,9 +17,6 @@ var pop_countdown_max_speed = 1.5
 var shake_bottle_from_hit = false
 
 # Sudden death
-var sudden_death = false
-var sudden_death_countdown = 0.0
-var sudden_death_timeout = 40
 
 # The current rotational speed of the bottle
 var rotation_speed: float = 0.5
@@ -71,8 +68,6 @@ func _ready() -> void:
     rng.seed = Time.get_unix_time_from_system()
     pop_countdown = rng.randi_range(pop_countdown_min, pop_countdown_max)
     pop_countdown_start = pop_countdown
-
-    sudden_death_countdown = sudden_death_timeout
 
     bottleneck_particles = $BottleneckParticles
     pop_particles = $PopParticles
@@ -127,22 +122,23 @@ func _process(delta: float) -> void:
             var shake_y = randf_range(-shake_intensity, shake_intensity)
             position = Vector2(shake_x, shake_y) + position
     else:
-        sudden_death_countdown -= delta
-        if not sudden_death and sudden_death_countdown <= 0:
-            var players = get_tree().get_nodes_in_group('players')
-            var player_angle = 0
-            for node in players:
-                var player = node as Player
-                if player.dead:
-                    player.respawn()
-                if player.is_in_minigame():
-                    player.stop_minigame()
-                node.position = viewpoint_center + Vector2.from_angle(player_angle) * 400
-                player_angle += (2 * PI) / players.size()
+        if Globals.state is Globals.RoundRunning:
+            Globals.state.sudden_death_countdown -= delta
 
-            sudden_death = true
+            if Globals.state.sudden_death_countdown <= 0:
+                Globals.state = Globals.SuddenDeath.new()
+                var players = get_tree().get_nodes_in_group('players')
+                var player_angle = 0
+                for node in players:
+                    var player = node as Player
+                    if player.state is Player.Dead:
+                        player.respawn()
+                    if player.state is Player.InMinigame:
+                        player.stop_minigame()
+                    node.position = viewpoint_center + Vector2.from_angle(player_angle) * 400
+                    player_angle += (2 * PI) / players.size()
+
                 
-
     # Check if the bottle should pop.
     if not popped and pop_countdown <= 0 or Input.is_action_just_pressed("debug_pop_bottle"):
         popped = true
@@ -164,6 +160,9 @@ func pop_bottle() -> void:
     # without this it breaks. do not ask why.
     await get_tree().create_timer(0.6).timeout
     pop_particles.emitting = false
+
+    if Globals.state is Globals.RoundRunning:
+        Globals.state.sudden_death_countdown = Globals.state.sudden_death_timeout
 
 # Call this to hit the bottle.
 # Reduces the countdown until pop and adds some impulse to the bottle.

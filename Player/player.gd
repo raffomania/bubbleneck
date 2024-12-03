@@ -2,6 +2,46 @@ extends Area2D
 
 class_name Player
 
+class State:
+    pass
+
+class InMinigame:
+    extends State
+
+    var minigame: Minigame
+
+class Moving:
+    extends State
+
+    var direction: Vector2
+
+class Dead:
+    extends State
+
+class Idle:
+    extends State
+
+class Dashing:
+    extends State
+
+    var dash_direction: Vector2
+    # The timer that tracks how far we're in a dash.
+    var dash_timer: float = 0.0
+
+class ChargingThrow:
+    extends State
+
+class Stabbing:
+    extends State
+
+class Stunned:
+    extends State
+
+class WonRound:
+    extends State
+
+var state: State = Idle.new()
+
 var colors = {
     0: 'Cyan',
     1: 'Orange',
@@ -24,25 +64,16 @@ var controller_device_index := 0
 var player_color := Color.VIOLET
 @export
 var radius := 1.5
-@export
-var dead := false
+
 @export
 var respawn_time := 3.0
 
 @onready
 var bubble_sprite := $BubbleSprite
 
-# When bouncing off the wall or bottle, disable movement
-var stun_countdown := 0.0
-
 # This is null when player is not carrying a weapon
 var weapon
-var stage_lost := false
 var kill_streak := 0
-
-# ----- Minigame ----- 
-# This is set if the player is currently in a minigame
-var minigame = null
 
 # ----- Movement ------
 @export
@@ -55,22 +86,17 @@ var look_direction := Vector2(1, 0)
 # The curve that represents the the player dash movement.
 @export
 var dash_curve: Curve
-var is_dashing := false
-var dash_direction: Vector2
-# The timer that tracks how far we're in a dash.
-
-var dash_timer: float = 0.0
 # How far the player should be able to dash.
 @export
 var dash_speed := 6
 # The time how long a dash should last
 @export
 var dash_duration: float = 0.10
-# The timer that tracks how long the dash is on cooldown.
-var dash_disabled_countdown: float = 0.0
 @export
 # How long a player needs to wait until they can dash again
 var dash_cooldown_seconds: float = 1.0
+# The timer that tracks how long the dash is on cooldown.
+var dash_disabled_countdown: float = 0.0
 
 # ----- Invincibility related variables ----- 
 var spawn_protection_duration: float = 3.5
@@ -88,72 +114,82 @@ func _ready():
     scale = Vector2(radius, radius)
 
 func _process(delta: float) -> void:
-    if (dead):
+    if (state is Dead):
         return
 
-    stun_countdown = max(0, stun_countdown - delta)
     handle_invincibility(delta)
 
     # var look_direction: Vector2
     var pressed_direction
     var move_strength := 0.0
+    var prefix = get_keyboard_player_prefix()
+    if can_rotate():
+        if is_keyboard_player():
+            pressed_direction = Input.get_vector(prefix + "_left", prefix + "_right", prefix + "_up", prefix + "_down")
+            look_direction = look_direction.rotated(rotation_speed * delta * pressed_direction.x)
+            if pressed_direction.y <= -0.5:
+                move_strength = 1.0
+        else:
+            # Player is using a controller
+            var controller_vector = Vector2()
+            controller_vector.x = Input.get_joy_axis(controller_device_index, JOY_AXIS_LEFT_X)
+            controller_vector.y = Input.get_joy_axis(controller_device_index, JOY_AXIS_LEFT_Y)
+            if (controller_vector.length() < deadzone):
+                controller_vector = Vector2.ZERO
+
+            look_direction = controller_vector.normalized()
+            move_strength = controller_vector.length()
+
+        if move_strength > 0.0 and can_move():
+            state = Moving.new()
+
     if is_keyboard_player():
-        var prefix = get_keyboard_player_prefix()
-        pressed_direction = Input.get_vector(prefix + "_left", prefix + "_right", prefix + "_up", prefix + "_down")
-        look_direction = look_direction.rotated(rotation_speed * delta * pressed_direction.x)
-        if pressed_direction.y <= -0.5:
-            move_strength = 1.0
-            
-        if is_instance_valid(weapon):
-            if Input.is_action_pressed(prefix + "_throw") and not is_in_minigame():
+        if Input.is_action_pressed(prefix + "_throw"):
+            if can_attack():
                 $'GooglyEyes'.raise_eye()
                 weapon.set_attack_button_pressed(true)
-            elif Input.is_action_pressed(prefix + "_stab") and not is_in_minigame():
+                state = ChargingThrow.new()
+        elif Input.is_action_pressed(prefix + "_stab"):
+            if can_attack():
                 weapon.stab()
-            else:
-                weapon.set_attack_button_pressed(false)
-
+                state = Stabbing.new()
+        elif state is ChargingThrow or (state is Stabbing and not weapon.is_stabbing):
+            weapon.set_attack_button_pressed(false)
+            state = Idle.new()
     else:
-        # Player is using a controller
-        var controller_vector = Vector2()
-        controller_vector.x = Input.get_joy_axis(controller_device_index, JOY_AXIS_LEFT_X)
-        controller_vector.y = Input.get_joy_axis(controller_device_index, JOY_AXIS_LEFT_Y)
-        if (controller_vector.length() < deadzone):
-            controller_vector = Vector2.ZERO
-
-        look_direction = controller_vector.normalized()
-        move_strength = controller_vector.length()
-        
-        if is_instance_valid(weapon):
-            if Input.get_joy_axis(controller_device_index, JOY_AXIS_TRIGGER_RIGHT) > 0.5 and not is_in_minigame():
+        if Input.get_joy_axis(controller_device_index, JOY_AXIS_TRIGGER_RIGHT) > 0.5:
+            if can_attack():
                 $'GooglyEyes'.raise_eye()
                 weapon.set_attack_button_pressed(true)
-            elif Input.get_joy_axis(controller_device_index, JOY_AXIS_TRIGGER_LEFT) > 0.5 and not is_in_minigame():
+                state = ChargingThrow.new()
+        elif Input.get_joy_axis(controller_device_index, JOY_AXIS_TRIGGER_LEFT) > 0.5:
+            if can_attack():
                 weapon.stab()
-            else:
-                weapon.set_attack_button_pressed(false)
+                state = Stabbing.new()
+        elif state is ChargingThrow or (state is Stabbing and not weapon.is_stabbing):
+            weapon.set_attack_button_pressed(false)
+            state = Idle.new()
 
     var dash_offset = handle_dash(delta, look_direction)
 
     update_weapon_visibility()
 
     # Rotate in the look_direction we're walking
-    if look_direction != Vector2.ZERO:
+    if look_direction != Vector2.ZERO and can_rotate():
         rotation = look_direction.angle()
         bubble_sprite.rotation = look_direction.angle()
 
-    if is_movement_allowed():
+    if state is Dashing:
+        position += dash_offset
+    elif can_move():
         # Move in the look_direction we're dashing
-        if is_dashing:
-            position += dash_offset
         # Move into the look_direction indicated by controller or keyboard
-        else:
-            position += look_direction * delta * move_strength * max_movespeed
+        position += look_direction * delta * move_strength * max_movespeed
         
-    if move_strength > 0.0 and is_movement_allowed():
+    if move_strength > 0.0 and can_move():
         animate_wobble(2.0)
         $GooglyEyes.walking_animation()
-    else:
+    elif state is Idle:
         animate_wobble(1.0)
         $GooglyEyes.reset()
     
@@ -162,19 +198,20 @@ func _process(delta: float) -> void:
 
 
 func _input(_event):
-    if is_in_minigame():
+    if state is InMinigame:
         if is_keyboard_player():
             var prefix = get_keyboard_player_prefix()
             if Input.is_action_just_pressed(prefix + "_dash"):
                 stop_minigame()
         else:
             if Input.is_joy_button_pressed(controller_device_index, JOY_BUTTON_A):
+                print("stop minigame")
                 stop_minigame()
 
 func update_weapon_visibility():
     if not is_instance_valid(weapon):
         return
-    if is_dashing:
+    if state is Dashing:
         weapon.visible = false
     else:
         weapon.visible = true
@@ -192,7 +229,7 @@ func handle_dash(delta: float, current_player_direction: Vector2) -> Vector2:
 
     # The player isn't dashing yet and the cooldown is not active.
     # Check whether we should start a new dash.
-    if not is_dashing and is_movement_allowed():
+    if not state is Dashing and can_move():
         var just_started_dashing = false
         if is_keyboard_player():
             var prefix = get_keyboard_player_prefix()
@@ -204,18 +241,18 @@ func handle_dash(delta: float, current_player_direction: Vector2) -> Vector2:
 
         # If we are now dashing, update some stuff.
         if just_started_dashing:
-            is_dashing = true
-            dash_direction = Vector2(current_player_direction).normalized()
+            state = Dashing.new()
+            state.dash_direction = Vector2(current_player_direction).normalized()
             $'GooglyEyes'.blink(dash_duration)
             make_invincible(dash_protection_duration)
             $AudioStreamPlayer2D_Dash.play()
 
     # Return early if no button is pressed
-    if not is_dashing:
+    if not state is Dashing:
         return dash_offset
 
     # Dash is active, increment the timer
-    dash_timer += delta
+    state.dash_timer += delta
 
     bubble_sprite.skew = 0.6
 
@@ -227,16 +264,16 @@ func handle_dash(delta: float, current_player_direction: Vector2) -> Vector2:
     # var curve_value = dash_curve.sample(relative_elapsed_time)
     # TODO fix this
     var curve_value = 50 * delta
-    dash_offset.x = curve_value * dash_direction.x
-    dash_offset.y = curve_value * dash_direction.y
+    dash_offset.x = curve_value * state.dash_direction.x
+    dash_offset.y = curve_value * state.dash_direction.y
     dash_offset *= dash_speed
 
     # If we reached the end of the dashing duration.
     # Cancel the dash and start the cooldown.
-    if dash_timer >= dash_duration:
+    if state.dash_timer >= dash_duration:
         # Reset the dashing logic.
-        dash_timer = 0
-        is_dashing = false
+        state.dash_timer = 0
+        state = Idle.new()
         bubble_sprite.skew = 0
         # Start the cooldown
         dash_disabled_countdown = dash_cooldown_seconds
@@ -304,22 +341,25 @@ func on_throw_weapon():
         weapon.on_throw.disconnect(on_throw_weapon)
     weapon = null
 
-func kill(muted = false):
-    if dead:
+func kill():
+    # Always die, no matter the circumstances
+    var regular_kill = Globals.state is not Globals.RoundOver
+
+    if state is Dead:
         return
     # Don't kill invincible players.
-    if is_invincible():
+    if is_invincible() and regular_kill:
         return
+
 
     if is_instance_valid(weapon):
         weapon.drop()
 
         weapon = null
 
-    dead = true
     kill_streak = 0
 
-    if not muted:
+    if regular_kill:
         play_death_sound()
 
     stop_minigame()
@@ -327,21 +367,19 @@ func kill(muted = false):
 
     $BubbleSprite.visible = false
     $GooglyEyes.kill()
+    state = Dead.new()
     Globals.player_killed.emit(self)
 
     await get_tree().create_timer(respawn_time).timeout
     respawn()
 
 func respawn():
-    if stage_lost:
+    if Globals.state is not Globals.RoundRunning:
         return
 
     var bottle = get_tree().root.get_node("Main/PlayerSpawner").bottle
-    # Stay dead on sudden death
-    if bottle.sudden_death:
-        return
 
-    dead = false
+    state = Idle.new()
     # Spawn protection
     make_invincible(spawn_protection_duration)
     get_new_weapon()
@@ -364,15 +402,12 @@ func is_keyboard_player():
 func get_keyboard_player_prefix():
     return "kb" + str(abs(controller_device_index))
 
-func is_in_minigame() -> bool:
-    return is_instance_valid(minigame)
-
 func start_minigame() -> Minigame:
-    if dead:
+    if state is not Moving:
         return
 
-    if is_in_minigame():
-        return minigame
+    if state is InMinigame:
+        return state.minigame
 
     var new_minigame: Minigame = minigame_scene.instantiate()
     new_minigame.color = player_color
@@ -384,18 +419,24 @@ func start_minigame() -> Minigame:
 
     new_minigame.finished.connect(self.win)
 
-    minigame = new_minigame
+    state = InMinigame.new()
+    state.minigame = new_minigame
 
     return new_minigame
 
 func stop_minigame():
-    if not is_in_minigame():
+    if state is not InMinigame:
         return
     
-    minigame.abort()
+    state.minigame.abort()
+
+    state = Idle.new()
 
 func win():
     make_invincible(5.0)
+
+    state = WonRound.new()
+    Globals.state = Globals.RoundOver.new()
 
     # $AudioStreamPlayer2D_Win.play()
 
@@ -404,20 +445,26 @@ func win():
     for player in get_tree().get_nodes_in_group("players"):
         if player != self:
             player.stage_lost = true
-            player.kill(true)
+            player.kill()
 
 func bounce_back(bounce_direction: Vector2):
-    if is_in_minigame():
+    if state is InMinigame:
         return
+    state = Stunned.new()
     var tween = get_tree().create_tween()
     var bounce_duration = 0.05
-    stun_countdown = bounce_duration
     tween.tween_property(self, "global_position", global_position + bounce_direction, bounce_duration)
+    await tween.finished
+    state = Idle.new()
 
-func is_movement_allowed():
-    var is_attacking = is_instance_valid(weapon) and (weapon.is_stabbing or weapon.is_charging_throw)
-    var is_stunned = stun_countdown > 0
-    return !is_attacking and !is_in_minigame() and !is_stunned
+func can_move() -> bool:
+    return state is Moving or state is Idle
+
+func can_rotate() -> bool:
+    return state is Moving or state is Idle or state is ChargingThrow
+
+func can_attack() -> bool:
+    return is_instance_valid(weapon) and (state is Idle or state is Moving or state is Dashing)
 
 func play_death_sound():
     var num: int = randi() % 3
