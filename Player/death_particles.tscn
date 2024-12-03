@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://d4ibq4ldajc7f"]
+[gd_scene load_steps=5 format=3 uid="uid://bxwvn54hlicia"]
 
 [ext_resource type="Shader" path="res://Player/deathparticles.gdshader" id="1_wii0q"]
 [ext_resource type="Texture2D" uid="uid://ekewl83mripo" path="res://assets/bubble_texture.png" id="2_1v07j"]
