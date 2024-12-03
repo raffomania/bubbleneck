@@ -115,6 +115,15 @@ func _ready():
     
     scale = Vector2(radius, radius)
 
+func can_move() -> bool:
+    return state is Moving or state is Idle
+
+func can_rotate() -> bool:
+    return state is Moving or state is Idle or state is ChargingThrow
+
+func can_attack() -> bool:
+    return is_instance_valid(weapon) and (state is Idle or state is Moving or state is Dashing)
+
 func _process(delta: float) -> void:
     if (state is Dead):
         return
@@ -140,35 +149,31 @@ func _process(delta: float) -> void:
             look_direction = controller_vector.normalized()
             move_strength = controller_vector.length()
 
-        if move_strength > 0.0 and can_move():
+        if can_move() and move_strength > 0.0:
             state = Moving.new()
 
+    var stab_button_pressed
+    var charge_button_pressed
     if is_keyboard_player():
-        if Input.is_action_pressed(prefix + "_throw"):
-            if can_attack():
-                $'GooglyEyes'.raise_eye()
-                weapon.set_attack_button_pressed(true)
-                state = ChargingThrow.new()
-        elif Input.is_action_pressed(prefix + "_stab"):
-            if can_attack():
-                weapon.stab()
-                state = Stabbing.new()
-        elif state is ChargingThrow or (state is Stabbing and not weapon.is_stabbing):
-            weapon.set_attack_button_pressed(false)
-            state = Idle.new()
+        stab_button_pressed = Input.is_action_pressed(prefix + "_throw")
+        charge_button_pressed = Input.is_action_pressed(prefix + "_stab")
     else:
-        if Input.get_joy_axis(controller_device_index, JOY_AXIS_TRIGGER_RIGHT) > 0.5:
-            if can_attack():
-                $'GooglyEyes'.raise_eye()
-                weapon.set_attack_button_pressed(true)
-                state = ChargingThrow.new()
-        elif Input.get_joy_axis(controller_device_index, JOY_AXIS_TRIGGER_LEFT) > 0.5:
-            if can_attack():
-                weapon.stab()
-                state = Stabbing.new()
-        elif state is ChargingThrow or (state is Stabbing and not weapon.is_stabbing):
-            weapon.set_attack_button_pressed(false)
-            state = Idle.new()
+        stab_button_pressed = Input.get_joy_axis(controller_device_index, JOY_AXIS_TRIGGER_RIGHT) > 0.5
+        charge_button_pressed = Input.get_joy_axis(controller_device_index, JOY_AXIS_TRIGGER_LEFT) > 0.5
+
+    if can_attack():
+        if charge_button_pressed:
+            $'GooglyEyes'.raise_eye()
+            weapon.set_attack_button_pressed(true)
+            state = ChargingThrow.new()
+        elif stab_button_pressed:
+            weapon.stab()
+            state = Stabbing.new()
+
+    # Reset state after charging or stabbing.
+    if (state is ChargingThrow and not stab_button_pressed and not charge_button_pressed) or (state is Stabbing and not weapon.is_stabbing):
+        weapon.set_attack_button_pressed(false)
+        state = Idle.new()
 
     var dash_offset = handle_dash(delta, look_direction)
 
@@ -454,15 +459,6 @@ func bounce_back(bounce_direction: Vector2):
     tween.tween_property(self, "global_position", global_position + bounce_direction, bounce_duration)
     await tween.finished
     state = Idle.new()
-
-func can_move() -> bool:
-    return state is Moving or state is Idle
-
-func can_rotate() -> bool:
-    return state is Moving or state is Idle or state is ChargingThrow
-
-func can_attack() -> bool:
-    return is_instance_valid(weapon) and (state is Idle or state is Moving or state is Dashing)
 
 func play_death_sound():
     var num: int = randi() % 3
