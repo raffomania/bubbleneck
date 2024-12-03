@@ -34,4 +34,9 @@ func _process(_delta: float) -> void:
        var weapon = node as Weapon
        var dist = weapon.global_position.distance_to(center)
        if (weapon.is_throwing and dist > radius - 10):
-           weapon.stick()
+           # This is to prevent the weapon being stuck on throw when the player is on the edge of the arena.
+           # Stick only if arena center is below line orthogonal to weapon throwing direction.
+           var a = weapon.position - (100 * Vector2.RIGHT.rotated(weapon.rotation).rotated(PI/2))
+           var b = weapon.position + (100 * Vector2.RIGHT.rotated(weapon.rotation).rotated(PI/2))
+           if (b-a).cross(position-a) > 0:
+               weapon.stick()
