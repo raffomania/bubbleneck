@@ -120,15 +120,13 @@ func _process(delta: float) -> void:
     handle_invincibility(delta)
 
     # var look_direction: Vector2
-    var pressed_direction
     var move_strength := 0.0
     var prefix = get_keyboard_player_prefix()
     if can_rotate():
         if is_keyboard_player():
             var rotation_direction = Input.get_axis(prefix + "_left", prefix + "_right")
-
             look_direction = look_direction.rotated(rotation_speed * delta * rotation_direction)
-            move_strength = min(0, Input.get_axis(prefix + "_down", prefix + "_up"))
+            move_strength = max(0, Input.get_axis(prefix + "_up", prefix + "_down") * -1)
         else:
             # Player is using a controller
             var controller_vector = Vector2()
