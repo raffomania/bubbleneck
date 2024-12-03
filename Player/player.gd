@@ -125,10 +125,10 @@ func _process(delta: float) -> void:
     var prefix = get_keyboard_player_prefix()
     if can_rotate():
         if is_keyboard_player():
-            pressed_direction = Input.get_vector(prefix + "_left", prefix + "_right", prefix + "_up", prefix + "_down")
-            look_direction = look_direction.rotated(rotation_speed * delta * pressed_direction.x)
-            if pressed_direction.y <= -0.5:
-                move_strength = 1.0
+            var rotation_direction = Input.get_axis(prefix + "_left", prefix + "_right")
+
+            look_direction = look_direction.rotated(rotation_speed * delta * rotation_direction)
+            move_strength = min(0, Input.get_axis(prefix + "_down", prefix + "_up"))
         else:
             # Player is using a controller
             var controller_vector = Vector2()
