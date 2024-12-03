@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://cvcdb4wd2wp6s"]
 
 [ext_resource type="PackedScene" uid="uid://vya5gp3frnx5" path="res://Arena/arena.tscn" id="1_dx7tj"]
-[ext_resource type="Script" path="res://Arena/arenaB.gd" id="2_s1c3c"]
+[ext_resource type="Script" path="res://Arena/arenaSquare.gd" id="2_s1c3c"]
 [ext_resource type="PackedScene" uid="uid://c87bliyet1rcn" path="res://Stage/background.tscn" id="3_dsfel"]
 [ext_resource type="PackedScene" uid="uid://b1u5n0mlyoqu5" path="res://Bottle/bottle.tscn" id="4_5h1o3"]
 
