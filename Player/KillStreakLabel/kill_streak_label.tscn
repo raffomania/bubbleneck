@@ -1,0 +1,22 @@
+[gd_scene load_steps=2 format=3 uid="uid://b22agbt7gpm4f"]
+
+[ext_resource type="Script" path="res://Player/KillStreakLabel/kill_streak_label.gd" id="1_tr0n7"]
+
+[node name="KillStreakLabel" type="Node2D"]
+script = ExtResource("1_tr0n7")
+
+[node name="RichTextLabel" type="RichTextLabel" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -30.5
+offset_right = 20.0
+offset_bottom = 30.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/normal_font_size = 40
+bbcode_enabled = true
+text = "[center]X"

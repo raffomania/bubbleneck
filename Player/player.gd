@@ -54,6 +54,8 @@ var colors = {
     8: 'Purple',
 }
 
+var kill_streak_label_scene = preload("res://Player/KillStreakLabel/kill_streak_label.tscn")
+
 var weapon_scene = preload("res://Weapon/weapon.tscn")
 var minigame_scene = preload("res://Minigame/Minigame.tscn")
 
@@ -475,6 +477,16 @@ func get_id() -> int:
 func get_player_name() -> String:
     return 'Player %s' % colors[get_id()]
 
-
 func increment_kill_streak():
     kill_streak += 1
+
+    var label: KillStreakLabel = kill_streak_label_scene.instantiate()
+    label.set_color(player_color)
+    label.set_text("[center]" + str(kill_streak))
+    get_node('/root/Main').add_child(label)
+    label.set_global_position(global_position - get_label_offset())
+    label.init()
+
+func get_label_offset() -> Vector2:
+    var padding = 30
+    return Vector2(0, $BubbleSprite.texture.get_height() * $BubbleSprite.scale.y * radius / 2 + padding)
