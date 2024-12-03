@@ -40,6 +40,13 @@ class Stunned:
 class WonRound:
     extends State
 
+
+class ActionInput:
+    var dash_pressed: bool
+    var stab_pressed: bool
+    var charge_pressed: bool
+
+
 var state: State = Idle.new()
 
 var colors = {
@@ -124,6 +131,24 @@ func can_rotate() -> bool:
 func can_attack() -> bool:
     return is_instance_valid(weapon) and (state is Idle or state is Moving or state is Dashing)
 
+func can_dash() -> bool:
+    return state is Moving or state is Idle and dash_disabled_countdown > 0.0
+
+# Returns a tuple of (stab_button_pressed, charge_button_pressed, dash_button_pressed).
+func get_action_inputs() -> ActionInput:
+    var inputs = ActionInput.new()
+    if is_keyboard_player():
+        var prefix = get_keyboard_player_prefix()
+        inputs.stab_pressed = Input.is_action_pressed(prefix + "_stab")
+        inputs.charge_pressed = Input.is_action_pressed(prefix + "_throw")
+        inputs.dash_pressed = Input.is_action_just_pressed(prefix + "_dash")
+    else:
+        inputs.stab_pressed = Input.get_joy_axis(controller_device_index, JOY_AXIS_TRIGGER_RIGHT) > 0.5
+        inputs.charge_pressed = Input.get_joy_axis(controller_device_index, JOY_AXIS_TRIGGER_LEFT) > 0.5
+        inputs.dash_pressed = Input.is_joy_button_pressed(controller_device_index, JOY_BUTTON_A)
+    return inputs
+
+
 func _process(delta: float) -> void:
     if (state is Dead):
         return
@@ -152,54 +177,43 @@ func _process(delta: float) -> void:
         if can_move() and move_strength > 0.0:
             state = Moving.new()
 
-    var stab_button_pressed
-    var charge_button_pressed
-    if is_keyboard_player():
-        stab_button_pressed = Input.is_action_pressed(prefix + "_throw")
-        charge_button_pressed = Input.is_action_pressed(prefix + "_stab")
-    else:
-        stab_button_pressed = Input.get_joy_axis(controller_device_index, JOY_AXIS_TRIGGER_RIGHT) > 0.5
-        charge_button_pressed = Input.get_joy_axis(controller_device_index, JOY_AXIS_TRIGGER_LEFT) > 0.5
-
+    var actions = get_action_inputs()
     if can_attack():
-        if charge_button_pressed:
+        if actions.charge_pressed:
             $'GooglyEyes'.raise_eye()
             weapon.set_attack_button_pressed(true)
             state = ChargingThrow.new()
-        elif stab_button_pressed:
+        elif actions.stab_pressed:
             weapon.stab()
             state = Stabbing.new()
 
     # Reset state after charging or stabbing.
-    if (state is ChargingThrow and not stab_button_pressed and not charge_button_pressed) or (state is Stabbing and not weapon.is_stabbing):
+    var stop_charging = state is ChargingThrow and not actions.stab_pressed and not actions.charge_pressed 
+    var stop_stabbing = state is Stabbing and not weapon.is_stabbing
+    if stop_charging or stop_stabbing:
         weapon.set_attack_button_pressed(false)
         state = Idle.new()
 
-    var dash_offset = handle_dash(delta, look_direction)
+    handle_dash(delta, look_direction)
 
     update_weapon_visibility()
 
     # Rotate in the look_direction we're walking
-    if look_direction != Vector2.ZERO and can_rotate():
+    if can_rotate() and look_direction != Vector2.ZERO:
         rotation = look_direction.angle()
         bubble_sprite.rotation = look_direction.angle()
 
-    if state is Dashing:
-        position += dash_offset
-    elif can_move():
-        # Move in the look_direction we're dashing
+        # fix player sprite rotation so sprite highlight doesn't rotate
+        $BubbleSprite.global_rotation_degrees = 0
+
+    if state is Moving:
         # Move into the look_direction indicated by controller or keyboard
         position += look_direction * delta * move_strength * max_movespeed
-        
-    if move_strength > 0.0 and can_move():
         animate_wobble(2.0)
         $GooglyEyes.walking_animation()
     elif state is Idle:
         animate_wobble(1.0)
         $GooglyEyes.reset()
-    
-    # fix player sprite rotation so sprite highlight doesn't rotate
-    $BubbleSprite.global_rotation_degrees = 0
 
 
 func _input(_event):
@@ -220,40 +234,29 @@ func update_weapon_visibility():
     else:
         weapon.visible = true
 
-# Handle the player dash
-# Returns a Vector that indicates the dash look_direction.
-# The vector is empty if no dash is active.
-func handle_dash(delta: float, current_player_direction: Vector2) -> Vector2:
+# Handle the player dash and dash cooldown.
+func handle_dash(delta: float, current_player_direction: Vector2) -> void:
     var dash_offset = Vector2()
 
     # The dash is still on cooldown, reduce the cooldown.
     if dash_disabled_countdown > 0:
         dash_disabled_countdown -= delta
-        return dash_offset
+        return
 
     # The player isn't dashing yet and the cooldown is not active.
     # Check whether we should start a new dash.
-    if not state is Dashing and can_move():
-        var just_started_dashing = false
-        if is_keyboard_player():
-            var prefix = get_keyboard_player_prefix()
-            if Input.is_action_just_pressed(prefix + "_dash"):
-                just_started_dashing = true
-        else:
-            if Input.is_joy_button_pressed(controller_device_index, JOY_BUTTON_A):
-                just_started_dashing = true
-
+    if can_dash():
         # If we are now dashing, update some stuff.
-        if just_started_dashing:
+        if get_action_inputs().dash_pressed:
             state = Dashing.new()
             state.dash_direction = Vector2(current_player_direction).normalized()
             $'GooglyEyes'.blink(dash_duration)
             make_invincible(dash_protection_duration)
             $AudioStreamPlayer2D_Dash.play()
 
-    # Return early if no button is pressed
+    # Return early if not dashing.
     if not state is Dashing:
-        return dash_offset
+        return
 
     # Dash is active, increment the timer
     state.dash_timer += delta
@@ -282,7 +285,9 @@ func handle_dash(delta: float, current_player_direction: Vector2) -> Vector2:
         # Start the cooldown
         dash_disabled_countdown = dash_cooldown_seconds
 
-    return dash_offset
+    # Update player position when in dash.
+    if state is Dashing:
+        position += dash_offset
 
 
 func animate_wobble(multiplier: float):
