@@ -23,22 +23,28 @@ func _ready() -> void:
     particles_left.emitting = false
     particles_right.emitting = false
 
-    show_text("Orange Player is unstoppable!", Color.HONEYDEW)
-
     Globals.kill_streak_changed.connect(_kill_streak_changed)
+    Globals.state_changed.connect(_global_state_changed)
 
 func _kill_streak_changed(player: Player):
     if player.kill_streak >= 4:
         var color_desc = player.get_color_description()
         show_text("%s is unstoppable!" % color_desc, player.player_color)
 
+func _global_state_changed():
+    if Globals.state is Globals.SuddenDeath:
+        show_text("Sudden Death", Color.RED.darkened(0.1))
+
 func idle():
     particles_left.emitting = false
     particles_right.emitting = false
     if label.visible == true:
-        $AnimationPlayer.play_backwards("Appear")
-        await $AnimationPlayer.animation_finished
+        animation_player.play_backwards("Appear")
+        await animation_player.animation_finished
         label.visible = false
+
+    # Wait for all particles to disappear
+    await get_tree().create_timer(0.9).timeout
     state = Idle.new()
     state_changed.emit()
 
