@@ -42,7 +42,7 @@ var shake_start_time = 8
 var viewpoint_center: Vector2
 
 var player_has_entered := false
-var minigame_in_progress := false
+var minigame = null
 
 @onready
 var entrance_area: Area2D = $EntranceArea
@@ -193,23 +193,20 @@ func add_impulse(impulse: float) -> void:
         rotation_speed = -max_rotation_speed
 
 func _on_area_entered_entrance(area: Area2D) -> void:
-    if not is_instance_of(area, Player) or not popped or player_has_entered or minigame_in_progress:
+    if not is_instance_of(area, Player) or not popped or player_has_entered or minigame_in_progress():
         return
 
     var player = area as Player
-    var minigame = player.start_minigame()
-    minigame_in_progress = true
+    minigame = player.start_minigame()
 
     var tween = create_tween()
     tween.tween_property(player, "global_position", entrance_area.global_position, 0.2)
 
     if is_instance_valid(minigame):
         minigame.finished.connect(func(): self.minigame_finished(player))
-        minigame.aborted.connect(self.minigame_aborted)
 
-
-func minigame_aborted():
-    minigame_in_progress = false
+func minigame_in_progress() -> bool:
+    return is_instance_valid(minigame)
 
 
 func minigame_finished(player: Player):
