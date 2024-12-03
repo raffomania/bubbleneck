@@ -19,3 +19,6 @@ var state: State = RoundRunning.new()
 
 @warning_ignore("unused_signal")
 signal player_killed(player: Player)
+
+@warning_ignore("unused_signal")
+signal kill_streak_changed(player: Player)

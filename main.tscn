@@ -1,7 +1,8 @@
-[gd_scene load_steps=5 format=3 uid="uid://dv03v2o4qgx7j"]
+[gd_scene load_steps=6 format=3 uid="uid://dv03v2o4qgx7j"]
 
 [ext_resource type="Script" path="res://main.gd" id="1_m3pie"]
 [ext_resource type="PackedScene" uid="uid://c5c8t3bryu081" path="res://ScoringSystem.tscn" id="3_3hbry"]
+[ext_resource type="PackedScene" uid="uid://dshmda7lm6opm" path="res://Announcer/Announcer.tscn" id="4_2icmo"]
 [ext_resource type="Script" path="res://Player/player_spawner.gd" id="4_h0alh"]
 
 [sub_resource type="Environment" id="Environment_grt4r"]
@@ -29,3 +30,5 @@ offset = Vector2(960, 540)
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_grt4r")
+
+[node name="Announcer" parent="." instance=ExtResource("4_2icmo")]

@@ -477,10 +477,14 @@ func get_id() -> int:
 
 # Returns the name of a player.
 func get_player_name() -> String:
-    return 'Player %s' % colors[get_id()]
+    return 'Player %s' % get_color_description()
+
+func get_color_description() -> String:
+    return colors[get_id()]
 
 func increment_kill_streak():
     kill_streak = min(get_max_kill_streak(), kill_streak + 1)
+    Globals.kill_streak_changed.emit(self)
 
     var label: KillStreakLabel = kill_streak_label_scene.instantiate()
     label.set_color(player_color)
@@ -494,10 +498,9 @@ func get_label_offset() -> Vector2:
     return Vector2(0, $BubbleSprite.texture.get_height() * $BubbleSprite.scale.y * radius / 2 + padding)
 
 func get_max_kill_streak() -> int:
-    var spawner : PlayerSpawner = get_node("/root/Main/PlayerSpawner")
-    var total_players  = spawner.get_total_players()
+    var spawner: PlayerSpawner = get_node("/root/Main/PlayerSpawner")
+    var total_players = spawner.get_total_players()
     var min_minigame_labels = Minigame.min_labels
     var max_minigame_labels = Minigame.max_labels
 
     return abs(min_minigame_labels - max_minigame_labels) - floor(total_players / 2)
-
