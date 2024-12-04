@@ -173,7 +173,6 @@ func _process(delta: float) -> void:
     if can_attack():
         if actions.charge_pressed:
             $'GooglyEyes'.raise_eye()
-            weapon.set_attack_button_pressed(true)
             state = ChargingThrow.new()
         elif actions.stab_pressed:
             weapon.stab()
@@ -201,11 +200,11 @@ func _process(delta: float) -> void:
         $GooglyEyes.walking_animation()
     elif state is Stabbing:
         if not actions.stab_pressed and not weapon.is_stabbing:
-            weapon.set_attack_button_pressed(false)
+            weapon.release_charge()
             state = Idle.new()
     elif state is ChargingThrow:
         if not actions.charge_pressed:
-            weapon.set_attack_button_pressed(false)
+            weapon.release_charge()
             state = Idle.new()
     elif state is Idle:
         if actions.drive > 0.0:
