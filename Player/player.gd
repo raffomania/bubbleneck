@@ -178,13 +178,6 @@ func _process(delta: float) -> void:
 
     var actions = get_action_inputs(delta)
     
-    if can_attack():
-        if actions.charge_pressed:
-            state = ChargingThrow.new()
-        elif actions.stab_pressed:
-            weapon.stab()
-            state = Stabbing.new()
-
     handle_dash(delta, actions, look_direction)
     update_invincibility(delta)
     update_weapon_visibility()
@@ -199,12 +192,19 @@ func _process(delta: float) -> void:
         # fix player sprite rotation so sprite highlight doesn't rotate
         $BubbleSprite.global_rotation_degrees = 0
 
+    if can_attack():
+        if actions.charge_pressed:
+            state = ChargingThrow.new()
+        elif actions.stab_pressed:
+            weapon.stab()
+            state = Stabbing.new()
+
     if state is Moving:
+        animate_wobble(2.0)
         if actions.drive <= 0.0:
             state = Idle.new()
         # Move into the look_direction indicated by controller or keyboard
         position += look_direction * delta * actions.drive * max_movespeed
-        animate_wobble(2.0)
         $GooglyEyes.walking_animation()
     elif state is Stabbing:
         if not actions.stab_pressed and not weapon.is_stabbing:
