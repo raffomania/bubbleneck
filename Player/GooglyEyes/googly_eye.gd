@@ -36,3 +36,11 @@ func raise_eye() -> void:
     if not is_instance_valid(eye_tween):
         eye_tween = get_tree().create_tween()
         eye_tween.tween_property(self, "scale:y", base_eye_scale.y * stretch, dur)
+
+func squint() -> void:
+    var stretch = 0.5
+    var dur = 0.2
+
+    if not is_instance_valid(eye_tween):
+        eye_tween = get_tree().create_tween()
+        eye_tween.tween_property(self, "scale:y", base_eye_scale.y * stretch, dur)

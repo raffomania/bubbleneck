@@ -28,9 +28,13 @@ func walking_animation() -> void:
     left_outer.position.y = sin(Time.get_ticks_msec() * time_factor) 
     right_outer.position.y = -sin(Time.get_ticks_msec() * time_factor) 
     
-func raise_eye() -> void:
+func raise_eyes() -> void:
     left_outer.raise_eye()
     right_outer.raise_eye()
+
+func squint() -> void:
+    left_outer.squint()
+    right_outer.squint()
 
 func blink(duration: float) -> void:
     if blinking:

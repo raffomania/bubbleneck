@@ -165,7 +165,9 @@ func get_action_inputs(delta: float) -> ActionInput:
 
 func update_eyes(actions: ActionInput) -> void:
     if actions.charge_pressed:
-        $GooglyEyes.raise_eye()
+        $GooglyEyes.squint()
+    elif actions.stab_pressed:
+        $GooglyEyes.raise_eyes()
     else:
         $GooglyEyes.reset()
 
