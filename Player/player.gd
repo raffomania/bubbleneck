@@ -489,7 +489,7 @@ func increment_kill_streak():
 
 func get_label_offset() -> Vector2:
     var padding = 30
-    return Vector2(0, $BubbleSprite.texture.get_height() * $BubbleSprite.scale.y * radius / 2 + padding)
+    return Vector2(0, floor(get_height() / 2.0) + padding)
 
 func get_max_kill_streak() -> int:
     var spawner: PlayerSpawner = get_node("/root/Main/PlayerSpawner")
@@ -498,3 +498,9 @@ func get_max_kill_streak() -> int:
     var max_minigame_labels = Minigame.max_labels
 
     return abs(min_minigame_labels - max_minigame_labels) - floor(total_players / 2)
+
+func get_width() -> int:
+    return $BubbleSprite.texture.get_width() * $BubbleSprite.scale.x * radius
+
+func get_height() -> int:
+    return $BubbleSprite.texture.get_height() * $BubbleSprite.scale.y * radius
