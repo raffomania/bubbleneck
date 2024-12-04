@@ -163,24 +163,31 @@ func get_action_inputs(delta: float) -> ActionInput:
         inputs.drive = controller_vector.length()
     return inputs
 
+func update_eyes(actions: ActionInput) -> void:
+    if can_move():
+        if actions.charge_pressed:
+            $GooglyEyes.raise_eye()
+        else:
+            $GooglyEyes.reset()
+
 
 func _process(delta: float) -> void:
     if (state is Dead):
         return
 
     var actions = get_action_inputs(delta)
-
+    
     if can_attack():
         if actions.charge_pressed:
-            $'GooglyEyes'.raise_eye()
             state = ChargingThrow.new()
         elif actions.stab_pressed:
             weapon.stab()
             state = Stabbing.new()
 
-    handle_dash(delta, look_direction)
-    handle_invincibility_countdown(delta)
+    handle_dash(delta, actions, look_direction)
+    update_invincibility(delta)
     update_weapon_visibility()
+    update_eyes(actions)
 
     # Rotate in the look_direction we're walking
     if can_rotate() and look_direction != Vector2.ZERO:
@@ -207,10 +214,9 @@ func _process(delta: float) -> void:
             weapon.release_charge()
             state = Idle.new()
     elif state is Idle:
+        animate_wobble(1.0)
         if actions.drive > 0.0:
             state = Moving.new()
-        animate_wobble(1.0)
-        $GooglyEyes.reset()
 
 
 func _input(_event):
@@ -232,7 +238,7 @@ func update_weapon_visibility():
         weapon.visible = true
 
 # Handle the player dash and dash cooldown.
-func handle_dash(delta: float, current_player_direction: Vector2) -> void:
+func handle_dash(delta: float, actions: ActionInput, current_player_direction: Vector2) -> void:
     var dash_offset = Vector2()
 
     # The dash is still on cooldown, reduce the cooldown.
@@ -244,7 +250,7 @@ func handle_dash(delta: float, current_player_direction: Vector2) -> void:
     # Check whether we should start a new dash.
     if can_dash():
         # If we are now dashing, update some stuff.
-        if get_action_inputs(delta).dash_pressed:
+        if actions.dash_pressed:
             state = Dashing.new()
             state.dash_direction = Vector2(current_player_direction).normalized()
             $'GooglyEyes'.blink(dash_duration)
@@ -292,7 +298,7 @@ func animate_wobble(multiplier: float):
     var skew_speed = 0.005 * multiplier
     $BubbleSprite.skew = sin(Time.get_ticks_msec() * skew_speed) * skew_intensity
 
-func handle_invincibility_countdown(delta: float):
+func update_invincibility(delta: float):
     if is_invincible():
         invincibility_countdown -= delta
 
