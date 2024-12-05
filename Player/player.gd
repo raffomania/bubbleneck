@@ -141,6 +141,9 @@ func can_rotate() -> bool:
 func can_attack() -> bool:
     return is_instance_valid(weapon) and (state is Idle or state is Moving or state is Dashing)
 
+func can_start_stab() -> bool:
+    return can_attack() and is_instance_valid(weapon) and not weapon.stab_on_cooldown
+
 func can_start_dash() -> bool:
     return state is Moving or state is Idle and dash_disabled_countdown > 0.0
 
@@ -213,7 +216,7 @@ func _process(delta: float) -> void:
     if can_attack():
         if actions.charge_pressed:
             state = ChargingThrow.new()
-        elif actions.stab_pressed:
+        elif actions.stab_pressed and can_start_stab():
             weapon.stab()
             state = Stabbing.new()
 
