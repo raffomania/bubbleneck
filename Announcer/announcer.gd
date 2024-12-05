@@ -27,7 +27,7 @@ func _ready() -> void:
     Globals.state_changed.connect(_global_state_changed)
 
 func _kill_streak_changed(player: Player):
-    if player.kill_streak == 4:
+    if player.uncapped_kill_streak == 4:
         var color_desc = player.get_color_description()
         show_text("%s is unstoppable!" % color_desc, player.player_color)
 

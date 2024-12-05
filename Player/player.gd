@@ -93,6 +93,7 @@ var bubble_sprite := $BubbleSprite
 # This is null when player is not carrying a weapon
 var weapon
 var kill_streak := 0
+var uncapped_kill_streak := 0
 
 # ----- Movement ------
 @export
@@ -427,6 +428,7 @@ func kill():
         weapon = null
 
     kill_streak = 0
+    uncapped_kill_streak = 0
 
     if regular_kill:
         play_death_sound()
@@ -544,6 +546,7 @@ func get_color_description() -> String:
 func increment_kill_streak():
     radius = radius * 1.2
     scale = Vector2(radius, radius)
+    uncapped_kill_streak += 1
     kill_streak = min(get_max_kill_streak(), kill_streak + 1)
     Globals.kill_streak_changed.emit(self)
 
