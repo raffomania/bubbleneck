@@ -182,8 +182,8 @@ func get_action_inputs(delta: float) -> ActionInput:
         inputs.look_direction = controller_vector.normalized()
         inputs.drive = controller_vector.length()
 
-        inputs.stab_pressed = Input.get_joy_axis(controller_device_index, JOY_AXIS_TRIGGER_RIGHT) > 0.5
-        inputs.charge_pressed = Input.get_joy_axis(controller_device_index, JOY_AXIS_TRIGGER_LEFT) > 0.5
+        inputs.stab_pressed = Input.get_joy_axis(controller_device_index, JOY_AXIS_TRIGGER_LEFT) > 0.5
+        inputs.charge_pressed = Input.get_joy_axis(controller_device_index, JOY_AXIS_TRIGGER_RIGHT) > 0.5
         inputs.dash_pressed = Input.is_joy_button_pressed(controller_device_index, JOY_BUTTON_A) and inputs.drive > 0.0
         inputs.parry_pressed = Input.is_joy_button_pressed(controller_device_index, JOY_BUTTON_A) and not inputs.dash_pressed
 
