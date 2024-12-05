@@ -437,6 +437,7 @@ func kill():
 
     kill_streak = 0
     uncapped_kill_streak = 0
+    scale = Vector2.ONE * initial_radius
 
     if regular_kill:
         play_death_sound()
