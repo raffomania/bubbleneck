@@ -317,14 +317,14 @@ func update_invincibility(delta: float):
 
 func handle_vulnerable_on_attack():
     if is_invincible() and (state is Stabbing or state is ChargingThrow):
-        $Shield.remove()
-        make_vulnerable()
+        invincibility_countdown = 0
 
 func make_invincible(duration: float):
+    if (is_invincible()):
+        return
     invincibility_countdown = duration
     var shield = shield_scene.instantiate()
     shield.get_node("Panel").material.set_shader_parameter("color", player_color)
-    print(shield.get_node("Panel").material.get_instance_id())
     add_child(shield)
 
 func visualize_dashing_is_allowed_again():
@@ -339,7 +339,6 @@ func visualize_dashing_is_allowed_again():
 
 func make_vulnerable():
     $Shield.queue_free()
-    print("Vulnerable")
     #disconect shield area entered?
 
 func is_invincible() -> bool:
