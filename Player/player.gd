@@ -37,7 +37,7 @@ class Stabbing:
 class Parrying:
     extends State
 
-    var parry_timer := 0.3
+    var parry_timer := 0.5
 
 class Stunned:
     extends State
