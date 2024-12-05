@@ -227,14 +227,12 @@ func _process(delta: float) -> void:
         # Move into the look_direction indicated by controller or keyboard
         position += actions.look_direction * delta * actions.drive * max_movespeed
         $GooglyEyes.walking_animation()
-    elif state is Stabbing:
-        if not actions.stab_pressed and not weapon.is_stabbing:
-            weapon.release_charge()
-            state = Idle.new()
-    elif state is ChargingThrow:
-        if not actions.charge_pressed:
-            weapon.release_charge()
-            state = Idle.new()
+    elif state is Stabbing and not weapon.is_stabbing:
+        # Stab is now finished
+        state = Idle.new()
+    elif state is ChargingThrow and not actions.charge_pressed:
+        weapon.release_charge()
+        state = Idle.new()
     elif state is Idle:
         animate_wobble(1.0)
         if actions.drive > 0.0:
