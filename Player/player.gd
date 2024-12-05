@@ -506,6 +506,8 @@ func get_color_description() -> String:
     return colors[get_id()]
 
 func increment_kill_streak():
+    radius = radius * 1.2 
+    scale = Vector2(radius, radius)
     kill_streak = min(get_max_kill_streak(), kill_streak + 1)
     Globals.kill_streak_changed.emit(self)
 
