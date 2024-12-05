@@ -46,6 +46,7 @@ class ActionInput:
     var stab_pressed: bool
     var charge_pressed: bool
     var look_direction: Vector2
+    # How far a player will move towards look_direction in a given frame.
     var drive: float
 
 
@@ -141,18 +142,15 @@ func get_action_inputs(delta: float) -> ActionInput:
     var inputs = ActionInput.new()
     if is_keyboard_player():
         var prefix = get_keyboard_player_prefix()
-        inputs.stab_pressed = Input.is_action_pressed(prefix + "_stab")
-        inputs.charge_pressed = Input.is_action_pressed(prefix + "_throw")
-        inputs.dash_pressed = Input.is_action_just_pressed(prefix + "_dash")
 
         var rotation_direction = Input.get_axis(prefix + "_left", prefix + "_right")
         inputs.look_direction = look_direction.rotated(rotation_speed * delta * rotation_direction)
         inputs.drive = max(0, Input.get_axis(prefix + "_up", prefix + "_down") * -1)
-    else:
-        inputs.stab_pressed = Input.get_joy_axis(controller_device_index, JOY_AXIS_TRIGGER_RIGHT) > 0.5
-        inputs.charge_pressed = Input.get_joy_axis(controller_device_index, JOY_AXIS_TRIGGER_LEFT) > 0.5
-        inputs.dash_pressed = Input.is_joy_button_pressed(controller_device_index, JOY_BUTTON_A)
 
+        inputs.stab_pressed = Input.is_action_pressed(prefix + "_stab")
+        inputs.charge_pressed = Input.is_action_pressed(prefix + "_throw")
+        inputs.dash_pressed = Input.is_action_just_pressed(prefix + "_dash") and inputs.drive > 0.0
+    else:
         var controller_vector = Vector2()
         controller_vector.x = Input.get_joy_axis(controller_device_index, JOY_AXIS_LEFT_X)
         controller_vector.y = Input.get_joy_axis(controller_device_index, JOY_AXIS_LEFT_Y)
@@ -161,6 +159,12 @@ func get_action_inputs(delta: float) -> ActionInput:
 
         inputs.look_direction = controller_vector.normalized()
         inputs.drive = controller_vector.length()
+
+        inputs.stab_pressed = Input.get_joy_axis(controller_device_index, JOY_AXIS_TRIGGER_RIGHT) > 0.5
+        inputs.charge_pressed = Input.get_joy_axis(controller_device_index, JOY_AXIS_TRIGGER_LEFT) > 0.5
+        inputs.dash_pressed = Input.is_joy_button_pressed(controller_device_index, JOY_BUTTON_A) and inputs.drive > 0.0
+
+
     return inputs
 
 func update_eyes(actions: ActionInput) -> void:
