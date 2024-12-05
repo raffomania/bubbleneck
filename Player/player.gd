@@ -65,6 +65,7 @@ var colors = {
 }
 
 var kill_streak_label_scene = preload("res://Player/KillStreakLabel/kill_streak_label.tscn")
+var shield_scene = preload("res://Player/shield.tscn")
 
 var weapon_scene = preload("res://Weapon/weapon.tscn")
 var minigame_scene = preload("res://Minigame/Minigame.tscn")
@@ -181,9 +182,17 @@ func _process(delta: float) -> void:
         return
 
     var actions = get_action_inputs(delta)
-    
+
+    if can_attack():
+        if actions.charge_pressed:
+            $'GooglyEyes'.raise_eye()
+            state = ChargingThrow.new()
+        elif actions.stab_pressed:
+            weapon.stab()
+            state = Stabbing.new()
+
     handle_dash(delta, actions, look_direction)
-    update_invincibility(delta)
+    handle_vulnerable_on_attack()
     update_weapon_visibility()
     update_eyes(actions)
 
@@ -306,23 +315,38 @@ func animate_wobble(multiplier: float):
 func update_invincibility(delta: float):
     if is_invincible():
         invincibility_countdown -= delta
+        if invincibility_countdown <= 0:
+            invincibility_countdown = 0
+            make_vulnerable()
 
+func handle_vulnerable_on_attack():
+    if is_invincible() and (state is Stabbing or state is ChargingThrow):
+        $Shield.remove()
+        make_vulnerable()
 
 func make_invincible(duration: float):
     invincibility_countdown = duration
-    var tween = get_tree().create_tween()
-    var color = Color(player_color)
-    color.a = 0.2
-    var flash_duration = 0.4
-    tween.tween_property($BubbleSprite, "self_modulate", color, flash_duration / 2)
-    tween.tween_property($BubbleSprite, "self_modulate", player_color, flash_duration / 2)
-    tween.set_trans(Tween.TransitionType.TRANS_SINE)
-    var loops = floori(duration / flash_duration)
-    tween.set_loops(loops)
+    var shield = shield_scene.instantiate()
+    shield.get_node("Panel").material.set_shader_parameter("color", player_color)
+    print(shield.get_node("Panel").material.get_instance_id())
+    add_child(shield)
+    # var tween = get_tree().create_tween()
+    # var color = Color(player_color)
+    # color.a = 0.2
+    # var flash_duration = 0.4
+    # tween.tween_property($BubbleSprite, "self_modulate", color, flash_duration / 2)
+    # tween.tween_property($BubbleSprite, "self_modulate", player_color, flash_duration / 2)
+    # tween.set_trans(Tween.TransitionType.TRANS_SINE)
+    # var loops = floori(duration / flash_duration)
+    # tween.set_loops(loops)
 
+func make_vulnerable():
+    $Shield.queue_free()
+    print("Vulnerable")
+    #disconect shield area entered?
 
 func is_invincible() -> bool:
-    return invincibility_countdown > 0.0
+    return get_node_or_null("Shield") != null
 
 
 func set_player_color(color: Color):
@@ -450,6 +474,7 @@ func stop_minigame():
 
 func win():
     make_invincible(5.0)
+    $Shield.queue_free()
 
     state = WonRound.new()
     Globals.state = Globals.RoundOver.new()

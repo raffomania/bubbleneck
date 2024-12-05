@@ -1,0 +1,33 @@
+[gd_scene load_steps=5 format=3 uid="uid://d3cnqddkw1kds"]
+
+[ext_resource type="Shader" path="res://Player/shield.gdshader" id="1_cqigv"]
+[ext_resource type="Script" path="res://Player/shield.gd" id="1_f6hgh"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_aymq8"]
+resource_local_to_scene = true
+shader = ExtResource("1_cqigv")
+shader_parameter/color = Color(1, 1, 1, 1)
+shader_parameter/thickness = 0.126
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_o6yiy"]
+radius = 36.0139
+
+[node name="Shield" type="Area2D"]
+script = ExtResource("1_f6hgh")
+
+[node name="Panel" type="Panel" parent="."]
+material = SubResource("ShaderMaterial_aymq8")
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -45.0
+offset_top = -45.0
+offset_right = 45.0
+offset_bottom = 45.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_o6yiy")
