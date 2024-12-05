@@ -205,13 +205,6 @@ func _process(delta: float) -> void:
             weapon.stab()
             state = Stabbing.new()
 
-    if can_attack():
-        if actions.charge_pressed:
-            state = ChargingThrow.new()
-        elif actions.stab_pressed:
-            weapon.stab()
-            state = Stabbing.new()
-
     if state is Moving:
         animate_wobble(2.0)
         if actions.drive <= 0.0:
