@@ -9,7 +9,7 @@ var throw_curve: Curve
 @export
 var time_factor := 1.0
 @export
-var throw_range_factor := 1.0
+var throw_speed := 2000.0
 @export
 var stab_cooldown_seconds: float = 0.5
 @export
@@ -52,8 +52,7 @@ func _ready() -> void:
 func _process(delta: float) -> void:
     if is_throwing:
         throwing_time += delta * time_factor
-        var curve_value = throw_curve.sample(throwing_time)
-        throw_distance = curve_value * throw_range_factor
+        throw_distance = throw_speed
         global_position += throw_direction * delta * throw_distance
 
     if throwing_time > throwing_range_seconds:
