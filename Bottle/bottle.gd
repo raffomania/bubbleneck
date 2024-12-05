@@ -2,8 +2,6 @@ extends Node2D
 
 class_name Bottle
 
-# Describes whether the Bottle is popped.
-var popped = false
 # Seconds until bottle pops.
 var pop_countdown = 0
 var pop_countdown_start = 0
@@ -78,75 +76,83 @@ func _ready() -> void:
     top_right_area.area_entered.connect(_on_top_right_entered_body)
     bottom_left_area.area_entered.connect(_on_bottom_left_entered_body)
     bottom_right_area.area_entered.connect(_on_bottom_right_entered_body)
+    
+func process_popped_bottle(delta: float) -> void:
+    Globals.state.sudden_death_countdown -= delta
+
+    if Globals.state.sudden_death_countdown <= 0:
+        Globals.state = Globals.SuddenDeath.new()
+        var players = get_tree().get_nodes_in_group('players')
+        var player_angle = 0
+        for node in players:
+            var player = node as Player
+            if player.state is Player.Dead:
+                player.respawn()
+            if player.state is Player.InMinigame:
+                player.stop_minigame()
+            node.position = viewpoint_center + Vector2.from_angle(player_angle) * 400
+            player_angle += (2 * PI) / players.size()
 
 
 func _process(delta: float) -> void:
-    if not popped:
-        if movement_type == "spin":
-            spin(delta)
-        elif movement_type == "orbit":
-            orbit(delta)
-        elif movement_type == "spin_orbit":
-            spin_orbit(delta)
+    if Globals.state is not Globals.RoundRunning:
+        return 
 
-        # Calculate countdown and countdown speed depending on rotation speed.
-        var pop_countdown_speed = (abs(rotation_speed) / max_rotation_speed) * pop_countdown_max_speed + pop_countdown_min_speed
-        pop_countdown -= delta * pop_countdown_speed
-        #print("Countdown: %s, Speed: %s, Rotation: %s" % [pop_countdown, pop_countdown_speed, rotation_speed])
+    if Globals.state.popped:
+        process_popped_bottle(delta)
+        return
 
-        # Calculate particle lifetime depending on pop countdown.
-        var countdown_percentage = pop_countdown / pop_countdown_start
-        inside_particles.lifetime = max_inner_particle_lifetime * countdown_percentage + min_inner_particle_lifetime
+    if movement_type == "spin":
+        spin(delta)
+    elif movement_type == "orbit":
+        orbit(delta)
+    elif movement_type == "spin_orbit":
+        spin_orbit(delta)
 
-        # Calculate the new lifetime of the particles inside the bottle based on the countdown
-        if pop_countdown > min_lifetime_start_time:
-            inside_particles.lifetime = lerp(min_inner_particle_lifetime, max_inner_particle_lifetime, (pop_countdown - min_lifetime_start_time) / (pop_countdown_start - min_lifetime_start_time))
-        else:
-            # Stop decreasing at minimum lifetime
-            inside_particles.lifetime = min_inner_particle_lifetime
-    
-        # Reset position to original position if pop countdown is zero
-        if pop_countdown == 0:
-            position = Vector2(0, 0) + viewpoint_center
-    
-        var shake_intensity = 0
-        if pop_countdown < shake_start_time:
-            shake_intensity = lerp(0.0, max_shake_intensity, 1 - (pop_countdown / shake_start_time))
+    # Calculate countdown and countdown speed depending on rotation speed.
+    var pop_countdown_speed = (abs(rotation_speed) / max_rotation_speed) * pop_countdown_max_speed + pop_countdown_min_speed
+    pop_countdown -= delta * pop_countdown_speed
+    #print("Countdown: %s, Speed: %s, Rotation: %s" % [pop_countdown, pop_countdown_speed, rotation_speed])
 
-        if shake_bottle_from_hit:
-            shake_intensity = lerp(0.0, max_shake_intensity, 1)
-    
-        # Apply random shake to position
-        if shake_intensity > 0:
-            var shake_x = randf_range(-shake_intensity, shake_intensity)
-            var shake_y = randf_range(-shake_intensity, shake_intensity)
-            position = Vector2(shake_x, shake_y) + position
+    # Calculate particle lifetime depending on pop countdown.
+    var countdown_percentage = pop_countdown / pop_countdown_start
+    inside_particles.lifetime = max_inner_particle_lifetime * countdown_percentage + min_inner_particle_lifetime
+
+    # Calculate the new lifetime of the particles inside the bottle based on the countdown
+    if pop_countdown > min_lifetime_start_time:
+        inside_particles.lifetime = lerp(min_inner_particle_lifetime, max_inner_particle_lifetime, (pop_countdown - min_lifetime_start_time) / (pop_countdown_start - min_lifetime_start_time))
     else:
-        if Globals.state is Globals.RoundRunning:
-            Globals.state.sudden_death_countdown -= delta
+        # Stop decreasing at minimum lifetime
+        inside_particles.lifetime = min_inner_particle_lifetime
 
-            if Globals.state.sudden_death_countdown <= 0:
-                Globals.state = Globals.SuddenDeath.new()
-                var players = get_tree().get_nodes_in_group('players')
-                var player_angle = 0
-                for node in players:
-                    var player = node as Player
-                    if player.state is Player.Dead:
-                        player.respawn()
-                    if player.state is Player.InMinigame:
-                        player.stop_minigame()
-                    node.position = viewpoint_center + Vector2.from_angle(player_angle) * 400
-                    player_angle += (2 * PI) / players.size()
+    # Reset position to original position if pop countdown is zero
+    if pop_countdown == 0:
+        position = Vector2(0, 0) + viewpoint_center
 
-                
+    var shake_intensity = 0
+    if pop_countdown < shake_start_time:
+        shake_intensity = lerp(0.0, max_shake_intensity, 1 - (pop_countdown / shake_start_time))
+
+    if shake_bottle_from_hit:
+        shake_intensity = lerp(0.0, max_shake_intensity, 1)
+
+    # Apply random shake to position
+    if shake_intensity > 0:
+        var shake_x = randf_range(-shake_intensity, shake_intensity)
+        var shake_y = randf_range(-shake_intensity, shake_intensity)
+        position = Vector2(shake_x, shake_y) + position
+
     # Check if the bottle should pop.
-    if not popped and pop_countdown <= 0 or Input.is_action_just_pressed("debug_pop_bottle"):
-        popped = true
+    if pop_countdown <= 0 or Input.is_action_just_pressed("debug_pop_bottle"):
         pop_bottle()
-
+    return
 
 # Emits the popping particles.
 func pop_bottle() -> void:
+    if Globals.state is not Globals.RoundRunning:
+        return
+
+    Globals.state.popped = true
     bottle_cap.visible = false
     inside_particles.lifetime = 1
     inside_particles.emitting = false
@@ -161,8 +167,7 @@ func pop_bottle() -> void:
     await get_tree().create_timer(0.6).timeout
     pop_particles.emitting = false
 
-    if Globals.state is Globals.RoundRunning:
-        Globals.state.sudden_death_countdown = Globals.state.sudden_death_timeout
+    Globals.state.sudden_death_countdown = Globals.state.sudden_death_timeout
 
 # Call this to hit the bottle.
 # Reduces the countdown until pop and adds some impulse to the bottle.
@@ -192,7 +197,7 @@ func add_impulse(impulse: float) -> void:
         rotation_speed = -max_rotation_speed
 
 func _on_area_entered_entrance(area: Area2D) -> void:
-    if not is_instance_of(area, Player) or not popped or player_has_entered or minigame_in_progress():
+    if not is_instance_of(area, Player) or not Globals.state.popped or player_has_entered or minigame_in_progress():
         return
 
     var player = area as Player
@@ -301,7 +306,6 @@ func spin_orbit(delta):
         rotation_speed -= delta * 0.05
     elif rotation_speed < 0:
         rotation_speed += delta * 0.05
-
 
 func get_respawn_position():
     # Apply a random offset to the spawn position

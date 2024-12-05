@@ -8,6 +8,7 @@ class RoundRunning:
 
     var sudden_death_timeout := 40.0
     var sudden_death_countdown := sudden_death_timeout
+    var popped := false
 
 class SuddenDeath:
     extends State
