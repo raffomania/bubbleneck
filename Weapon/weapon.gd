@@ -168,11 +168,10 @@ func stab() -> void:
 
 func bounce_back() -> void:
     var bounce_back_duration = 1.0
-    var n = 6
+    var num_repeats = 3
     var tween = create_tween()
-    var scale_before = $WeaponSprite.scale
-    tween.tween_property($WeaponSprite, "scale:y", scale_before.y * 0.9, bounce_back_duration / (n*2))
-    tween.tween_property($WeaponSprite, "scale:y", scale_before.y, bounce_back_duration / (n*2))
-    tween.set_loops(n)
-    
-    
+    var initial_rot = $WeaponSprite.rotation
+
+    tween.tween_property($WeaponSprite, "rotation", initial_rot + 2 * num_repeats * PI, bounce_back_duration / (num_repeats))
+    await tween.finished
+    $WeaponSprite.rotation = initial_rot
