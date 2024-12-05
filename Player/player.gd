@@ -81,8 +81,12 @@ var controller_device_index := 0
 
 @export
 var player_color := Color.VIOLET
+
 @export
 var initial_radius := 1.5
+
+@export var parry_cooldown := 1.0
+
 var radius = initial_radius
 
 @export
@@ -95,6 +99,8 @@ var bubble_sprite := $BubbleSprite
 var weapon
 var kill_streak := 0
 var uncapped_kill_streak := 0
+
+var parry_disabled_countdown := 0.0
 
 # ----- Movement ------
 @export
@@ -150,7 +156,7 @@ func can_start_dash() -> bool:
     return state is Moving or state is Idle and dash_disabled_countdown > 0.0
 
 func can_start_parry() -> bool:
-    return state is Idle or state is Moving
+    return (state is Idle or state is Moving) and parry_disabled_countdown <= 0.0
 
 # Returns the player inputs.
 func get_action_inputs(delta: float) -> ActionInput:
@@ -318,6 +324,8 @@ func handle_dash(delta: float, actions: ActionInput, current_player_direction: V
         position += dash_offset
 
 func handle_parry(delta: float, actions: ActionInput):
+    parry_disabled_countdown = max(0.0, parry_disabled_countdown - delta)
+
     # Start a new parry
     if can_start_parry() and actions.parry_pressed:
         state = Parrying.new()
@@ -325,8 +333,8 @@ func handle_parry(delta: float, actions: ActionInput):
         var scale_before = Vector2($BubbleSprite.scale)
         var tween = create_tween()
         tween.set_trans(Tween.TRANS_CUBIC)
-        tween.tween_property($BubbleSprite, "scale", scale_before * 1.3, duration * 0.2)
-        tween.tween_property($BubbleSprite, "scale", scale_before, duration * 0.9)
+        tween.tween_property($BubbleSprite, "scale", scale_before * 1.4, duration * 0.2)
+        tween.tween_property($BubbleSprite, "scale", scale_before, duration * 0.8)
 
     if state is not Parrying:
         return
@@ -337,6 +345,7 @@ func handle_parry(delta: float, actions: ActionInput):
     # Parry is now finished
     if state.parry_timer <= 0.0:
         state = Idle.new()
+        parry_disabled_countdown = parry_cooldown
 
 func animate_wobble(multiplier: float):
     var skew_intensity = 0.25
