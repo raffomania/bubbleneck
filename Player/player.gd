@@ -183,15 +183,8 @@ func _process(delta: float) -> void:
 
     var actions = get_action_inputs(delta)
 
-    if can_attack():
-        if actions.charge_pressed:
-            $'GooglyEyes'.raise_eye()
-            state = ChargingThrow.new()
-        elif actions.stab_pressed:
-            weapon.stab()
-            state = Stabbing.new()
-
     handle_dash(delta, actions, look_direction)
+    update_invincibility(delta)
     handle_vulnerable_on_attack()
     update_weapon_visibility()
     update_eyes(actions)
@@ -204,6 +197,13 @@ func _process(delta: float) -> void:
 
         # fix player sprite rotation so sprite highlight doesn't rotate
         $BubbleSprite.global_rotation_degrees = 0
+
+    if can_attack():
+        if actions.charge_pressed:
+            state = ChargingThrow.new()
+        elif actions.stab_pressed:
+            weapon.stab()
+            state = Stabbing.new()
 
     if can_attack():
         if actions.charge_pressed:
