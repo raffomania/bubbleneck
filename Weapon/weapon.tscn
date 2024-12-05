@@ -38,6 +38,7 @@ max_throwing_range_seconds = 1.0
 
 [node name="WeaponSprite" type="Sprite2D" parent="."]
 material = SubResource("ShaderMaterial_7ml6n")
+position = Vector2(-8.11749, 0.528639)
 rotation = 1.5708
 scale = Vector2(0.2, 0.1)
 texture = ExtResource("2_pf2np")

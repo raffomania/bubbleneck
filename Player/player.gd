@@ -34,6 +34,11 @@ class ChargingThrow:
 class Stabbing:
     extends State
 
+class Parrying:
+    extends State
+
+    var parry_timer := 0.3
+
 class Stunned:
     extends State
 
@@ -45,6 +50,7 @@ class ActionInput:
     var dash_pressed: bool
     var stab_pressed: bool
     var charge_pressed: bool
+    var parry_pressed: bool
     var look_direction: Vector2
     # How far a player will move towards look_direction in a given frame.
     var drive: float
@@ -135,8 +141,11 @@ func can_rotate() -> bool:
 func can_attack() -> bool:
     return is_instance_valid(weapon) and (state is Idle or state is Moving or state is Dashing)
 
-func can_dash() -> bool:
+func can_start_dash() -> bool:
     return state is Moving or state is Idle and dash_disabled_countdown > 0.0
+
+func can_start_parry() -> bool:
+    return state is Idle or state is Moving
 
 # Returns the player inputs.
 func get_action_inputs(delta: float) -> ActionInput:
@@ -151,6 +160,7 @@ func get_action_inputs(delta: float) -> ActionInput:
         inputs.stab_pressed = Input.is_action_pressed(prefix + "_stab")
         inputs.charge_pressed = Input.is_action_pressed(prefix + "_throw")
         inputs.dash_pressed = Input.is_action_just_pressed(prefix + "_dash") and inputs.drive > 0.0
+        inputs.parry_pressed = Input.is_action_just_pressed(prefix + "_dash") and not inputs.dash_pressed
     else:
         var controller_vector = Vector2()
         controller_vector.x = Input.get_joy_axis(controller_device_index, JOY_AXIS_LEFT_X)
@@ -164,6 +174,7 @@ func get_action_inputs(delta: float) -> ActionInput:
         inputs.stab_pressed = Input.get_joy_axis(controller_device_index, JOY_AXIS_TRIGGER_RIGHT) > 0.5
         inputs.charge_pressed = Input.get_joy_axis(controller_device_index, JOY_AXIS_TRIGGER_LEFT) > 0.5
         inputs.dash_pressed = Input.is_joy_button_pressed(controller_device_index, JOY_BUTTON_A) and inputs.drive > 0.0
+        inputs.parry_pressed = Input.is_joy_button_pressed(controller_device_index, JOY_BUTTON_A) and not inputs.dash_pressed
 
 
     return inputs
@@ -184,6 +195,7 @@ func _process(delta: float) -> void:
     var actions = get_action_inputs(delta)
 
     handle_dash(delta, actions, look_direction)
+    handle_parry(delta, actions)
     update_invincibility(delta)
     handle_vulnerable_on_attack()
     update_weapon_visibility()
@@ -257,7 +269,7 @@ func handle_dash(delta: float, actions: ActionInput, current_player_direction: V
 
     # The player isn't dashing yet and the cooldown is not active.
     # Check whether we should start a new dash.
-    if can_dash():
+    if can_start_dash():
         # If we are now dashing, update some stuff.
         if actions.dash_pressed:
             state = Dashing.new()
@@ -302,6 +314,26 @@ func handle_dash(delta: float, actions: ActionInput, current_player_direction: V
     if state is Dashing:
         position += dash_offset
 
+func handle_parry(delta: float, actions: ActionInput):
+    # Start a new parry
+    if can_start_parry() and actions.parry_pressed:
+        state = Parrying.new()
+        var duration = state.parry_timer
+        var scale_before = Vector2($BubbleSprite.scale)
+        var tween = create_tween()
+        tween.set_trans(Tween.TRANS_CUBIC)
+        tween.tween_property($BubbleSprite, "scale", scale_before * 1.3, duration * 0.2)
+        tween.tween_property($BubbleSprite, "scale", scale_before, duration * 0.9)
+
+    if state is not Parrying:
+        return
+
+    # Parry is still running
+    state.parry_timer -= delta
+
+    # Parry is now finished
+    if state.parry_timer <= 0.0:
+        state = Idle.new()
 
 func animate_wobble(multiplier: float):
     var skew_intensity = 0.25

@@ -27,6 +27,7 @@ var throwing_range_seconds := 0.0
 var is_throwing := false
 var is_stabbing := false
 var stab_on_cooldown := false
+var stab_tween
 var throw_direction
 var weapon_owner
 var charging_throw_since: float
@@ -125,6 +126,15 @@ func hit_player(target: Player) -> void:
     if not is_attacking or not is_target_killable:
         return
 
+    # It's a hit on a parrying opponent
+    if target.state is Player.Parrying:
+        if is_stabbing:
+            disarm()
+        elif is_throwing:
+            deflect_throw()
+        return
+
+    # It's a kill
     if weapon_owner:
         weapon_owner.increment_kill_streak()
         # When a player kills another player with a throw, give them a new spear.
@@ -136,7 +146,9 @@ func hit_player(target: Player) -> void:
 
 func drop() -> void:
     cancel_attack_charge()
-    position.x = base_weapon_position.x
+    if stab_tween != null:
+        (stab_tween as Tween).kill()
+    # position.x = base_weapon_position.x
     for connection in on_throw.get_connections():
         on_throw.disconnect(connection.callable)
     weapon_owner = null
@@ -153,10 +165,13 @@ func stab() -> void:
 
     var pos_before = Vector2(position)
     var stab_direction = Vector2.RIGHT.rotated(rotation) * stab_distance
-    var tween = create_tween().tween_property(self, "position", position + stab_direction, stab_duration_seconds / 2)
-    await tween.finished
-    tween = create_tween().tween_property(self, "position", pos_before, stab_duration_seconds / 2)
-    await tween.finished
+    stab_tween = create_tween()
+    stab_tween.tween_property(self, "position", position + stab_direction, stab_duration_seconds / 2)
+    await stab_tween.finished
+    stab_tween = create_tween()
+    stab_tween.tween_property(self, "position", pos_before, stab_duration_seconds / 2)
+    await stab_tween.finished
+    stab_tween = null
 
     is_stabbing = false
     stab_on_cooldown = true
@@ -165,6 +180,22 @@ func stab() -> void:
     await get_tree().create_timer(stab_cooldown_seconds).timeout
 
     stab_on_cooldown = false
+
+func disarm() -> void:
+    if not is_instance_valid(weapon_owner):
+        return
+
+    drop()
+
+    var drop_offset = Vector2.ONE.rotated(randf_range(0, 2 * PI)) * 50
+    var tween = create_tween().set_ease(Tween.EASE_OUT)
+    tween.tween_property(self, "global_position", global_position + drop_offset, 0.5)
+    tween.parallel().tween_property(self, "rotation", self.rotation + PI, 0.6)
+
+func deflect_throw() -> void:
+    throw_direction = throw_direction.rotated(PI)
+    throwing_range_seconds += 0.1
+    rotation += PI
 
 func bounce_back() -> void:
     var bounce_back_duration = 1.0
