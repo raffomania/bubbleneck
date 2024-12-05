@@ -100,7 +100,7 @@ var uncapped_kill_streak := 0
 @export
 var max_movespeed := 400
 var rotation_speed := 5
-var look_direction := Vector2(1, 0)
+var previous_look_direction := Vector2(1, 0)
 @export var deadzone := 0.4
 
 # ----- Dash related variables ----- 
@@ -156,7 +156,7 @@ func get_action_inputs(delta: float) -> ActionInput:
         var prefix = get_keyboard_player_prefix()
 
         var rotation_direction = Input.get_axis(prefix + "_left", prefix + "_right")
-        inputs.look_direction = look_direction.rotated(rotation_speed * delta * rotation_direction)
+        inputs.look_direction = previous_look_direction.rotated(rotation_speed * delta * rotation_direction)
         inputs.drive = max(0, Input.get_axis(prefix + "_up", prefix + "_down") * -1)
 
         inputs.stab_pressed = Input.is_action_pressed(prefix + "_stab")
@@ -196,7 +196,7 @@ func _process(delta: float) -> void:
 
     var actions = get_action_inputs(delta)
 
-    handle_dash(delta, actions, look_direction)
+    handle_dash(delta, actions, actions.look_direction)
     handle_parry(delta, actions)
     update_invincibility(delta)
     handle_vulnerable_on_attack()
@@ -204,10 +204,10 @@ func _process(delta: float) -> void:
     update_eyes(actions)
 
     # Rotate in the look_direction we're walking
-    if can_rotate() and look_direction != Vector2.ZERO:
-        look_direction = actions.look_direction
-        rotation = look_direction.angle()
-        bubble_sprite.rotation = look_direction.angle()
+    if can_rotate() and actions.look_direction != Vector2.ZERO:
+        previous_look_direction = actions.look_direction
+        rotation = actions.look_direction.angle()
+        bubble_sprite.rotation = actions.look_direction.angle()
 
         # fix player sprite rotation so sprite highlight doesn't rotate
         $BubbleSprite.global_rotation_degrees = 0
@@ -224,7 +224,7 @@ func _process(delta: float) -> void:
         if actions.drive <= 0.0:
             state = Idle.new()
         # Move into the look_direction indicated by controller or keyboard
-        position += look_direction * delta * actions.drive * max_movespeed
+        position += actions.look_direction * delta * actions.drive * max_movespeed
         $GooglyEyes.walking_animation()
     elif state is Stabbing:
         if not actions.stab_pressed and not weapon.is_stabbing:
@@ -574,4 +574,3 @@ func get_width() -> int:
 
 func get_height() -> int:
     return $BubbleSprite.texture.get_height() * $BubbleSprite.scale.y * radius
-
