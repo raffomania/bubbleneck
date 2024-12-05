@@ -27,7 +27,7 @@ func _ready() -> void:
     Globals.state_changed.connect(_global_state_changed)
 
 func _kill_streak_changed(player: Player):
-    if player.kill_streak >= 4:
+    if player.kill_streak == 4:
         var color_desc = player.get_color_description()
         show_text("%s is unstoppable!" % color_desc, player.player_color)
 
@@ -35,7 +35,7 @@ func _global_state_changed():
     if Globals.state is Globals.SuddenDeath:
         show_text("Sudden Death", Color.RED.darkened(0.1))
     if Globals.state is Globals.Tie:
-        show_text("Mutual Destruction :O", Color.RED.darkened(0.1))
+        show_text("Mutual Destruction :O", Color.HOT_PINK.darkened(0.1))
 
 func idle():
     particles_left.emitting = false
