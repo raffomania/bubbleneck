@@ -126,7 +126,8 @@ func get_keyboard_player_prefix():
     return "kb" + str(abs(player.controller_device_index))
 
 func get_amount_labels():
-    var spawner : PlayerSpawner = get_node("/root/Main/PlayerSpawner")
-    var total_players  = spawner.get_total_players()
+    var spawner: PlayerSpawner = get_node("/root/Main/PlayerSpawner")
+    var total_players = spawner.get_total_players()
 
-    return  max(2, max_labels - player.kill_streak - (total_players / 2))
+    var kill_streak_reduction = floor(player.kill_streak / 2)
+    return max(2, max_labels - kill_streak_reduction - (total_players / 2))
