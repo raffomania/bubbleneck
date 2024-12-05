@@ -131,7 +131,7 @@ func hit_player(target: Player) -> void:
         if is_stabbing:
             disarm()
         elif is_throwing:
-            deflect_throw()
+            deflect_throw(target)
         return
 
     # It's a kill
@@ -192,7 +192,8 @@ func disarm() -> void:
     tween.tween_property(self, "global_position", global_position + drop_offset, 0.5)
     tween.parallel().tween_property(self, "rotation", self.rotation + PI, 0.6)
 
-func deflect_throw() -> void:
+func deflect_throw(new_owner: Player) -> void:
+    weapon_owner = new_owner
     throw_direction = throw_direction.rotated(PI)
     throwing_range_seconds += 0.1
     rotation += PI
