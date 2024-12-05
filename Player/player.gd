@@ -435,8 +435,6 @@ func kill():
     if is_instance_valid(weapon):
         weapon.drop()
 
-        weapon = null
-
     kill_streak = 0
     uncapped_kill_streak = 0
 

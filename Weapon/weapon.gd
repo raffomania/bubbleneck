@@ -151,6 +151,8 @@ func drop() -> void:
     # position.x = base_weapon_position.x
     for connection in on_throw.get_connections():
         on_throw.disconnect(connection.callable)
+    if is_instance_valid(weapon_owner):
+        weapon_owner.weapon = null
     weapon_owner = null
     var main_scene = get_tree().get_root().get_node("Main")
     reparent.call_deferred(main_scene)
