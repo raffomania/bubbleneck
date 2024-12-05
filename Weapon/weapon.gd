@@ -96,6 +96,7 @@ func throw() -> void:
     throw_direction = Vector2.RIGHT.rotated(global_rotation)
     var main_scene = get_tree().get_root().get_node("Main")
     reparent(main_scene)
+    is_stabbing = false
     is_throwing = true
     throwing_range_seconds = charging_throw_since
     $Hitbox.check_now()
@@ -149,6 +150,7 @@ func drop() -> void:
     if stab_tween != null:
         (stab_tween as Tween).kill()
     # position.x = base_weapon_position.x
+    is_stabbing = false
     for connection in on_throw.get_connections():
         on_throw.disconnect(connection.callable)
     if is_instance_valid(weapon_owner):
