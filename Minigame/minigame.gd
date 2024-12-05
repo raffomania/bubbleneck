@@ -10,7 +10,7 @@ var player: Player
 var axis_threshold = 0.5
 var color := Color.HOT_PINK
 
-static var max_labels := 7
+static var max_labels := 8
 static var min_labels := 2
 
 var on_cooldown := false
@@ -130,4 +130,4 @@ func get_amount_labels():
     var total_players = spawner.get_total_players()
 
     var kill_streak_reduction = floor(player.kill_streak / 2)
-    return max(2, max_labels - kill_streak_reduction - (total_players / 2))
+    return max(3, max_labels - kill_streak_reduction - (total_players / 2))
