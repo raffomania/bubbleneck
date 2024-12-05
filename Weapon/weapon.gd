@@ -25,7 +25,6 @@ var throwing_time := 0.0
 var throwing_range_seconds := 0.0
 @export
 var is_throwing := false
-var is_checking_for_throw_collisions := false
 var is_stabbing := false
 var stab_on_cooldown := false
 var throw_direction
@@ -57,13 +56,7 @@ func _process(delta: float) -> void:
         global_position += throw_direction * delta * throw_distance
 
     if throwing_time > throwing_range_seconds:
-        $Hitbox.check_now()
-        is_throwing = false
-
-        await get_tree().create_timer(0.2).timeout
-        throwing_time = 0
-        weapon_owner = null
-        is_checking_for_throw_collisions = false
+        end_throw()
 
     if is_charging_throw():
         charging_throw_since = min(max_throwing_range_seconds, charging_throw_since + delta)
@@ -103,17 +96,20 @@ func throw() -> void:
     var main_scene = get_tree().get_root().get_node("Main")
     reparent(main_scene)
     is_throwing = true
-    is_checking_for_throw_collisions = true
     throwing_range_seconds = charging_throw_since
     $Hitbox.check_now()
     on_throw.emit()
+
+func end_throw() -> void:
+    $Hitbox.check_now()
+    is_throwing = false
+    throwing_time = 0
+    weapon_owner = null
     
 func stick() -> void:
     is_throwing = false
-    is_checking_for_throw_collisions = false
     throwing_time = 0
     weapon_owner = null
-
 
 func attach_to_player(area) -> void:
     var player = area as Player
@@ -124,7 +120,7 @@ func attach_to_player(area) -> void:
 
 func hit_player(target: Player) -> void:
     # Weapon cannot kill owner and only while throwing or stabbing
-    var is_attacking = is_checking_for_throw_collisions or is_stabbing
+    var is_attacking = is_throwing or is_stabbing
     var is_target_killable = target.state is not Player.Dead and not target.is_invincible() and target != weapon_owner
     if not is_attacking or not is_target_killable:
         return
@@ -169,3 +165,14 @@ func stab() -> void:
     await get_tree().create_timer(stab_cooldown_seconds).timeout
 
     stab_on_cooldown = false
+
+func bounce_back() -> void:
+    var bounce_back_duration = 1.0
+    var n = 6
+    var tween = create_tween()
+    var scale_before = $WeaponSprite.scale
+    tween.tween_property($WeaponSprite, "scale:y", scale_before.y * 0.9, bounce_back_duration / (n*2))
+    tween.tween_property($WeaponSprite, "scale:y", scale_before.y, bounce_back_duration / (n*2))
+    tween.set_loops(n)
+    
+    
