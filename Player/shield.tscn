@@ -1,7 +1,6 @@
-[gd_scene load_steps=5 format=3 uid="uid://d3cnqddkw1kds"]
+[gd_scene load_steps=4 format=3 uid="uid://dfiasb65hwmn5"]
 
 [ext_resource type="Shader" path="res://Player/shield.gdshader" id="1_cqigv"]
-[ext_resource type="Script" path="res://Player/shield.gd" id="1_f6hgh"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_aymq8"]
 resource_local_to_scene = true
@@ -13,7 +12,6 @@ shader_parameter/thickness = 0.126
 radius = 36.0139
 
 [node name="Shield" type="Area2D"]
-script = ExtResource("1_f6hgh")
 
 [node name="Panel" type="Panel" parent="."]
 material = SubResource("ShaderMaterial_aymq8")
