@@ -97,7 +97,7 @@ func throw() -> void:
     reparent(main_scene)
     is_stabbing = false
     is_throwing = true
-    throwing_range_seconds = charging_throw_since * 2
+    throwing_range_seconds = charging_throw_since * 1.5
     $Hitbox.check_now()
     on_throw.emit()
 
@@ -169,10 +169,13 @@ func stab() -> void:
     var pos_before = Vector2(position)
     var stab_direction = Vector2.RIGHT.rotated(rotation) * stab_distance
     stab_tween = create_tween()
-    stab_tween.tween_property(self, "position", position + stab_direction, stab_duration_seconds / 2)
+    stab_tween.tween_property(self, "position", pos_before - stab_direction * 0.4, stab_duration_seconds * 0.4)
     await stab_tween.finished
     stab_tween = create_tween()
-    stab_tween.tween_property(self, "position", pos_before, stab_duration_seconds / 2)
+    stab_tween.tween_property(self, "position", pos_before + stab_direction, stab_duration_seconds * 0.2)
+    await stab_tween.finished
+    stab_tween = create_tween()
+    stab_tween.tween_property(self, "position", pos_before, stab_duration_seconds * 0.4)
     await stab_tween.finished
     stab_tween = null
 
@@ -190,6 +193,7 @@ func disarm() -> void:
 
     drop()
 
+    # TODO prevent pickup during this time
     var drop_offset = Vector2.ONE.rotated(randf_range(0, 2 * PI)) * 50
     var tween = create_tween().set_ease(Tween.EASE_OUT)
     tween.tween_property(self, "global_position", global_position + drop_offset, 0.5)
