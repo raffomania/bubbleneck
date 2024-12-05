@@ -143,6 +143,9 @@ func can_rotate() -> bool:
 func can_attack() -> bool:
     return is_instance_valid(weapon) and (state is Idle or state is Moving or state is Dashing)
 
+func can_start_stab() -> bool:
+    return can_attack() and is_instance_valid(weapon) and not weapon.stab_on_cooldown
+
 func can_start_dash() -> bool:
     return state is Moving or state is Idle and dash_disabled_countdown > 0.0
 
@@ -215,7 +218,7 @@ func _process(delta: float) -> void:
     if can_attack():
         if actions.charge_pressed:
             state = ChargingThrow.new()
-        elif actions.stab_pressed:
+        elif actions.stab_pressed and can_start_stab():
             weapon.stab()
             state = Stabbing.new()
 
@@ -226,14 +229,12 @@ func _process(delta: float) -> void:
         # Move into the look_direction indicated by controller or keyboard
         position += actions.look_direction * delta * actions.drive * max_movespeed
         $GooglyEyes.walking_animation()
-    elif state is Stabbing:
-        if not actions.stab_pressed and not weapon.is_stabbing:
-            weapon.release_charge()
-            state = Idle.new()
-    elif state is ChargingThrow:
-        if not actions.charge_pressed:
-            weapon.release_charge()
-            state = Idle.new()
+    elif state is Stabbing and not weapon.is_stabbing:
+        # Stab is now finished
+        state = Idle.new()
+    elif state is ChargingThrow and not actions.charge_pressed:
+        weapon.release_charge()
+        state = Idle.new()
     elif state is Idle:
         animate_wobble(1.0)
         if actions.drive > 0.0:
@@ -546,7 +547,7 @@ func get_color_description() -> String:
 func increment_kill_streak():
     uncapped_kill_streak += 1
     kill_streak = min(get_max_kill_streak(), kill_streak + 1)
-    radius = initial_radius + 1.1 * kill_streak
+    radius = initial_radius + 0.5 * kill_streak
     scale = Vector2(radius, radius)
     Globals.kill_streak_changed.emit(self)
 
