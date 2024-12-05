@@ -251,6 +251,8 @@ func handle_dash(delta: float, actions: ActionInput, current_player_direction: V
     # The dash is still on cooldown, reduce the cooldown.
     if dash_disabled_countdown > 0:
         dash_disabled_countdown -= delta
+        if dash_disabled_countdown <= 0:
+            visualize_dashing_is_allowed_again()
         return
 
     # The player isn't dashing yet and the cooldown is not active.
@@ -295,6 +297,7 @@ func handle_dash(delta: float, actions: ActionInput, current_player_direction: V
         # Start the cooldown
         dash_disabled_countdown = dash_cooldown_seconds
 
+
     # Update player position when in dash.
     if state is Dashing:
         position += dash_offset
@@ -323,15 +326,16 @@ func make_invincible(duration: float):
     shield.get_node("Panel").material.set_shader_parameter("color", player_color)
     print(shield.get_node("Panel").material.get_instance_id())
     add_child(shield)
-    # var tween = get_tree().create_tween()
-    # var color = Color(player_color)
-    # color.a = 0.2
-    # var flash_duration = 0.4
-    # tween.tween_property($BubbleSprite, "self_modulate", color, flash_duration / 2)
-    # tween.tween_property($BubbleSprite, "self_modulate", player_color, flash_duration / 2)
-    # tween.set_trans(Tween.TransitionType.TRANS_SINE)
-    # var loops = floori(duration / flash_duration)
-    # tween.set_loops(loops)
+
+func visualize_dashing_is_allowed_again():
+    var tween = get_tree().create_tween()
+    var color = player_color.lightened(0.5)
+    var flash_duration = 0.2
+    tween.tween_property($BubbleSprite, "self_modulate", color, flash_duration / 2)
+    tween.tween_property($BubbleSprite, "self_modulate", player_color, flash_duration / 2)
+    tween.set_trans(Tween.TransitionType.TRANS_SINE)
+    var loops = 2
+    tween.set_loops(loops)
 
 func make_vulnerable():
     $Shield.queue_free()
