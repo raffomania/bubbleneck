@@ -76,7 +76,7 @@ func _process(delta: float) -> void:
 func _draw() -> void:
     if is_charging_throw() and is_instance_valid(weapon_owner):
         var start = Vector2.RIGHT * 30
-        var direction_vector = Vector2.RIGHT * (charging_throw_since * 300)
+        var direction_vector = Vector2.RIGHT * (charging_throw_since * 600)
         var end = start + direction_vector
         draw_line(start, end, weapon_owner.player_color, -1.0, true)
 
@@ -97,7 +97,7 @@ func throw() -> void:
     reparent(main_scene)
     is_stabbing = false
     is_throwing = true
-    throwing_range_seconds = charging_throw_since
+    throwing_range_seconds = charging_throw_since * 2
     $Hitbox.check_now()
     on_throw.emit()
 
