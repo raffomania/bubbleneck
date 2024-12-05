@@ -34,6 +34,8 @@ func _kill_streak_changed(player: Player):
 func _global_state_changed():
     if Globals.state is Globals.SuddenDeath:
         show_text("Sudden Death", Color.RED.darkened(0.1))
+    if Globals.state is Globals.Tie:
+        show_text("Mutual Destruction :O", Color.RED.darkened(0.1))
 
 func idle():
     particles_left.emitting = false

@@ -13,6 +13,9 @@ class RoundRunning:
 class SuddenDeath:
     extends State
 
+class Tie:
+    extends State
+
 class RoundOver:
     extends State
 

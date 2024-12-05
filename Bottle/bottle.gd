@@ -95,6 +95,16 @@ func process_popped_bottle(delta: float) -> void:
 
 
 func _process(delta: float) -> void:
+    if Globals.state is Globals.SuddenDeath:
+        var players = get_tree().get_nodes_in_group('players')
+        if players.all(func(player: Player): return player.state is Player.Dead):
+            Globals.state = Globals.Tie.new()
+            var camera = get_tree().root.get_camera_2d()
+            var zoom_tween = create_tween().set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_IN)
+            zoom_tween.tween_property(camera, "zoom", Vector2(10, 10), 3.0)
+            await zoom_tween.finished
+            get_tree().root.get_node("Main").next_stage()
+        
     if Globals.state is not Globals.RoundRunning:
         return 
 
@@ -197,7 +207,9 @@ func add_impulse(impulse: float) -> void:
         rotation_speed = -max_rotation_speed
 
 func _on_area_entered_entrance(area: Area2D) -> void:
-    if not is_instance_of(area, Player) or not Globals.state.popped or player_has_entered or minigame_in_progress():
+    if not (Globals.state is Globals.SuddenDeath or Globals.state is Globals.RoundRunning and Globals.state.popped): 
+        return
+    if not is_instance_of(area, Player) or player_has_entered or minigame_in_progress():
         return
 
     var player = area as Player
