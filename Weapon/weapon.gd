@@ -2,6 +2,36 @@ extends Node2D
 
 class_name Weapon
 
+class State:
+    pass
+
+class Carrying:
+    extends State
+
+class ChargingStab:
+    extends State
+
+class Stabbing:
+    extends State
+    var stab_tween : Tween
+
+class ChargingThrow:
+    extends State
+
+class Flying:
+    extends State
+    var throwing_time := 0.0
+    var throwing_range_seconds := 0.0
+    var throw_direction
+
+class LyingOnGround:
+    extends State
+
+class Disarming:
+    extends State
+
+var state: State = Carrying.new()
+
 @export
 var throw_distance := 0.0
 @export
@@ -21,21 +51,13 @@ var stab_distance: float = 50
 @export
 var max_throwing_range_seconds: float
 
-var throwing_time := 0.0
-var throwing_range_seconds := 0.0
-@export
-var is_throwing := false
-var is_stabbing := false
 var stab_on_cooldown := false
-var stab_tween
-var throw_direction
 var weapon_owner
 var charging_throw_since: float
 var base_weapon_scale: Vector2
 var hit_bottle: bool = false
 
 var base_weapon_position: Vector2
-
 
 signal on_throw
 
@@ -47,16 +69,15 @@ func _ready() -> void:
     base_weapon_scale = $WeaponSprite.scale
     add_to_group('weapons')
 
-
 # Called every frame. 'delta' is the elapsed throwing_time since the previous frame.
 func _process(delta: float) -> void:
-    if is_throwing:
-        throwing_time += delta * time_factor
+    if state is Flying:
+        state.throwing_time += delta * time_factor
         throw_distance = throw_speed
-        global_position += throw_direction * delta * throw_distance
+        global_position += state.throw_direction * delta * throw_distance
 
-    if throwing_time > throwing_range_seconds:
-        end_throw()
+        if state.throwing_time > state.throwing_range_seconds:
+            end_throw()
 
     if is_charging_throw():
         charging_throw_since = min(max_throwing_range_seconds, charging_throw_since + delta)
@@ -66,10 +87,15 @@ func _process(delta: float) -> void:
         $WeaponSprite.scale.x = base_weapon_scale.x + charging_throw_since * 0.2
         queue_redraw()
 
-    if is_instance_valid(weapon_owner) and not is_throwing and not is_stabbing:
-        var wobble_strength = 4
-        if is_charging_throw() and is_instance_valid(weapon_owner):
-            wobble_strength = 2
+
+    var wobble_strength = 0
+    if state is Carrying:
+        wobble_strength = 4 
+
+    if state is ChargingThrow:
+        wobble_strength = 2
+
+    if wobble_strength > 0:
         position = base_weapon_position + Vector2.UP * sin(Time.get_ticks_msec() * 0.01) * wobble_strength
 
 
@@ -92,45 +118,45 @@ func cancel_attack_charge():
     $WeaponSprite.scale.x = base_weapon_scale.x
 
 func throw() -> void:
-    throw_direction = Vector2.RIGHT.rotated(global_rotation)
+    state = Flying.new()
+    state.throw_direction = Vector2.RIGHT.rotated(global_rotation)
     var main_scene = get_tree().get_root().get_node("Main")
     reparent(main_scene)
-    is_stabbing = false
-    is_throwing = true
-    throwing_range_seconds = charging_throw_since * 1.5
+    state.throwing_range_seconds = charging_throw_since * 1.5
     $Hitbox.check_now()
     on_throw.emit()
 
 func end_throw() -> void:
     $Hitbox.check_now()
-    is_throwing = false
-    throwing_time = 0
+    state = LyingOnGround.new()
     weapon_owner = null
     
 func stick() -> void:
-    is_throwing = false
-    throwing_time = 0
-    weapon_owner = null
+    state = LyingOnGround.new()
 
-func attach_to_player(area) -> void:
-    var player = area as Player
+func attach_to_player(player: Player) -> void:
+    if not state is LyingOnGround:
+        return
+    if player.has_weapon():
+        return
 
-    if throwing_time == 0 and not is_instance_valid(player.weapon) and not is_instance_valid(weapon_owner):
-        weapon_owner = player
-        player.pick_up_weapon.call_deferred(self)
+    print("weapon")
+
+    weapon_owner = player
+    player.pick_up_weapon.call_deferred(self)
 
 func hit_player(target: Player) -> void:
     # Weapon cannot kill owner and only while throwing or stabbing
-    var is_attacking = is_throwing or is_stabbing
+    var is_attacking = state is Flying or state is Stabbing
     var is_target_killable = target.state is not Player.Dead and not target.is_invincible() and target != weapon_owner
     if not is_attacking or not is_target_killable:
         return
 
     # It's a hit on a parrying opponent
     if target.state is Player.Parrying:
-        if is_stabbing:
+        if state is Stabbing:
             disarm()
-        elif is_throwing:
+        elif state is Flying:
             deflect_throw(target)
         return
 
@@ -138,18 +164,19 @@ func hit_player(target: Player) -> void:
     if weapon_owner:
         weapon_owner.increment_kill_streak()
         # When a player kills another player with a throw, give them a new spear.
-        if is_throwing:
+        if state is Flying:
             weapon_owner.get_new_weapon()
             weapon_owner = null
 
     target.kill()
 
 func drop() -> void:
+    if state is Stabbing and state.stab_tween != null:
+        state.stab_tween.kill()
+    
+    # local rotation and position
+    state = LyingOnGround.new()
     cancel_attack_charge()
-    if stab_tween != null:
-        (stab_tween as Tween).kill()
-    # position.x = base_weapon_position.x
-    is_stabbing = false
     for connection in on_throw.get_connections():
         on_throw.disconnect(connection.callable)
     if is_instance_valid(weapon_owner):
@@ -159,27 +186,27 @@ func drop() -> void:
     reparent.call_deferred(main_scene)
 
 func stab() -> void:
-    if is_stabbing or stab_on_cooldown:
+    if state is Stabbing or stab_on_cooldown:
         return
 
-    is_stabbing = true
+    state = Stabbing.new()
 
     $Hitbox.check_now()
 
     var pos_before = Vector2(position)
     var stab_direction = Vector2.RIGHT.rotated(rotation) * stab_distance
-    stab_tween = create_tween()
-    stab_tween.tween_property(self, "position", pos_before - stab_direction * 0.4, stab_duration_seconds * 0.4)
-    await stab_tween.finished
-    stab_tween = create_tween()
-    stab_tween.tween_property(self, "position", pos_before + stab_direction, stab_duration_seconds * 0.2)
-    await stab_tween.finished
-    stab_tween = create_tween()
-    stab_tween.tween_property(self, "position", pos_before, stab_duration_seconds * 0.4)
-    await stab_tween.finished
-    stab_tween = null
+    state.stab_tween = create_tween()
+    state.stab_tween.tween_property(self, "position", pos_before - stab_direction * 0.4, stab_duration_seconds * 0.4)
+    await state.stab_tween.finished
+    state.stab_tween = create_tween()
+    state.stab_tween.tween_property(self, "position", pos_before + stab_direction, stab_duration_seconds * 0.2)
+    await state.stab_tween.finished
+    state.stab_tween = create_tween()
+    state.stab_tween.tween_property(self, "position", pos_before, stab_duration_seconds * 0.4)
+    await state.stab_tween.finished
+    state.stab_tween = null
 
-    is_stabbing = false
+    state = Carrying.new()
     stab_on_cooldown = true
     hit_bottle = false
 
@@ -191,18 +218,20 @@ func disarm() -> void:
     if not is_instance_valid(weapon_owner):
         return
 
-    drop()
-
-    # TODO prevent pickup during this time
+    state = Disarming.new()
     var drop_offset = Vector2.ONE.rotated(randf_range(0, 2 * PI)) * 50
     var tween = create_tween().set_ease(Tween.EASE_OUT)
     tween.tween_property(self, "global_position", global_position + drop_offset, 0.5)
     tween.parallel().tween_property(self, "rotation", self.rotation + PI, 0.6)
+    await tween.finished
+    drop()
 
 func deflect_throw(new_owner: Player) -> void:
+    if not state is Flying:
+        return
     weapon_owner = new_owner
-    throw_direction = throw_direction.rotated(PI)
-    throwing_range_seconds += 0.1
+    state.throw_direction = state.throw_direction.rotated(PI)
+    state.throwing_range_seconds += 0.1
     rotation += PI
 
 func bounce_back() -> void:

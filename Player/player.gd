@@ -235,7 +235,7 @@ func _process(delta: float) -> void:
         # Move into the look_direction indicated by controller or keyboard
         position += actions.look_direction * delta * actions.drive * max_movespeed
         $GooglyEyes.walking_animation()
-    elif state is Stabbing and not weapon.is_stabbing:
+    elif state is Stabbing and not weapon.state is Weapon.Stabbing:
         # Stab is now finished
         state = Idle.new()
     elif state is ChargingThrow and not actions.charge_pressed:
@@ -397,6 +397,9 @@ func set_player_color(color: Color):
         sprite.material.set("shader_parameter/color", color)
 
 
+func has_weapon() -> bool:
+    return is_instance_valid(weapon)
+
 func get_new_weapon() -> void:
     if is_instance_valid(weapon):
         return
@@ -414,7 +417,9 @@ func pick_up_weapon(new_weapon) -> void:
     weapon.rotation = 0
     weapon.weapon_owner = self
     weapon.base_weapon_position = Vector2($WeaponPosition.position)
+    weapon.position = weapon.base_weapon_position
     weapon.on_throw.connect(on_throw_weapon)
+    print("player")
 
 func on_throw_weapon():
     if weapon.on_throw.is_connected(on_throw_weapon):
