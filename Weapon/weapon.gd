@@ -17,6 +17,7 @@ class Stabbing:
 
 class ChargingThrow:
     extends State
+    var charging_throw_since: float
 
 class Flying:
     extends State
@@ -53,7 +54,6 @@ var max_throwing_range_seconds: float
 
 var stab_on_cooldown := false
 var weapon_owner
-var charging_throw_since: float
 var base_weapon_scale: Vector2
 var hit_bottle: bool = false
 
@@ -61,33 +61,48 @@ var base_weapon_position: Vector2
 
 signal on_throw
 
-func is_charging_throw():
-    return weapon_owner and (weapon_owner as Player).state is Player.ChargingThrow
-
-# Called when the node enters the scene tree for the first throwing_time.
 func _ready() -> void:
     base_weapon_scale = $WeaponSprite.scale
     add_to_group('weapons')
 
-# Called every frame. 'delta' is the elapsed throwing_time since the previous frame.
 func _process(delta: float) -> void:
-    if state is Flying:
-        state.throwing_time += delta * time_factor
-        throw_distance = throw_speed
-        global_position += state.throw_direction * delta * throw_distance
+    process_flying(delta)
+    process_charging_throw(delta)
+    wobble()
 
-        if state.throwing_time > state.throwing_range_seconds:
-            end_throw()
+func _draw() -> void:
+    if state is ChargingThrow and is_instance_valid(weapon_owner):
+        var start = Vector2.RIGHT * 30
+        # TODO exact laserpointer lenght
+        var direction_vector = Vector2.RIGHT * (state.charging_throw_since * 600)
+        var end = start + direction_vector
+        draw_line(start, end, weapon_owner.player_color, -1.0, true)
 
-    if is_charging_throw():
-        charging_throw_since = min(max_throwing_range_seconds, charging_throw_since + delta)
-        if charging_throw_since >= stab_button_press_threshold_seconds:
-            $Highlight.visible = true
-        position.x = base_weapon_position.x - charging_throw_since * 20
-        $WeaponSprite.scale.x = base_weapon_scale.x + charging_throw_since * 0.2
-        queue_redraw()
+func process_flying(delta):
+    # print("check state", state is Flying )
+    if not state is Flying:
+        return
+    # print("flying")
+    # print("position", position)
+    state.throwing_time += delta * time_factor
+    throw_distance = throw_speed
+    global_position += state.throw_direction * delta * throw_distance
 
+    if state.throwing_time > state.throwing_range_seconds:
+        print("end")
+        end_throw()
 
+func process_charging_throw(delta):
+    if not state is ChargingThrow:
+        return
+    state.charging_throw_since = min(max_throwing_range_seconds, state.charging_throw_since + delta)
+    if state.charging_throw_since >= stab_button_press_threshold_seconds:
+        $Highlight.visible = true
+    position.x = base_weapon_position.x - state.charging_throw_since * 20
+    $WeaponSprite.scale.x = base_weapon_scale.x + state.charging_throw_since * 0.2
+    queue_redraw()
+
+func wobble():
     var wobble_strength = 0
     if state is Carrying:
         wobble_strength = 4 
@@ -98,49 +113,44 @@ func _process(delta: float) -> void:
     if wobble_strength > 0:
         position = base_weapon_position + Vector2.UP * sin(Time.get_ticks_msec() * 0.01) * wobble_strength
 
-
-func _draw() -> void:
-    if is_charging_throw() and is_instance_valid(weapon_owner):
-        var start = Vector2.RIGHT * 30
-        var direction_vector = Vector2.RIGHT * (charging_throw_since * 600)
-        var end = start + direction_vector
-        draw_line(start, end, weapon_owner.player_color, -1.0, true)
-
 func release_charge() -> void:
-    if charging_throw_since >= stab_button_press_threshold_seconds:
+    if state is ChargingThrow and state.charging_throw_since >= stab_button_press_threshold_seconds:
         throw()
-    cancel_attack_charge()
+    end_attack_charge()
     queue_redraw()
 
-func cancel_attack_charge():
-    charging_throw_since = 0.0
+func end_attack_charge():
     $Highlight.visible = false
     $WeaponSprite.scale.x = base_weapon_scale.x
 
 func throw() -> void:
+    if not state is ChargingThrow:
+        return
+    var charged_for_seconds = state.charging_throw_since  
     state = Flying.new()
+    print("state flying", state)
     state.throw_direction = Vector2.RIGHT.rotated(global_rotation)
     var main_scene = get_tree().get_root().get_node("Main")
     reparent(main_scene)
-    state.throwing_range_seconds = charging_throw_since * 1.5
+    state.throwing_range_seconds = charged_for_seconds  * 1.5
     $Hitbox.check_now()
     on_throw.emit()
 
 func end_throw() -> void:
     $Hitbox.check_now()
     state = LyingOnGround.new()
+    print("state lying", state)
     weapon_owner = null
     
 func stick() -> void:
     state = LyingOnGround.new()
+    print("state lying", state)
 
 func attach_to_player(player: Player) -> void:
     if not state is LyingOnGround:
         return
     if player.has_weapon():
         return
-
-    print("weapon")
 
     weapon_owner = player
     player.pick_up_weapon.call_deferred(self)
@@ -176,7 +186,8 @@ func drop() -> void:
     
     # local rotation and position
     state = LyingOnGround.new()
-    cancel_attack_charge()
+    print("state lying", state)
+    end_attack_charge()
     for connection in on_throw.get_connections():
         on_throw.disconnect(connection.callable)
     if is_instance_valid(weapon_owner):
@@ -190,6 +201,7 @@ func stab() -> void:
         return
 
     state = Stabbing.new()
+    print("state stabbing", state)
 
     $Hitbox.check_now()
 
@@ -207,6 +219,7 @@ func stab() -> void:
     state.stab_tween = null
 
     state = Carrying.new()
+    print("state carrying after stab", state)
     stab_on_cooldown = true
     hit_bottle = false
 
@@ -219,6 +232,7 @@ func disarm() -> void:
         return
 
     state = Disarming.new()
+    print("state disarming", state)
     var drop_offset = Vector2.ONE.rotated(randf_range(0, 2 * PI)) * 50
     var tween = create_tween().set_ease(Tween.EASE_OUT)
     tween.tween_property(self, "global_position", global_position + drop_offset, 0.5)

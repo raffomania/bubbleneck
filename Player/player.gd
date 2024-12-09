@@ -224,6 +224,7 @@ func _process(delta: float) -> void:
     if can_attack():
         if actions.charge_pressed:
             state = ChargingThrow.new()
+            weapon.state = Weapon.ChargingThrow.new()
         elif actions.stab_pressed and can_start_stab():
             weapon.stab()
             state = Stabbing.new()
@@ -419,7 +420,6 @@ func pick_up_weapon(new_weapon) -> void:
     weapon.base_weapon_position = Vector2($WeaponPosition.position)
     weapon.position = weapon.base_weapon_position
     weapon.on_throw.connect(on_throw_weapon)
-    print("player")
 
 func on_throw_weapon():
     if weapon.on_throw.is_connected(on_throw_weapon):
