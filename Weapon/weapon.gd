@@ -33,6 +33,9 @@ class Disarming:
 
 var state: State = Carrying.new()
 
+var stab_is_on_cooldown := false
+var weapon_owner: Player
+
 @export
 var throw_distance := 0.0
 @export
@@ -52,11 +55,7 @@ var stab_distance: float = 50
 @export
 var max_throwing_range_seconds: float
 
-var stab_on_cooldown := false
-var weapon_owner
 var base_weapon_scale: Vector2
-var hit_bottle: bool = false
-
 var base_weapon_position: Vector2
 
 signal on_throw
@@ -79,17 +78,13 @@ func _draw() -> void:
         draw_line(start, end, weapon_owner.player_color, -1.0, true)
 
 func process_flying(delta):
-    # print("check state", state is Flying )
     if not state is Flying:
         return
-    # print("flying")
-    # print("position", position)
     state.throwing_time += delta * time_factor
     throw_distance = throw_speed
     global_position += state.throw_direction * delta * throw_distance
 
     if state.throwing_time > state.throwing_range_seconds:
-        print("end")
         end_throw()
 
 func process_charging_throw(delta):
@@ -128,7 +123,6 @@ func throw() -> void:
         return
     var charged_for_seconds = state.charging_throw_since  
     state = Flying.new()
-    print("state flying", state)
     state.throw_direction = Vector2.RIGHT.rotated(global_rotation)
     var main_scene = get_tree().get_root().get_node("Main")
     reparent(main_scene)
@@ -139,12 +133,10 @@ func throw() -> void:
 func end_throw() -> void:
     $Hitbox.check_now()
     state = LyingOnGround.new()
-    print("state lying", state)
     weapon_owner = null
     
 func stick() -> void:
     state = LyingOnGround.new()
-    print("state lying", state)
 
 func attach_to_player(player: Player) -> void:
     if not state is LyingOnGround:
@@ -171,7 +163,7 @@ func hit_player(target: Player) -> void:
         return
 
     # It's a kill
-    if weapon_owner:
+    if is_instance_valid(weapon_owner):
         weapon_owner.increment_kill_streak()
         # When a player kills another player with a throw, give them a new spear.
         if state is Flying:
@@ -186,7 +178,6 @@ func drop() -> void:
     
     # local rotation and position
     state = LyingOnGround.new()
-    print("state lying", state)
     end_attack_charge()
     for connection in on_throw.get_connections():
         on_throw.disconnect(connection.callable)
@@ -197,11 +188,10 @@ func drop() -> void:
     reparent.call_deferred(main_scene)
 
 func stab() -> void:
-    if state is Stabbing or stab_on_cooldown:
+    if state is Stabbing or stab_is_on_cooldown:
         return
 
     state = Stabbing.new()
-    print("state stabbing", state)
 
     $Hitbox.check_now()
 
@@ -219,20 +209,17 @@ func stab() -> void:
     state.stab_tween = null
 
     state = Carrying.new()
-    print("state carrying after stab", state)
-    stab_on_cooldown = true
-    hit_bottle = false
+    stab_is_on_cooldown = true
 
     await get_tree().create_timer(stab_cooldown_seconds).timeout
 
-    stab_on_cooldown = false
+    stab_is_on_cooldown = false
 
 func disarm() -> void:
     if not is_instance_valid(weapon_owner):
         return
 
     state = Disarming.new()
-    print("state disarming", state)
     var drop_offset = Vector2.ONE.rotated(randf_range(0, 2 * PI)) * 50
     var tween = create_tween().set_ease(Tween.EASE_OUT)
     tween.tween_property(self, "global_position", global_position + drop_offset, 0.5)

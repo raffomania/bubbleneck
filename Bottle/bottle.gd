@@ -282,8 +282,6 @@ func hit_bottle(area: Area2D, direction: String) -> void:
     if is_instance_of(area, WeaponHitbox) and not player_has_entered:
         var weapon = area.get_parent() as Weapon
         if weapon.state is Weapon.Flying or weapon.state is Weapon.Stabbing:
-            #print("Hit impulse %s from direction %s" % [impulse_direction, direction])
-            weapon.hit_bottle = true
             hit(0.25 * impulse_direction)
 
 func get_bottle_floor(offset: int) -> Vector2:
