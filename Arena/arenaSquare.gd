@@ -40,5 +40,5 @@ func _process(_delta: float) -> void:
 
     for node: Node2D in get_tree().get_nodes_in_group('weapons'):
        var weapon = node as Weapon
-       if (weapon.is_throwing and is_point_outside_rect(weapon.global_position)):
+       if (weapon.state is Weapon.Flying and is_point_outside_rect(weapon.global_position)):
            weapon.stick()
