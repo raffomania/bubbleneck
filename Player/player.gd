@@ -150,7 +150,7 @@ func can_attack() -> bool:
     return is_instance_valid(weapon) and (state is Idle or state is Moving or state is Dashing)
 
 func can_start_stab() -> bool:
-    return can_attack() and is_instance_valid(weapon) and not weapon.stab_on_cooldown
+    return can_attack() and is_instance_valid(weapon) and not weapon.stab_is_on_cooldown 
 
 func can_start_dash() -> bool:
     return state is Moving or state is Idle and dash_disabled_countdown > 0.0
@@ -224,6 +224,7 @@ func _process(delta: float) -> void:
     if can_attack():
         if actions.charge_pressed:
             state = ChargingThrow.new()
+            weapon.state = Weapon.ChargingThrow.new()
         elif actions.stab_pressed and can_start_stab():
             weapon.stab()
             state = Stabbing.new()
@@ -235,7 +236,7 @@ func _process(delta: float) -> void:
         # Move into the look_direction indicated by controller or keyboard
         position += actions.look_direction * delta * actions.drive * max_movespeed
         $GooglyEyes.walking_animation()
-    elif state is Stabbing and not weapon.is_stabbing:
+    elif state is Stabbing and not weapon.state is Weapon.Stabbing:
         # Stab is now finished
         state = Idle.new()
     elif state is ChargingThrow and not actions.charge_pressed:
@@ -397,6 +398,9 @@ func set_player_color(color: Color):
         sprite.material.set("shader_parameter/color", color)
 
 
+func has_weapon() -> bool:
+    return is_instance_valid(weapon)
+
 func get_new_weapon() -> void:
     if is_instance_valid(weapon):
         return
@@ -414,6 +418,7 @@ func pick_up_weapon(new_weapon) -> void:
     weapon.rotation = 0
     weapon.weapon_owner = self
     weapon.base_weapon_position = Vector2($WeaponPosition.position)
+    weapon.position = weapon.base_weapon_position
     weapon.on_throw.connect(on_throw_weapon)
 
 func on_throw_weapon():

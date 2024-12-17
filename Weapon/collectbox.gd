@@ -10,4 +10,4 @@ func _on_area_entered(area) -> void:
         return
     
     var weapon = get_parent() as Weapon
-    weapon.attach_to_player(area)
+    weapon.attach_to_player(area as Player)
