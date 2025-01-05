@@ -100,7 +100,6 @@ func process_charging_throw(delta):
     if state.charging_throw_since >= stab_button_press_threshold_seconds:
         $Highlight.visible = true
     position.x = base_weapon_position.x - state.charging_throw_since * 20
-    $WeaponSprite.scale.x = base_weapon_scale.x + state.charging_throw_since * 0.2
     self.global_scale.y = base_weapon_scale.y + state.charging_throw_since 
     queue_redraw()
 
