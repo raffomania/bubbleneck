@@ -111,6 +111,8 @@ func wobble():
 func release_charge() -> void:
     if state is ChargingThrow and state.charging_throw_since >= stab_button_press_threshold_seconds:
         throw()
+    else:
+        state = Carrying.new()
     end_attack_charge()
     queue_redraw()
 
