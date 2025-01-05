@@ -31,6 +31,8 @@ class Dashing:
 class ChargingThrow:
     extends State
 
+class ChargingStab:
+    extends State
 class Stabbing:
     extends State
 
@@ -144,7 +146,7 @@ func can_move() -> bool:
     return state is Moving or state is Idle
 
 func can_rotate() -> bool:
-    return state is Moving or state is Idle or state is ChargingThrow
+    return state is Moving or state is Idle or state is ChargingThrow or state is ChargingStab
 
 func can_attack() -> bool:
     return is_instance_valid(weapon) and (state is Idle or state is Moving or state is Dashing)
@@ -226,8 +228,8 @@ func _process(delta: float) -> void:
             state = ChargingThrow.new()
             weapon.state = Weapon.ChargingThrow.new()
         elif actions.stab_pressed and can_start_stab():
-            weapon.stab()
-            state = Stabbing.new()
+            weapon.charge_stab()
+            state = ChargingStab.new()
 
     if state is Moving:
         animate_wobble(2.0)
@@ -236,6 +238,9 @@ func _process(delta: float) -> void:
         # Move into the look_direction indicated by controller or keyboard
         position += actions.look_direction * delta * actions.drive * max_movespeed
         $GooglyEyes.walking_animation()
+    elif state is ChargingStab and !actions.stab_pressed:
+        state = Stabbing.new()
+        weapon.stab()
     elif state is Stabbing and not weapon.state is Weapon.Stabbing:
         # Stab is now finished
         state = Idle.new()

@@ -10,6 +10,7 @@ class Carrying:
 
 class ChargingStab:
     extends State
+    var stab_tween : Tween
 
 class Stabbing:
     extends State
@@ -196,6 +197,16 @@ func drop() -> void:
     var main_scene = get_tree().get_root().get_node("Main")
     reparent.call_deferred(main_scene)
 
+func charge_stab() -> void:
+    if state is ChargingStab or stab_is_on_cooldown:
+        return
+
+    state = ChargingStab.new()
+    var pos_before = Vector2(position)
+    var stab_direction = Vector2.RIGHT.rotated(rotation) * stab_distance
+
+    state.stab_tween = create_tween()
+    state.stab_tween.tween_property(self, "position", pos_before - stab_direction * 0.4, stab_duration_seconds * 0.4)
 func stab() -> void:
     if state is Stabbing or stab_is_on_cooldown:
         return
@@ -206,9 +217,6 @@ func stab() -> void:
 
     var pos_before = Vector2(position)
     var stab_direction = Vector2.RIGHT.rotated(rotation) * stab_distance
-    state.stab_tween = create_tween()
-    state.stab_tween.tween_property(self, "position", pos_before - stab_direction * 0.4, stab_duration_seconds * 0.4)
-    await state.stab_tween.finished
     state.stab_tween = create_tween()
     state.stab_tween.tween_property(self, "position", pos_before + stab_direction, stab_duration_seconds * 0.2)
     await state.stab_tween.finished
