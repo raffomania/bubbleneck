@@ -169,6 +169,7 @@ func hit_player(target: Player) -> void:
             disarm()
         elif state is Flying:
             deflect_throw(target)
+        target.reset_parry()
         return
 
     # It's a kill

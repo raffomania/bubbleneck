@@ -550,6 +550,12 @@ func play_death_sound():
 func get_id() -> int:
     return controller_device_index + 2
 
+func reset_parry():
+    if state is Parrying:
+        # Set state directly to avoid starting cooldown after parry ends
+        parry_disabled_countdown = 0
+        state = Idle.new()
+
 # Returns the name of a player.
 func get_player_name() -> String:
     return 'Player %s' % get_color_description()
