@@ -406,6 +406,7 @@ func get_new_weapon() -> void:
         return
 
     var new_weapon: Weapon = weapon_scene.instantiate()
+    new_weapon.set_base_scale()
     add_child.call_deferred(new_weapon)
     pick_up_weapon.call_deferred(new_weapon)
 
@@ -420,6 +421,7 @@ func pick_up_weapon(new_weapon) -> void:
     weapon.base_weapon_position = Vector2($WeaponPosition.position)
     weapon.position = weapon.base_weapon_position
     weapon.on_throw.connect(on_throw_weapon)
+    weapon.reset_scale()
 
 func on_throw_weapon():
     if weapon.on_throw.is_connected(on_throw_weapon):
@@ -477,8 +479,6 @@ func respawn():
     # Set the respawn position based on current level.
     global_position = bottle.get_respawn_position()
 
-    # if not is_instance_valid(weapon):
-    #     get_new_weapon()
     queue_redraw()
 
 func is_keyboard_player():
@@ -557,12 +557,16 @@ func get_player_name() -> String:
 func get_color_description() -> String:
     return colors[get_id()]
 
-func increment_kill_streak():
+func on_successful_murder():
     uncapped_kill_streak += 1
     kill_streak = min(get_max_kill_streak(), kill_streak + 1)
+    Globals.kill_streak_changed.emit(self)
+
     radius = initial_radius + 0.5 * kill_streak
     scale = Vector2(radius, radius)
-    Globals.kill_streak_changed.emit(self)
+
+    if (has_weapon()):
+        weapon.reset_scale()
 
     var label: KillStreakLabel = kill_streak_label_scene.instantiate()
     label.set_color(player_color)

@@ -61,7 +61,7 @@ var base_weapon_position: Vector2
 signal on_throw
 
 func _ready() -> void:
-    base_weapon_scale = $WeaponSprite.scale
+    set_base_scale()
     add_to_group('weapons')
 
 func _process(delta: float) -> void:
@@ -76,6 +76,12 @@ func _draw() -> void:
         var direction_vector = Vector2.RIGHT * (state.charging_throw_since * 600)
         var end = start + direction_vector
         draw_line(start, end, weapon_owner.player_color, -1.0, true)
+
+func set_base_scale():
+    if (base_weapon_scale.length() > 0): 
+        return 
+
+    base_weapon_scale = self.global_scale
 
 func process_flying(delta):
     if not state is Flying:
@@ -95,6 +101,7 @@ func process_charging_throw(delta):
         $Highlight.visible = true
     position.x = base_weapon_position.x - state.charging_throw_since * 20
     $WeaponSprite.scale.x = base_weapon_scale.x + state.charging_throw_since * 0.2
+    self.global_scale.y = base_weapon_scale.y + state.charging_throw_since 
     queue_redraw()
 
 func wobble():
@@ -118,7 +125,7 @@ func release_charge() -> void:
 
 func end_attack_charge():
     $Highlight.visible = false
-    $WeaponSprite.scale.x = base_weapon_scale.x
+    self.global_scale.y = base_weapon_scale.y
 
 func throw() -> void:
     if not state is ChargingThrow:
@@ -166,7 +173,7 @@ func hit_player(target: Player) -> void:
 
     # It's a kill
     if is_instance_valid(weapon_owner):
-        weapon_owner.increment_kill_streak()
+        weapon_owner.on_successful_murder()
         # When a player kills another player with a throw, give them a new spear.
         if state is Flying:
             weapon_owner.get_new_weapon()
@@ -246,3 +253,6 @@ func bounce_back() -> void:
     tween.tween_property($WeaponSprite, "rotation", initial_rot + 2 * num_repeats * PI, bounce_back_duration / (num_repeats))
     await tween.finished
     $WeaponSprite.rotation = initial_rot
+
+func reset_scale() -> void:
+    self.global_scale = base_weapon_scale
