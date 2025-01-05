@@ -32,7 +32,8 @@ class ChargingThrow:
     extends State
 
 class ChargingStab:
-    extends State
+    extends Moving
+
 class Stabbing:
     extends State
 
@@ -231,16 +232,17 @@ func _process(delta: float) -> void:
             weapon.charge_stab()
             state = ChargingStab.new()
 
-    if state is Moving:
+    # this must be first since ChargingStab inherits Moving
+    if state is ChargingStab and !actions.stab_pressed:
+        state = Stabbing.new()
+        weapon.stab()
+    elif state is Moving:
         animate_wobble(2.0)
         if actions.drive <= 0.0:
             state = Idle.new()
         # Move into the look_direction indicated by controller or keyboard
         position += actions.look_direction * delta * actions.drive * max_movespeed
         $GooglyEyes.walking_animation()
-    elif state is ChargingStab and !actions.stab_pressed:
-        state = Stabbing.new()
-        weapon.stab()
     elif state is Stabbing and not weapon.state is Weapon.Stabbing:
         # Stab is now finished
         state = Idle.new()
