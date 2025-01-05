@@ -150,7 +150,7 @@ func can_attack() -> bool:
     return is_instance_valid(weapon) and (state is Idle or state is Moving or state is Dashing)
 
 func can_start_stab() -> bool:
-    return can_attack() and not weapon.stab_is_on_cooldown 
+    return can_attack() and not weapon.stab_is_on_cooldown
 
 func can_start_dash() -> bool:
     return state is Moving or state is Idle and dash_disabled_countdown > 0.0
@@ -497,10 +497,9 @@ func start_minigame() -> Minigame:
     var new_minigame: Minigame = minigame_scene.instantiate()
     new_minigame.color = player_color
     new_minigame.player = self
-    var direction_to_center = ((get_viewport_rect().size / 2) - global_position).normalized()
     get_parent().add_child(new_minigame)
     new_minigame.create_labels()
-    new_minigame.global_position = global_position + direction_to_center * 200
+    new_minigame.global_position = new_minigame.calculate_global_position(global_position)
 
     new_minigame.finished.connect(self.win)
 

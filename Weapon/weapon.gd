@@ -13,7 +13,7 @@ class ChargingStab:
 
 class Stabbing:
     extends State
-    var stab_tween : Tween
+    var stab_tween: Tween
 
 class ChargingThrow:
     extends State
@@ -106,7 +106,7 @@ func process_charging_throw(delta):
 func wobble():
     var wobble_strength = 0
     if state is Carrying:
-        wobble_strength = 4 
+        wobble_strength = 4
 
     if state is ChargingThrow:
         wobble_strength = 2
@@ -129,12 +129,12 @@ func end_attack_charge():
 func throw() -> void:
     if not state is ChargingThrow:
         return
-    var charged_for_seconds = state.charging_throw_since  
+    var charged_for_seconds = state.charging_throw_since
     state = Flying.new()
     state.throw_direction = Vector2.RIGHT.rotated(global_rotation)
     var main_scene = get_tree().get_root().get_node("Main")
     reparent(main_scene)
-    state.throwing_range_seconds = charged_for_seconds  * 1.5
+    state.throwing_range_seconds = charged_for_seconds * 1.5
     $Hitbox.check_now()
     on_throw.emit()
 

@@ -19,6 +19,9 @@ var pressed_textures = {
 var is_pressed := false
 var dir: String
 
+func get_global_size():
+    return self.texture.get_size() * global_scale
+
 func set_direction(new_dir: String):
     dir = new_dir
     update_texture()

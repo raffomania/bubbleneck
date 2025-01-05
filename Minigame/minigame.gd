@@ -32,6 +32,32 @@ func create_labels():
         add_child(label)
         label_children.append(label)
 
+# Move the minigame to make sure it doesn't reach outside the available screen area.
+# Also make sure not to cover the player
+func calculate_global_position(global_player_position: Vector2) -> Vector2:
+    var result = Vector2(global_player_position)
+
+    # Calculate size of minigame
+    var first_label = label_children.front() as PressLabel
+    var last_label = label_children.back() as PressLabel
+    var global_width = last_label.global_position.x + last_label.get_global_size().x - first_label.global_position.x
+
+    # Center on player
+    result.x -= global_width / 2
+
+    # Move slightly below or above player
+    var viewport = get_viewport_rect()
+    var to_center = sign(viewport.size.y / 2 - global_player_position.y)
+    result.y += to_center * 100
+
+    # Move away from the side of the screen if necessary
+    if global_position.x < viewport.position.x:
+        result.x = viewport.position.x
+    if global_position.x + global_width > viewport.size.x:
+        result.x = viewport.size.x
+
+    return result
+
 func _process(_delta: float) -> void:
     global_rotation = 0
 
