@@ -238,7 +238,7 @@ func _process(delta: float) -> void:
         weapon.stab()
     elif state is Moving:
         animate_wobble(2.0)
-        if actions.drive <= 0.0:
+        if actions.drive <= 0.0 and state is not ChargingStab:
             state = Idle.new()
         # Move into the look_direction indicated by controller or keyboard
         position += actions.look_direction * delta * actions.drive * max_movespeed
