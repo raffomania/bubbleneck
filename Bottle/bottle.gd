@@ -237,7 +237,7 @@ func minigame_finished(player: Player):
     await get_tree().create_timer(1.0).timeout
 
     var camera = get_tree().root.get_camera_2d()
-    var zoom_tween = create_tween().set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+    var zoom_tween = create_tween().set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN_OUT)
     zoom_tween.tween_property(camera, "zoom", Vector2(10, 10), 3.0)
     var offset_tween = zoom_tween.parallel()
     offset_tween .tween_property(camera, "offset", global_position, 3.0)
