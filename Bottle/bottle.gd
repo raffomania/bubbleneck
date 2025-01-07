@@ -237,16 +237,18 @@ func minigame_finished(player: Player):
     await get_tree().create_timer(1.0).timeout
 
     var camera = get_tree().root.get_camera_2d()
-    var zoom_tween = create_tween().set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_IN)
+    var zoom_tween = create_tween().set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
     zoom_tween.tween_property(camera, "zoom", Vector2(10, 10), 3.0)
+    var offset_tween = zoom_tween.parallel()
+    offset_tween .tween_property(camera, "offset", global_position, 3.0)
+    create_tween().tween_property(player, "rotation", player.rotation + PI * 2, 3.0)
 
-    create_tween().tween_property(player, "rotation", player.rotation + PI * 2, 2.0)
+    var player_tween = create_tween()
+    player_tween.tween_property(player, "global_position", global_position, 2.0)
+    player_tween.parallel().tween_property(player, "scale", player.scale * 0.6, 1.0)
 
-    var tween = create_tween()
-    tween.tween_property(player, "global_position", global_position, 2.0)
-    tween.parallel().tween_property(player, "scale", player.scale * 0.6, 1.0)
-    await zoom_tween.finished
-
+    await offset_tween.finished
+    player.visible = false
     get_tree().root.get_node("Main").next_stage()
 
 func _on_area_entered_body(area: Area2D) -> void:

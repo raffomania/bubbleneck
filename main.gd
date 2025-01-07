@@ -36,6 +36,10 @@ func next_stage():
     current_stage = stage_scene.instantiate()
     
     add_child(current_stage)
-    camera.zoom = Vector2.ONE
     spawner.bottle = current_stage.find_child("Bottle")
     spawner.spawn_all_players.call_deferred()
+    var zoom_back =  create_tween()
+    zoom_back.tween_property(camera, "zoom", Vector2.ONE, 0.2)
+    zoom_back.parallel().tween_property(camera, "offset", get_offset(), 0.2)
+func get_offset():
+    return get_viewport_rect().size / 2
